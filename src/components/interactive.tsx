@@ -1,107 +1,11 @@
 "use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-  base,
-  concepts,
-  conceptKeys,
-  nav,
-  projects,
-  type Concept,
-} from "@/lib/content";
-import { Arrow, Mark } from "./icons";
+import { useState } from "react";
+import { projects } from "@/lib/content";
+import { Arrow, Icon } from "./icons";
 import { WebsiteArtwork } from "./artwork";
 
-export function ReviewBar({ concept }: { concept: Concept }) {
-  const pathname = usePathname();
-  const tail = pathname.split("/").slice(3).join("/");
-  return (
-    <aside className="review-bar" aria-label="Навигация между дизайн концепции">
-      <Link href="/" className="review-home">
-        ← <span>Дизайн преглед</span>
-      </Link>
-      <div className="review-concepts">
-        {conceptKeys.map((key) => (
-          <Link
-            key={key}
-            href={`${base(key)}${tail ? `/${tail}` : ""}`}
-            aria-current={concept === key ? "page" : undefined}
-          >
-            <span>{concepts[key].number}</span> <b>{concepts[key].name}</b>
-          </Link>
-        ))}
-      </div>
-      <span className="review-stage">ЕТАП 1 · ПРОТОТИП</span>
-    </aside>
-  );
-}
-
-export function Header({ concept }: { concept: Concept }) {
-  const [open, setOpen] = useState(false);
-  const pathname = usePathname();
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-  return (
-    <header className="site-header wrap">
-      <Link
-        className="brand"
-        href={base(concept)}
-        aria-label="Saitena — начало"
-      >
-        <Mark />
-        <span>
-          saitena<span className="brand-dot">.</span>
-        </span>
-      </Link>
-      <button
-        type="button"
-        className="menu-toggle"
-        aria-label={open ? "Затвори менюто" : "Отвори менюто"}
-        aria-expanded={open}
-        aria-controls="main-nav"
-        onClick={() => setOpen(!open)}
-      >
-        {open ? "Затвори ×" : "Меню ☰"}
-      </button>
-      <nav
-        id="main-nav"
-        className={open ? "main-nav is-open" : "main-nav"}
-        aria-label="Главно меню"
-      >
-        {nav.map(([path, label]) => (
-          <Link
-            key={path}
-            href={`${base(concept)}/${path}`}
-            aria-current={
-              pathname.startsWith(`${base(concept)}/${path}`)
-                ? "page"
-                : undefined
-            }
-          >
-            {label}
-          </Link>
-        ))}
-        <Link
-          className="button button-small"
-          href={`${base(concept)}/zapitvane`}
-        >
-          Да поговорим <Arrow />
-        </Link>
-      </nav>
-    </header>
-  );
-}
-
-export function PortfolioGallery({
-  concept,
-  limit,
-}: {
-  concept: Concept;
-  limit?: number;
-}) {
+export function PortfolioGallery({ limit }: { limit?: number }) {
   const [filter, setFilter] = useState("Всички");
   const filters = [
     "Всички",
@@ -135,14 +39,14 @@ export function PortfolioGallery({
       <div className="project-grid">
         {filtered.map((project, i) => (
           <Link
-            href={`${base(concept)}/portfolio/${project.slug}`}
+            href={`/portfolio/${project.slug}`}
             className={`project-card project-card-${i}`}
             key={project.slug}
           >
             <div className="project-visual">
               <WebsiteArtwork kind={project.kind} />
-              <span className="project-open" aria-hidden="true">
-                ↗
+              <span className="project-open">
+                <Icon name="external" />
               </span>
             </div>
             <div className="project-meta">
@@ -164,11 +68,9 @@ export function PortfolioGallery({
 
 export function InquiryForm({
   kind,
-  concept,
   initialPlan = "Не съм сигурен/а",
 }: {
   kind: "contact" | "website";
-  concept: Concept;
   initialPlan?: string;
 }) {
   const [ready, setReady] = useState(false);
@@ -191,6 +93,9 @@ export function InquiryForm({
       }}
     >
       <div className="form-heading">
+        <span className="section-icon">
+          <Icon name={website ? "monitor" : "mail"} />
+        </span>
         <span className="eyebrow">{website ? "ВАШАТА ИДЕЯ" : "ПИШЕТЕ НИ"}</span>
         <h2>
           {website ? "Нека започнем с няколко думи." : "Как можем да помогнем?"}
@@ -303,10 +208,7 @@ export function InquiryForm({
       <p className="form-privacy">
         * Задължителни полета. Предвидено е кратко уведомление за обработването
         на запитванията и връзка към{" "}
-        <Link href={`${base(concept)}/pravni/poveritelnost`}>
-          политиката за поверителност
-        </Link>
-        .
+        <Link href={`/legal/privacy`}>политиката за поверителност</Link>.
       </p>
       <button className="button" type="submit">
         Преглед на {website ? "запитването" : "съобщението"} <Arrow />
@@ -323,3 +225,4 @@ export function InquiryForm({
     </form>
   );
 }
+

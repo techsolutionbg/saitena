@@ -1,30 +1,28 @@
 import Link from "next/link";
+import { plans, startFeatures, faq, siteContent } from "@/lib/content";
 import {
-  base,
-  concepts,
-  plans,
-  startFeatures,
-  faq,
-  type Concept,
-} from "@/lib/content";
-import { Arrow, Check, Mark } from "./icons";
+  mainNavigation,
+  legalNavigation,
+  type NavigationItem,
+} from "@/lib/navigation";
+import { Arrow, Check, Icon, type IconName } from "./icons";
+import { Brand } from "./brand";
 import { HeroArtwork } from "./artwork";
 import { PortfolioGallery } from "./interactive";
+import { FAQ } from "./faq";
 
 export function ButtonLink({
-  concept,
-  to = "zapitvane",
+  to = "inquiry",
   children,
   secondary = false,
 }: {
-  concept: Concept;
   to?: string;
   children: React.ReactNode;
   secondary?: boolean;
 }) {
   return (
     <Link
-      href={`${base(concept)}/${to}`}
+      href={`/${to}`}
       className={`button ${secondary ? "button-secondary" : ""}`}
     >
       {children}
@@ -68,25 +66,24 @@ export function PageIntro({
     </div>
   );
 }
-
-export function PlanCards({
-  concept,
-  full = false,
-}: {
-  concept: Concept;
-  full?: boolean;
-}) {
+export function PlanCards({ full = false }: { full?: boolean }) {
   return (
     <>
       <div className="plans-grid">
-        {plans.map((plan, i) => (
+        {plans.map((plan, index) => (
           <article
-            className={`plan-card ${i === 0 ? "plan-featured" : ""}`}
+            className={`plan-card ${index === 0 ? "plan-featured" : ""}`}
             key={plan.name}
           >
             <div className="plan-topline">
+              <span className="plan-icon">
+                <Icon
+                  name={
+                    index === 0 ? "monitor" : index === 1 ? "layers" : "growth"
+                  }
+                />
+              </span>
               <span>{plan.eyebrow}</span>
-              <span>{i === 0 ? "↗" : `0${i + 1}`}</span>
             </div>
             <h3>{plan.name}</h3>
             <div className="plan-price">
@@ -96,7 +93,7 @@ export function PlanCards({
                   <span>/месец</span>
                 </>
               ) : (
-                <strong className="concept-price">Обхват в развитие</strong>
+                <span>Обхват в развитие</span>
               )}
             </div>
             <span className="plan-status">
@@ -106,21 +103,23 @@ export function PlanCards({
             </span>
             <p>{plan.description}</p>
             <ul>
-              {(full && i === 0 ? startFeatures : plan.features).map((item) => (
-                <li key={item}>
-                  <Check />
-                  {item}
-                </li>
-              ))}
+              {(full && index === 0 ? startFeatures : plan.features).map(
+                (item) => (
+                  <li key={item}>
+                    <Check />
+                    <span>{item}</span>
+                  </li>
+                ),
+              )}
             </ul>
             <Link
-              href={`${base(concept)}/zapitvane?plan=${encodeURIComponent(i === 0 ? "START" : `${plan.name} (концепция)`)}`}
-              className={`button ${i === 0 ? "" : "button-secondary"}`}
+              href={`/inquiry?plan=${encodeURIComponent(index === 0 ? "START" : `${plan.name} (концепция)`)}`}
+              className={`button ${index === 0 ? "" : "button-secondary"}`}
             >
-              {i === 0 ? "Запитване за START" : "Обсъдете възможностите"}
+              {index === 0 ? "Запитване за START" : "Обсъдете възможностите"}
               <Arrow />
             </Link>
-            <small>{plan.status}</small>
+            <span className="plan-confirmation">{plan.status}</span>
           </article>
         ))}
       </div>
@@ -131,196 +130,172 @@ export function PlanCards({
         уточнен.
       </p>
       <div className="custom-plan">
+        <span className="section-icon">
+          <Icon name="message" />
+        </span>
         <div>
           <span className="eyebrow">ИМАТЕ НЕЩО ДРУГО ПРЕДВИД?</span>
           <h3>Вашата идея не се побира в план?</h3>
           <p>Да обсъдим индивидуален обхват според целите ви.</p>
         </div>
-        <ButtonLink
-          concept={concept}
-          to="zapitvane?plan=Индивидуална%20оферта"
-          secondary
-        >
+        <ButtonLink to="inquiry?plan=Индивидуална%20оферта" secondary>
           Индивидуална оферта
         </ButtonLink>
       </div>
     </>
   );
 }
-
-export function FAQ({ limit }: { limit?: number }) {
-  return (
-    <div className="faq-list">
-      {faq.slice(0, limit).map(([question, answer], i) => (
-        <details key={question}>
-          <summary>
-            <span className="faq-index">0{i + 1}</span>
-            <span>{question}</span>
-            <span className="faq-plus" aria-hidden="true">
-              +
-            </span>
-          </summary>
-          <p>{answer}</p>
-        </details>
-      ))}
-    </div>
-  );
-}
-
-export function Process({ concept }: { concept: Concept }) {
+const processItems: { title: string; copy: string; icon: IconName }[] = [
+  {
+    title: "Разговаряме",
+    copy: "Разбираме бизнеса, целите и хората, до които искате да достигнете.",
+    icon: "message",
+  },
+  {
+    title: "Създаваме",
+    copy: "Подреждаме съдържанието и оформяме дизайн с вашия характер.",
+    icon: "monitor",
+  },
+  {
+    title: "Развиваме",
+    copy: "След одобрение и стартиране се грижим за сайта и месечните промени.",
+    icon: "growth",
+  },
+];
+export function Process() {
   return (
     <section className="process-section wrap section">
       <SectionHeading
         eyebrow="ОТ ИДЕЯ ДО ПРИСЪСТВИЕ"
-        title={
-          concept === "atelier"
-            ? "Всяка добра история има начало."
-            : concept === "pulse"
-              ? "СТЪПКА. ПО СТЪПКА."
-              : "Лесно начало. Постоянна грижа."
-        }
+        title="Лесно начало. Постоянна грижа."
       />
       <div className="process-grid">
-        {[
-          [
-            "Разговаряме",
-            "Разбираме бизнеса, целите и хората, до които искате да достигнете.",
-          ],
-          [
-            "Създаваме",
-            "Подреждаме съдържанието и оформяме дизайн с вашия характер.",
-          ],
-          [
-            "Развиваме",
-            "След одобрение и стартиране се грижим за сайта и месечните промени.",
-          ],
-        ].map(([title, copy], i) => (
-          <article key={title}>
-            <span className="process-number">
-              0{i + 1}
-              <Arrow />
-            </span>
-            <h3>{title}</h3>
-            <p>{copy}</p>
+        {processItems.map((item, index) => (
+          <article key={item.title}>
+            <div className="process-top">
+              <span className="section-icon">
+                <Icon name={item.icon} />
+              </span>
+              <span>0{index + 1}</span>
+            </div>
+            <h3>{item.title}</h3>
+            <p>{item.copy}</p>
           </article>
         ))}
       </div>
     </section>
   );
 }
-
-export function CTA({ concept }: { concept: Concept }) {
+export function CTA({ forFAQ = false }: { forFAQ?: boolean }) {
   return (
-    <section className="cta-section wrap">
+    <section className={`cta-section wrap${forFAQ ? " faq-cta" : ""}`}>
       <div className="cta-inner">
-        <span className="eyebrow">СЛЕДВАЩАТА СТЪПКА Е ВАША</span>
-        <h2>
-          {concept === "atelier"
-            ? "Нека дадем дом\nна идеята ви."
-            : concept === "pulse"
-              ? "ДОБРИТЕ ИДЕИ\nЗАСЛУЖАВАТ САЙТ."
-              : "Готови за своето\nмясто онлайн?"}
-        </h2>
-        <div className="cta-bottom">
-          <p>
-            Разкажете ни за бизнеса си.
-            <br />
-            Ще започнем с разговор.
-          </p>
-          <ButtonLink concept={concept}>Да създадем вашия сайт</ButtonLink>
+        <div>
+          <span className="eyebrow">{forFAQ ? "ГОТОВИ ЛИ СТЕ ДА ЗАПОЧНЕМ?" : "СЛЕДВАЩАТА СТЪПКА Е ВАША"}</span>
+          <h2>{forFAQ ? "Вашият бизнес заслужава силно онлайн присъствие." : "Готови за своето място онлайн?"}</h2>
+          <p>{forFAQ ? "Получете професионален уебсайт, техническа поддръжка и ясна месечна цена — без голяма първоначална инвестиция." : "Разкажете ни за бизнеса си. Ще започнем с разговор."}</p>
         </div>
-        <Mark className="cta-watermark" />
+        <ButtonLink>Да създадем вашия сайт</ButtonLink>
+        {forFAQ && <Link className="button" href="/plans">Разгледайте плановете <Arrow /></Link>}
+        <img
+          src="/brand/saitena-mark.svg"
+          className="cta-watermark"
+          width={525}
+          height={525}
+          alt=""
+          aria-hidden="true"
+        />
       </div>
     </section>
   );
 }
-
-export function Footer({ concept }: { concept: Concept }) {
-  const root = base(concept);
+const usefulNavigation: NavigationItem[] = [
+  { href: "/faq", label: "Всички въпроси и отговори", icon: "help" },
+  { href: "/blog", label: "Блог", icon: "book" },
+  { href: "/sitemap", label: "Карта на сайта", icon: "sitemap" },
+  { href: "/contact", label: "Контакти", icon: "mail" },
+];
+export function Footer() {
   return (
     <footer className="site-footer wrap">
       <div className="footer-grid">
         <div className="footer-brand">
-          <Link href={root} className="brand">
-            <Mark />
-            <span>saitena.</span>
-          </Link>
+          <Brand className="brand-footer" withTagline />
           <p>
             Сайтът ви е в добри ръце.
             <br />
             Всеки месец.
           </p>
-          <span className="footer-location">
-            Създадено за бизнесите в България.
-          </span>
+          <p>Създадено за бизнесите в България.</p>
         </div>
         <div>
           <h2>Разгледайте</h2>
-          <Link href={`${root}/uslugi`}>Сайтове на абонамент</Link>
-          <Link href={`${root}/planove`}>Абонаментни планове</Link>
-          <Link href={`${root}/portfolio`}>Портфолио</Link>
-          <Link href={`${root}/za-nas`}>За нас</Link>
+          {mainNavigation.slice(0, 4).map((item) => (
+            <Link href={item.href} key={item.href}>
+              <Icon name={item.icon} />
+              <span>
+                {item.href === "/services" ? "Сайтове на абонамент" : item.label}
+              </span>
+            </Link>
+          ))}
         </div>
         <div>
           <h2>Полезно</h2>
-          <Link href={`${root}/vuprosi`}>Често задавани въпроси</Link>
-          <Link href={`${root}/blog`}>Блог</Link>
-          <Link href={`${root}/karta-na-saita`}>Карта на сайта</Link>
-          <Link href={`${root}/kontakti`}>Контакти</Link>
+          {usefulNavigation.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <Icon name={item.icon} />
+              <span>{item.label}</span>
+            </Link>
+          ))}
         </div>
         <div className="footer-inquiry">
           <h2>Имате идея?</h2>
           <p>Нека ѝ дадем добра посока.</p>
-          <Link href={`${root}/zapitvane`} className="text-link">
+          <Link href="/inquiry" className="text-link">
             Разкажете ни <Arrow />
           </Link>
-          <small>
-            Контактни и фирмени данни:
-            <br />
-            предстои потвърждение.
-          </small>
+          <p>Контактни и фирмени данни: предстои потвърждение.</p>
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} Saitena · Дизайн концепция</span>
-        <div>
-          <Link href={`${root}/pravni/poveritelnost`}>Поверителност</Link>
-          <Link href={`${root}/pravni/biskvitki`}>Бисквитки</Link>
-          <Link href={`${root}/pravni/uslovia`}>Условия за ползване</Link>
-          <Link href={`${root}/pravni/abonamentni-uslovia`}>
-            Абонаментни условия
-          </Link>
-        </div>
+        <p>© {new Date().getFullYear()} Saitena</p>
+        <nav aria-label="Правни страници">
+          {legalNavigation.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <Icon name={item.icon} />
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
       </div>
     </footer>
   );
 }
-
-export function Home({ concept }: { concept: Concept }) {
-  const data = concepts[concept];
+const benefits: { title: string; icon: IconName }[] = [
+  { title: "Индивидуален дизайн", icon: "sparkles" },
+  { title: "Хостинг и SSL*", icon: "shield" },
+  { title: "Месечни промени", icon: "growth" },
+  { title: "SEO и GEO", icon: "search" },
+];
+export function Home() {
   return (
     <>
       <section className="hero wrap">
         <div className="hero-copy">
-          <div className="hero-kicker">
-            <span className="status-dot" />
+          <span className="eyebrow hero-kicker">
+            <Icon name="sparkles" />
             ВАШИЯТ ДИГИТАЛЕН ПАРТНЬОР
-          </div>
+          </span>
           <h1>
-            {data.title.map((line, i) => (
-              <span
-                key={line}
-                className={i === data.title.length - 1 ? "accent-line" : ""}
-              >
-                {line}
-              </span>
-            ))}
+            Вашият бизнес.
+            <br />
+            Следващата <span className="accent-line">му стъпка.</span>
           </h1>
-          <p className="hero-intro">{data.intro}</p>
+          <p className="hero-intro">{siteContent.intro}</p>
           <div className="hero-actions">
-            <ButtonLink concept={concept}>Да започнем</ButtonLink>
-            <Link className="text-link" href={`${base(concept)}/portfolio`}>
-              Вижте концепциите <Arrow />
+            <ButtonLink>Да започнем</ButtonLink>
+            <Link href="/portfolio" className="text-link">
+              Разгледайте портфолиото <Arrow />
             </Link>
           </div>
           <div className="hero-proof">
@@ -334,58 +309,37 @@ export function Home({ concept }: { concept: Concept }) {
             </span>
           </div>
         </div>
-        <HeroArtwork variant={concept} />
+        <HeroArtwork />
       </section>
-      <div className="benefits-strip">
+      <section
+        className="benefits-strip"
+        aria-label="Какво включва грижата за сайта"
+      >
         <div className="wrap">
-          <span>
-            Един партньор.
-            <br />
-            <b>Цялата грижа.</b>
-          </span>
-          {[
-            "Индивидуален дизайн",
-            "Хостинг и SSL*",
-            "Месечни промени",
-            "SEO и GEO",
-          ].map((item, i) => (
-            <div key={item}>
-              <span className="benefit-symbol">{["✳", "⌘", "↗", "◎"][i]}</span>
-              {item}
+          {benefits.map((item) => (
+            <div key={item.title}>
+              <span className="section-icon">
+                <Icon name={item.icon} />
+              </span>
+              <span>{item.title}</span>
             </div>
           ))}
         </div>
-      </div>
+      </section>
       <section className="intro-section wrap section">
         <span className="eyebrow">ПОВЕЧЕ ОТ ИЗРАБОТКА НА САЙТ</span>
         <div>
           <h2>
-            {concept === "clarity" ? (
-              <>
-                Вие градите бизнеса.
-                <br />
-                <span>Ние се грижим за сайта.</span>
-              </>
-            ) : concept === "atelier" ? (
-              <>
-                Създаден за вас.
-                <br />
-                <span>Обгрижван от нас.</span>
-              </>
-            ) : (
-              <>
-                ФОКУС ВЪРХУ БИЗНЕСА.
-                <br />
-                <span>САЙТЪТ Е ОТ НАС.</span>
-              </>
-            )}
+            Вие градите бизнеса.
+            <br />
+            <span>Ние се грижим за сайта.</span>
           </h2>
           <p>
             Сайтът не е еднократна задача. Той е вашата визитка, място за
             услугите ви и начало на нови разговори. Събираме изработката и
             техническата грижа в ясен месечен абонамент.
           </p>
-          <Link href={`${base(concept)}/uslugi`} className="text-link">
+          <Link href="/services" className="text-link">
             Как работи абонаментът <Arrow />
           </Link>
         </div>
@@ -394,57 +348,56 @@ export function Home({ concept }: { concept: Concept }) {
         <div className="wrap">
           <SectionHeading
             eyebrow="ИДЕИ СЪС СОБСТВЕН ХАРАКТЕР"
-            title={
-              concept === "pulse"
-                ? "РАЗЛИЧЕН БИЗНЕС. РАЗЛИЧЕН САЙТ."
-                : "Вашият бизнес заслужава свой облик."
-            }
+            title="Вашият бизнес заслужава свой облик."
           >
-            <Link className="text-link" href={`${base(concept)}/portfolio`}>
-              Всички концепции <Arrow />
+            <Link href="/portfolio" className="text-link">
+              Всички примерни проекти <Arrow />
             </Link>
           </SectionHeading>
-          <PortfolioGallery
-            concept={concept}
-            limit={concept === "atelier" ? 3 : 2}
-          />
+          <PortfolioGallery limit={2} />
         </div>
       </section>
-      <Process concept={concept} />
+      <Process />
       <section className="pricing-section section">
         <div className="wrap">
           <SectionHeading
             eyebrow="ПЛАН ЗА ВАШЕТО ПРИСЪСТВИЕ"
-            title={
-              concept === "pulse"
-                ? "ЯСЕН СТАРТ. МЯСТО ЗА РАСТЕЖ."
-                : "Малка месечна стъпка. Голямо начало."
-            }
+            title="Малка месечна стъпка. Голямо начало."
           >
-            <p>
-              Започнете със START.
-              <br />
-              Обсъдете следващите възможности.
-            </p>
+            <p>Започнете със START. Обсъдете следващите възможности.</p>
           </SectionHeading>
-          <PlanCards concept={concept} />
+          <PlanCards />
         </div>
       </section>
+      <div className="faq-backdrop">
       <section className="faq-section wrap section">
+        <svg className="faq-art" viewBox="0 0 1280 1000" preserveAspectRatio="none" fill="none" aria-hidden="true" focusable="false">
+          <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M32 210C150 120 40 400 145 480S30 760 165 870M1240 100C1100 240 1270 350 1150 500S1280 730 1130 920" strokeDasharray="7 14" />
+            <path d="M38 60h105a20 20 0 0 1 20 20v75a20 20 0 0 1-20 20H85l-30 25v-25H38a20 20 0 0 1-20-20V80a20 20 0 0 1 20-20Z" />
+            <path d="M1100 730h130v95h-35l-25 23v-23h-70Z M1120 752h85m-85 20h60" />
+            <circle cx="98" cy="620" r="47" /><circle cx="1180" cy="300" r="55" />
+            <path d="m50 945 18-18-18-18m40 36-18-18 18-18m1080-420 20 20 35-45" />
+          </g>
+          <g fill="currentColor" fontFamily="sans-serif" fontSize="72" textAnchor="middle">
+            <text x="90" y="143" transform="rotate(-10 90 143)">?</text>
+            <text x="1180" y="325" transform="rotate(12 1180 325)">?</text>
+            <text x="98" y="645">?</text>
+          </g>
+        </svg>
         <div>
-          <span className="eyebrow">ДОБРЕ Е ДА ЗНАЕТЕ</span>
-          <h2>
-            Имате въпроси?
-            <br />
-            Нека ги изясним.
-          </h2>
-          <Link className="text-link" href={`${base(concept)}/vuprosi`}>
-            Всички отговори <Arrow />
-          </Link>
+          <h2>Всичко важно, преди да започнем.</h2>
+          <p>Колко струва сайтът? Какво включва абонаментът? Какво се случва, ако решите да прекратите услугата? Отговаряме ясно на най-важните въпроси, за да направите информиран избор.</p>
         </div>
-        <FAQ limit={4} />
+        <FAQ items={faq.filter((item) => ["subscription", "pricing", "timeline", "monthly-changes", "ownership", "contract"].includes(item.id))} label="Въпроси за добър старт" className="faq-cards" />
+        <span className="eyebrow faq-afterword">ДОБРЕ Е ДА ЗНАЕТЕ</span>
+        <Link href="/faq" className="button">
+          Всички въпроси и отговори <Arrow />
+        </Link>
       </section>
-      <CTA concept={concept} />
+      </div>
+      <CTA forFAQ />
     </>
   );
 }
+

@@ -5,10 +5,11 @@ export const locales = ["bg", "en"] as const;
 export type Locale = (typeof locales)[number];
 export const localePrefixes: Record<Locale, string> = { bg: "", en: "/en" };
 export const translatedRoutes = {
-  services: { bg: "/uslugi", en: "/en/services" },
-  plans: { bg: "/planove", en: "/en/plans" },
+  services: { bg: "/services", en: "/en/services" },
+  plans: { bg: "/plans", en: "/en/plans" },
   portfolio: { bg: "/portfolio", en: "/en/portfolio" },
-  about: { bg: "/za-nas", en: "/en/about" },
-  contact: { bg: "/kontakti", en: "/en/contact" },
-  inquiry: { bg: "/zapitvane", en: "/en/inquiry" },
+  about: { bg: "/about", en: "/en/about" },
+  contact: { bg: "/contact", en: "/en/contact" },
+  inquiry: { bg: "/inquiry", en: "/en/inquiry" },
 } as const;
+

@@ -1,36 +1,26 @@
 import Link from "next/link";
 import {
   articles,
-  base,
   projects,
   routeTitles,
   startFeatures,
-  type Concept,
+  faq,
 } from "@/lib/content";
 import { WebsiteArtwork } from "./artwork";
 import { InquiryForm, PortfolioGallery } from "./interactive";
-import { Arrow, Check } from "./icons";
+import { Arrow, Check, Icon } from "./icons";
 import {
   ButtonLink,
   CTA,
-  FAQ,
   PageIntro,
   PlanCards,
   Process,
   SectionHeading,
 } from "./site";
+import { FAQ } from "./faq";
 
-export function ContentPage({
-  concept,
-  path,
-  plan,
-}: {
-  concept: Concept;
-  path: string;
-  plan?: string;
-}) {
-  const root = base(concept);
-  if (path === "uslugi")
+export function ContentPage({ path, plan }: { path: string; plan?: string }) {
+  if (path === "services")
     return (
       <>
         <PageIntro
@@ -42,9 +32,7 @@ export function ContentPage({
             България. Събираме изработката и текущата техническа поддръжка в
             една услуга.
           </p>
-          <ButtonLink concept={concept} to="planove">
-            Разгледайте плановете
-          </ButtonLink>
+          <ButtonLink to="plans">Разгледайте плановете</ButtonLink>
         </PageIntro>
         <section className="wrap service-overview">
           <div className="service-art">
@@ -73,7 +61,7 @@ export function ContentPage({
             </ul>
           </div>
         </section>
-        <Process concept={concept} />
+        <Process />
         <section className="wrap section">
           <SectionHeading
             eyebrow="ПОТВЪРДЕНИЯТ ОБХВАТ"
@@ -92,10 +80,10 @@ export function ContentPage({
             останалите договорни условия предстои да се уточнят.
           </p>
         </section>
-        <CTA concept={concept} />
+        <CTA />
       </>
     );
-  if (path === "planove")
+  if (path === "plans")
     return (
       <>
         <PageIntro
@@ -108,7 +96,7 @@ export function ContentPage({
           </p>
         </PageIntro>
         <section className="wrap plans-page">
-          <PlanCards concept={concept} full />
+          <PlanCards full />
         </section>
         <section className="wrap section">
           <SectionHeading
@@ -174,9 +162,12 @@ export function ContentPage({
             eyebrow="ПРЕДИ ДА ЗАПОЧНЕМ"
             title="Условията трябва да са ясни."
           />
-          <FAQ limit={5} />
+          <FAQ
+            items={faq.slice(0, 5)}
+            label="Въпроси за абонаментните планове"
+          />
         </section>
-        <CTA concept={concept} />
+        <CTA />
       </>
     );
   if (path === "portfolio")
@@ -193,9 +184,9 @@ export function ContentPage({
           </p>
         </PageIntro>
         <section className="wrap portfolio-page">
-          <PortfolioGallery concept={concept} />
+          <PortfolioGallery />
         </section>
-        <CTA concept={concept} />
+        <CTA />
       </>
     );
   if (path.startsWith("portfolio/")) {
@@ -203,7 +194,7 @@ export function ContentPage({
     return (
       <>
         <div className="wrap breadcrumb">
-          <Link href={`${root}/portfolio`}>Портфолио</Link>
+          <Link href="/portfolio">Портфолио</Link>
           <span>/</span>
           {project.name}
         </div>
@@ -261,11 +252,11 @@ export function ContentPage({
             </div>
           </div>
         </section>
-        <CTA concept={concept} />
+        <CTA />
       </>
     );
   }
-  if (path === "za-nas")
+  if (path === "about")
     return (
       <>
         <PageIntro
@@ -280,7 +271,7 @@ export function ContentPage({
         </PageIntro>
         <section className="wrap about-statement">
           <span className="statement-symbol" aria-hidden="true">
-            ✳
+            <Icon name="sparkles" />
           </span>
           <h2>Технологиите работят най-добре, когато са разбираеми.</h2>
           <p>
@@ -321,11 +312,11 @@ export function ContentPage({
             статистики.
           </p>
         </section>
-        <CTA concept={concept} />
+        <CTA />
       </>
     );
-  if (path === "kontakti" || path === "zapitvane") {
-    const website = path === "zapitvane";
+  if (path === "contact" || path === "inquiry") {
+    const website = path === "inquiry";
     return (
       <>
         <PageIntro
@@ -363,14 +354,16 @@ export function ContentPage({
               </span>
               <Link
                 className="text-link"
-                href={`${root}/${website ? "kontakti" : "zapitvane"}`}
+                href={`/${website ? "contact" : "inquiry"}`}
               >
                 {website ? "Обща контактна форма" : "Запитване за изработка"}
                 <Arrow />
               </Link>
             </div>
             <div className="map-placeholder">
-              <span aria-hidden="true">⌖</span>
+              <span aria-hidden="true">
+                <Icon name="location" />
+              </span>
               <b>Място за Google Maps</b>
               <p>
                 Само след потвърждение на публичен адрес и настройките за
@@ -379,7 +372,6 @@ export function ContentPage({
             </div>
           </aside>
           <InquiryForm
-            concept={concept}
             kind={website ? "website" : "contact"}
             initialPlan={plan}
           />
@@ -387,22 +379,26 @@ export function ContentPage({
       </>
     );
   }
-  if (path === "vuprosi")
+  if (path === "faq")
     return (
       <>
-        <PageIntro
-          eyebrow="ЧЕСТО ЗАДАВАНИ ВЪПРОСИ"
-          title="Ясни отговори за добър старт."
-        >
-          <p>
-            Най-важното за абонамента, включената грижа и условията, които
-            предстои да потвърдим.
-          </p>
-        </PageIntro>
-        <section className="wrap faq-page">
-          <FAQ />
+        <section className="faq-hero">
+          <div className="wrap faq-hero-inner">
+            <div>
+              <span className="eyebrow">ЧЕСТО ЗАДАВАНИ ВЪПРОСИ</span>
+              <h1>Ясни отговори.<br />Уверена първа стъпка.</h1>
+              <p>От цената и изработката до поддръжката и условията на абонамента — всичко важно, преди да създадем вашия сайт.</p>
+              <div className="faq-hero-actions">
+                <Link className="button" href="#answers">Разгледайте отговорите <Arrow /></Link>
+                <Link className="text-link" href="/inquiry">Задайте ни въпрос <Arrow /></Link>
+              </div>
+            </div>
+          </div>
         </section>
-        <CTA concept={concept} />
+        <section className="wrap faq-page" id="answers">
+          <FAQ items={faq} className="faq-cards" />
+        </section>
+        <CTA />
       </>
     );
   if (path === "blog")
@@ -420,7 +416,7 @@ export function ContentPage({
         <section className="wrap article-grid">
           {articles.map((article, i) => (
             <Link
-              href={`${root}/blog/${article.slug}`}
+              href={`/blog/${article.slug}`}
               className="article-card"
               key={article.slug}
             >
@@ -442,7 +438,7 @@ export function ContentPage({
             </Link>
           ))}
         </section>
-        <CTA concept={concept} />
+        <CTA />
       </>
     );
   if (path.startsWith("blog/")) {
@@ -450,7 +446,7 @@ export function ContentPage({
     return (
       <>
         <div className="wrap breadcrumb">
-          <Link href={`${root}/blog`}>Блог</Link>
+          <Link href="/blog">Блог</Link>
           <span>/</span>
           {article.category}
         </div>
@@ -469,9 +465,7 @@ export function ContentPage({
           ))}
           <div className="article-related">
             <h2>Продължете с конкретния обхват.</h2>
-            <ButtonLink concept={concept} to="planove">
-              Вижте абонаментните планове
-            </ButtonLink>
+            <ButtonLink to="plans">Вижте абонаментните планове</ButtonLink>
           </div>
           <p className="editor-note">
             Преди реално публикуване: редакционен преглед, потвърден автор, дата
@@ -481,21 +475,21 @@ export function ContentPage({
       </>
     );
   }
-  if (path === "karta-na-saita")
+  if (path === "sitemap")
     return (
       <>
         <PageIntro eyebrow="HTML SITEMAP" title="Всичко на едно място." />
         <section className="wrap sitemap-grid">
           <div>
             <h2>Основни страници</h2>
-            <Link href={root}>Начална</Link>
+            <Link href="/">Начална</Link>
             {Object.entries(routeTitles)
               .filter(
                 ([key]) =>
-                  key && !key.startsWith("pravni/") && key !== "karta-na-saita",
+                  key && !key.startsWith("legal/") && key !== "sitemap",
               )
               .map(([key, title]) => (
-                <Link href={`${root}/${key}`} key={key}>
+                <Link href={`/${key}`} key={key}>
                   {title}
                 </Link>
               ))}
@@ -503,12 +497,12 @@ export function ContentPage({
           <div>
             <h2>Примерни проекти и статии</h2>
             {projects.map((p) => (
-              <Link href={`${root}/portfolio/${p.slug}`} key={p.slug}>
+              <Link href={`/portfolio/${p.slug}`} key={p.slug}>
                 {p.name}
               </Link>
             ))}
             {articles.map((a) => (
-              <Link href={`${root}/blog/${a.slug}`} key={a.slug}>
+              <Link href={`/blog/${a.slug}`} key={a.slug}>
                 {a.title}
               </Link>
             ))}
@@ -516,9 +510,9 @@ export function ContentPage({
           <div>
             <h2>Правна информация</h2>
             {Object.entries(routeTitles)
-              .filter(([key]) => key.startsWith("pravni/"))
+              .filter(([key]) => key.startsWith("legal/"))
               .map(([key, title]) => (
-                <Link href={`${root}/${key}`} key={key}>
+                <Link href={`/${key}`} key={key}>
                   {title}
                 </Link>
               ))}
@@ -527,7 +521,7 @@ export function ContentPage({
       </>
     );
   const legalContent: Record<string, [string, string][]> = {
-    "pravni/poveritelnost": [
+    "legal/privacy": [
       [
         "Администратор и контакти",
         "Юридическо лице, ЕИК, адрес и контакт за защита на данните — предстои потвърждение.",
@@ -545,7 +539,7 @@ export function ContentPage({
         "Описват се реално използваните доставчици за форми, имейл, хостинг, аналитика и карти. В този прототип няма такива интеграции.",
       ],
     ],
-    "pravni/biskvitki": [
+    "legal/cookies": [
       [
         "Опис на използваните технологии",
         "Преди стартиране се прави реален опис на бисквитките, целите, доставчиците и сроковете им. В този прототип няма аналитика и тракери.",
@@ -559,7 +553,7 @@ export function ContentPage({
         "Google Maps е само визуално място в дизайна. Реалното зареждане и обработване на данни се решават след преглед.",
       ],
     ],
-    "pravni/uslovia": [
+    "legal/terms": [
       [
         "Доставчик и предназначение",
         "Потвърдени фирмени данни, контакт и предназначение на информационния сайт.",
@@ -573,7 +567,7 @@ export function ContentPage({
         "Изпращането на запитване в бъдещия сайт не представлява автоматично сключване на договор. Конкретните условия се уговарят отделно.",
       ],
     ],
-    "pravni/abonamentni-uslovia": [
+    "legal/subscription-terms": [
       [
         "Потвърдено за START",
         "50 €/месец без първоначална такса; до 6 основни страници. Подробният потвърден обхват е представен в страницата „Планове“.",
@@ -619,3 +613,4 @@ export function ContentPage({
     </>
   );
 }
+

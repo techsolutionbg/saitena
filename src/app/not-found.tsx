@@ -1,13 +1,13 @@
 import Link from "next/link";
 export default function NotFound() {
   return (
-    <main id="main" className="not-found">
+    <section className="not-found wrap">
       <span>404 / SAITENA</span>
-      <h1>Тази страница не е част от прегледа.</h1>
-      <p>Изберете една от трите дизайн концепции.</p>
+      <h1>Тази страница не е намерена.</h1>
+      <p>Продължете към началната страница на Saitena.</p>
       <Link className="button" href="/">
-        Към концепциите →
+        Към началната →
       </Link>
-    </main>
+    </section>
   );
 }

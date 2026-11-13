@@ -1,3 +1,5 @@
+import { Icon } from "./icons";
+
 export function WebsiteArtwork({
   kind = "architecture",
   compact = false,
@@ -105,26 +107,10 @@ export function WebsiteArtwork({
   );
 }
 
-export function HeroArtwork({
-  variant,
-}: {
-  variant: "clarity" | "atelier" | "pulse";
-}) {
+export function HeroArtwork() {
   return (
-    <div className={`hero-art hero-art-${variant}`}>
+    <div className="hero-art">
       <div className="art-grid" aria-hidden="true" />
-      {variant === "atelier" && (
-        <div className="atelier-stamp" aria-hidden="true">
-          ИДЕЯ
-          <br />
-          <span>+ грижа</span>
-        </div>
-      )}
-      {variant === "pulse" && (
-        <div className="orbit" aria-hidden="true">
-          <span>BUILD. CARE. GROW.</span>
-        </div>
-      )}
       <div className="browser-window">
         <div className="browser-toolbar">
           <span>
@@ -133,27 +119,21 @@ export function HeroArtwork({
             <i />
           </span>
           <span>вашият-бизнес.bg</span>
-          <span>↗</span>
+          <Icon name="external" />
         </div>
-        <WebsiteArtwork
-          kind={
-            variant === "atelier"
-              ? "botanical"
-              : variant === "pulse"
-                ? "consulting"
-                : "architecture"
-          }
-        />
+        <WebsiteArtwork kind="architecture" />
       </div>
       <div className="floating-care">
-        <span className="care-icon">✳</span>
+        <span className="care-icon">
+          <Icon name="sparkles" />
+        </span>
         <div>
-          <b>Добри ръце. Всеки месец.</b>
+          <strong>Добри ръце. Всеки месец.</strong>
           <span>Дизайн · Поддръжка · Развитие</span>
         </div>
       </div>
       <div className="floating-price">
-        <small>START</small>
+        <span>START</span>
         <div>
           50 €<span>/месец</span>
         </div>
