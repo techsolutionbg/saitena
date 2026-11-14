@@ -7,13 +7,14 @@ import {
   ButtonLink,
   CTA,
   PageIntro,
-  PlanCards,
   Process,
   SectionHeading,
 } from "./site";
 import { FAQ } from "./faq";
 import { faq, faqCategories } from "@/lib/faq-content";
 import { FAQDirectory } from "./faq-directory";
+import { PlansPage } from "./plans-page";
+import { startPlan } from "@/lib/plans";
 
 export function ContentPage({ path, plan }: { path: string; plan?: string }) {
   if (path === "services")
@@ -61,7 +62,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
         <section className="wrap section">
           <SectionHeading
             eyebrow="ПОТВЪРДЕНИЯТ ОБХВАТ"
-            title="START: какво включва 50 €/месец."
+            title={`START: какво включва ${startPlan.price} €/месец.`}
           />
           <div className="feature-panel">
             {startFeatures.map((feature, i) => (
@@ -79,93 +80,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
         <CTA />
       </>
     );
-  if (path === "plans")
-    return (
-      <>
-        <PageIntro
-          eyebrow="АБОНАМЕНТНИ ПЛАНОВЕ"
-          title="Изберете добро начало. Оставете място за растеж."
-        >
-          <p>
-            START има потвърдени цена и обхват. MEDIUM и PREMIUM показват
-            възможни посоки за надграждане, които ще уточним заедно.
-          </p>
-        </PageIntro>
-        <section className="wrap plans-page">
-          <PlanCards full />
-        </section>
-        <section className="wrap section">
-          <SectionHeading
-            eyebrow="ЯСНО СРАВНЕНИЕ"
-            title="Как могат да се надграждат плановете."
-          />
-          <div className="table-scroll">
-            <table className="comparison">
-              <caption>
-                Концептуално сравнение — количествените лимити за MEDIUM и
-                PREMIUM не са определени.
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Обхват</th>
-                  <th scope="col">START</th>
-                  <th scope="col">MEDIUM · концепция</th>
-                  <th scope="col">PREMIUM · концепция</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ["Месечна цена", "50 €", "Предстои", "Предстои"],
-                  [
-                    "Основни страници",
-                    "До 6",
-                    "Разширен обхват",
-                    "По-мащабна структура",
-                  ],
-                  ["Промени месечно", "1 час", "Повече време", "Според целите"],
-                  [
-                    "Езици",
-                    "Български",
-                    "За обсъждане",
-                    "Втора езикова версия",
-                  ],
-                  [
-                    "Съдържание",
-                    "Основни страници",
-                    "Блог / каталог",
-                    "План за съдържание",
-                  ],
-                  [
-                    "Поддръжка",
-                    "Архиви и мониторинг",
-                    "START като основа",
-                    "MEDIUM като основа",
-                  ],
-                ].map(([label, ...cells]) => (
-                  <tr key={label}>
-                    <th scope="row">{label}</th>
-                    {cells.map((cell, i) => (
-                      <td key={i}>{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-        <section className="wrap section">
-          <SectionHeading
-            eyebrow="ПРЕДИ ДА ЗАПОЧНЕМ"
-            title="Условията трябва да са ясни."
-          />
-          <FAQ
-            items={faq.slice(0, 5)}
-            label="Въпроси за абонаментните планове"
-          />
-        </section>
-        <CTA />
-      </>
-    );
+  if (path === "plans") return <PlansPage />;
   if (path === "portfolio")
     return (
       <>
@@ -573,7 +488,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
     "legal/subscription-terms": [
       [
         "Потвърдено за START",
-        "50 €/месец без първоначална такса; до 6 основни страници. Подробният потвърден обхват е представен в страницата „Планове“.",
+        `${startPlan.price} €/месец без първоначална такса; до ${startPlan.pages} основни страници. Подробният потвърден обхват е представен в страницата „Планове“.`,
       ],
       [
         "За търговско одобрение",

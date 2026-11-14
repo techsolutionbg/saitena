@@ -4,6 +4,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./theme-toggle";
 import { Icon } from "./icons";
+import { textSizeSettings } from "@/lib/text-size";
+import { setTextSize, useTextSize } from "@/lib/text-size-store";
 import {
   toggleWavesPaused,
   useReducedMotion,
@@ -17,6 +19,7 @@ export function AppearanceControls({ sidebar = false }: { sidebar?: boolean }) {
   const paused = useWavesPaused();
   const reduced = useReducedMotion();
   const pathname = usePathname();
+  const textSize = useTextSize();
   useEffect(() => {
     const close = () => {
       const panel = panelRef.current;
@@ -73,6 +76,54 @@ export function AppearanceControls({ sidebar = false }: { sidebar?: boolean }) {
         </div>
         <div className="appearance-row">
           <ThemeToggle />
+        </div>
+        <div className="appearance-row appearance-text-size">
+          <div className="appearance-size-heading">
+            <label htmlFor={`${id}-text-size`}>Размер на текста</label>
+            <output htmlFor={`${id}-text-size`} aria-live="polite">
+              {textSize}%
+            </output>
+          </div>
+          <div className="appearance-size-controls">
+            <button
+              type="button"
+              className="appearance-size-button"
+              aria-label="Намали размера на текста"
+              disabled={textSize === textSizeSettings.min}
+              onClick={() => setTextSize(textSize - textSizeSettings.step)}
+            >
+              A−
+            </button>
+            <input
+              id={`${id}-text-size`}
+              type="range"
+              min={textSizeSettings.min}
+              max={textSizeSettings.max}
+              step={textSizeSettings.step}
+              value={textSize}
+              aria-valuetext={`${textSize}%`}
+              onChange={(event) =>
+                setTextSize(Number(event.currentTarget.value))
+              }
+            />
+            <button
+              type="button"
+              className="appearance-size-button"
+              aria-label="Увеличи размера на текста"
+              disabled={textSize === textSizeSettings.max}
+              onClick={() => setTextSize(textSize + textSizeSettings.step)}
+            >
+              A+
+            </button>
+          </div>
+          <button
+            type="button"
+            className="appearance-size-reset"
+            disabled={textSize === textSizeSettings.default}
+            onClick={() => setTextSize(textSizeSettings.default)}
+          >
+            Върни на 100%
+          </button>
         </div>
         {pathname === "/" && (
           <div className="appearance-row">

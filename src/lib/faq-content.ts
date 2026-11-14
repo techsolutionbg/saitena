@@ -1,6 +1,7 @@
 import "server-only";
 import editorial from "@/content/faq-editorial.json";
 import type { FAQCategory, FAQItem } from "./faq";
+import { startPlan, monthlyTimeLabel } from "./plans";
 
 export const faqCategories: readonly FAQCategory[] = [
   { id: "general", label: "Общи въпроси", title: "Общи въпроси" },
@@ -32,6 +33,7 @@ export const faqCategories: readonly FAQCategory[] = [
 const contextualLinks: Record<number, NonNullable<FAQItem["relatedLink"]>> = {
   4: { href: "/services", label: "Какво включва услугата" },
   8: { href: "/plans", label: "Разгледайте абонаментните планове" },
+  15: { href: "/plans", label: "Вижте предложените планове" },
   16: { href: "/inquiry", label: "Опишете вашия проект" },
   25: { href: "/portfolio", label: "Разгледайте примерни проекти" },
 };
@@ -42,7 +44,11 @@ export const faq: readonly FAQItem[] = editorial
   .map((item) => ({
     id: item.id,
     question: item.question,
-    answer: item.answer,
+    answer: item.answer
+      .replaceAll("{{start.price}}", String(startPlan.price))
+      .replaceAll("{{start.pages}}", String(startPlan.pages))
+      .replaceAll("{{start.emailGb}}", String(startPlan.emailGb))
+      .replaceAll("{{start.monthlyTime}}", monthlyTimeLabel(startPlan)),
     categoryId: item.categoryId,
     relatedLink: contextualLinks[item.number],
   }));

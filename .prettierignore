@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.git/
+.agents/
+out/
+coverage/
+qa-output/
+docs/screenshots/
+public/
+package-lock.json
+next-env.d.ts
+*.tsbuildinfo
+.env*

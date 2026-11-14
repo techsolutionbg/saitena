@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { homeStorySections, type StoryVisual } from "@/lib/home-story";
 import { Arrow, Icon } from "./icons";
-import { HomeStoryMotion } from "./home-story-motion";
+import { ScrollReveal } from "./scroll-reveal";
 import styles from "./home-story.module.css";
 
 function StoryIllustration({ kind, labels }: { kind: StoryVisual; labels: readonly string[] }) {
@@ -57,18 +57,18 @@ function StoryIllustration({ kind, labels }: { kind: StoryVisual; labels: readon
 
 export function HomeStory() {
   return (
-    <HomeStoryMotion className={styles.story}>
+    <ScrollReveal className={styles.story}>
       {homeStorySections.map((section, index) => (
         <section className={styles.section} key={section.id} aria-labelledby={`${section.id}-title`}>
           <div className={`wrap ${styles.row}`}>
-            <div className={styles.copy} data-story-reveal="copy">
+            <div className={styles.copy} data-scroll-reveal="copy">
               <div className={styles.kicker}><span className={styles.number}>0{index + 1}</span><span>{section.eyebrow}</span></div>
               <h2 id={`${section.id}-title`}>{section.title}</h2>
               <p className={styles.introduction}>{section.introduction}</p>
               {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
               <Link href={section.link.href} className={styles.link}>{section.link.label}<Arrow /></Link>
             </div>
-            <div className={styles.visual} aria-hidden="true" data-story-reveal="visual">
+            <div className={styles.visual} aria-hidden="true" data-scroll-reveal="visual">
               <span className={styles.visualNumber}>0{index + 1}</span>
               <StoryIllustration kind={section.visual.kind} labels={section.visual.labels} />
               <span className={styles.caption}>{section.visual.caption}</span>
@@ -76,6 +76,6 @@ export function HomeStory() {
           </div>
         </section>
       ))}
-    </HomeStoryMotion>
+    </ScrollReveal>
   );
 }

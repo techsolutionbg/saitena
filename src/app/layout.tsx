@@ -9,7 +9,9 @@ import "@fontsource/lora/400-italic.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/site";
 import { themeBootstrap } from "@/lib/theme";
+import { textSizeBootstrap } from "@/lib/text-size";
 import { AppearanceControls } from "@/components/appearance-controls";
+import { startPlan } from "@/lib/plans";
 import "./globals.css";
 import "./artwork.css";
 
@@ -18,8 +20,7 @@ export const metadata: Metadata = {
     default: "Сайтове на абонамент с изработка и поддръжка | Saitena",
     template: "%s | Saitena",
   },
-  description:
-    "Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за 50 €/месец без първоначална такса.",
+  description: `Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за ${startPlan.price} €/месец без първоначална такса.`,
   robots: { index: true, follow: true },
   icons: { icon: [{ url: "/brand/saitena-mark.svg", type: "image/svg+xml" }] },
 };
@@ -35,6 +36,7 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
+        <script dangerouslySetInnerHTML={{ __html: textSizeBootstrap }} />
       </head>
       {/* Browser tools inject body attributes (e.g. cz-shortcut-listen) before hydration.
           Tolerate those only in development; descendants remain checked. */}

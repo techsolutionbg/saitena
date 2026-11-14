@@ -1,18 +1,18 @@
 import Link from "next/link";
-import { plans, startFeatures } from "@/lib/content";
-import { faq } from "@/lib/faq-content";
+import { buildContactLinks } from "@/lib/contact-links";
 import {
   mainNavigation,
   legalNavigation,
   type NavigationItem,
 } from "@/lib/navigation";
-import { Arrow, Check, Icon, type IconName } from "./icons";
+import { Arrow, Icon, type IconName } from "./icons";
+import { PlanCards, CustomPlanOffer } from "./plan-cards";
 import { Brand } from "./brand";
 import { HomeHero } from "./home-hero";
 import { BenefitsMarquee } from "./benefits-marquee";
 import { HomeStory } from "./home-story";
 import { PortfolioGallery } from "./interactive";
-import { FAQ } from "./faq";
+import { FAQPreview } from "./faq-preview";
 
 export function ButtonLink({
   to = "inquiry",
@@ -67,85 +67,6 @@ export function PageIntro({
       <h1>{title}</h1>
       {children && <div className="page-intro-copy">{children}</div>}
     </div>
-  );
-}
-export function PlanCards({ full = false }: { full?: boolean }) {
-  return (
-    <>
-      <div className="plans-grid">
-        {plans.map((plan, index) => (
-          <article
-            className={`plan-card ${index === 0 ? "plan-featured" : ""}`}
-            key={plan.name}
-          >
-            <div className="plan-topline">
-              <span className="plan-icon">
-                <Icon
-                  name={
-                    index === 0 ? "monitor" : index === 1 ? "layers" : "growth"
-                  }
-                />
-              </span>
-              <span>{plan.eyebrow}</span>
-            </div>
-            <h3>{plan.name}</h3>
-            <div className="plan-price">
-              {plan.price ? (
-                <>
-                  <strong>{plan.price}</strong>
-                  <span>/месец</span>
-                </>
-              ) : (
-                <span>Обхват в развитие</span>
-              )}
-            </div>
-            <span className="plan-status">
-              {plan.price
-                ? "Без първоначална такса"
-                : "Цената предстои да се уточни"}
-            </span>
-            <p>{plan.description}</p>
-            <ul>
-              {(full && index === 0 ? startFeatures : plan.features).map(
-                (item) => (
-                  <li key={item}>
-                    <Check />
-                    <span>{item}</span>
-                  </li>
-                ),
-              )}
-            </ul>
-            <Link
-              href={`/inquiry?plan=${encodeURIComponent(index === 0 ? "START" : `${plan.name} (концепция)`)}`}
-              className={`button ${index === 0 ? "" : "button-secondary"}`}
-            >
-              {index === 0 ? "Запитване за START" : "Обсъдете възможностите"}
-              <Arrow />
-            </Link>
-            <span className="plan-confirmation">{plan.status}</span>
-          </article>
-        ))}
-      </div>
-      <p className="plans-footnote">
-        * Хостинг, SSL и домейн при договорени условия. MEDIUM и PREMIUM са
-        предложения за обсъждане — без потвърдени цени, количествени лимити или
-        договорни условия. Данъчният режим на цената на START предстои да бъде
-        уточнен.
-      </p>
-      <div className="custom-plan">
-        <span className="section-icon">
-          <Icon name="message" />
-        </span>
-        <div>
-          <span className="eyebrow">ИМАТЕ НЕЩО ДРУГО ПРЕДВИД?</span>
-          <h3>Вашата идея не се побира в план?</h3>
-          <p>Да обсъдим индивидуален обхват според целите ви.</p>
-        </div>
-        <ButtonLink to="inquiry?plan=Индивидуална%20оферта" secondary>
-          Индивидуална оферта
-        </ButtonLink>
-      </div>
-    </>
   );
 }
 const processItems: { title: string; copy: string; icon: IconName }[] = [
@@ -227,23 +148,25 @@ export function CTA({ forFAQ = false }: { forFAQ?: boolean }) {
   );
 }
 const usefulNavigation: NavigationItem[] = [
-  { href: "/faq", label: "Всички въпроси и отговори", icon: "help" },
+  { href: "/faq", label: "Често задавани въпроси", icon: "help" },
   { href: "/blog", label: "Блог", icon: "book" },
   { href: "/sitemap", label: "Карта на сайта", icon: "sitemap" },
-  { href: "/contact", label: "Контакти", icon: "mail" },
 ];
 export function Footer() {
+  const contacts = buildContactLinks({
+    email: process.env.SAITENA_CONTACT_EMAIL,
+    phone: process.env.SAITENA_CONTACT_PHONE,
+    viberUrl: process.env.SAITENA_VIBER_URL,
+  });
   return (
     <footer className="site-footer wrap">
       <div className="footer-grid">
         <div className="footer-brand">
           <Brand className="brand-footer" withTagline />
           <p>
-            Сайтът ви е в добри ръце.
-            <br />
-            Всеки месец.
+            Създаваме сайтове на абонамент с красив дизайн, хостинг и техническа
+            поддръжка за Вашия бизнес.
           </p>
-          <p>Създадено за бизнесите в България.</p>
         </div>
         <div>
           <h2>Разгледайте</h2>
@@ -267,17 +190,42 @@ export function Footer() {
             </Link>
           ))}
         </div>
-        <div className="footer-inquiry">
-          <h2>Имате идея?</h2>
-          <p>Нека ѝ дадем добра посока.</p>
-          <Link href="/inquiry" className="text-link">
-            Разкажете ни <Arrow />
+        <div className="footer-contacts">
+          <h2>Свържете се с нас</h2>
+          {contacts.map((contact) =>
+            contact.href ? (
+              <a
+                key={contact.id}
+                href={contact.href}
+                className="footer-contact-row"
+                aria-label={`${contact.label}: ${contact.value}`}
+              >
+                <Icon name={contact.icon} />
+                <span>
+                  <span className="footer-contact-label">{contact.label}</span>
+                  {contact.value}
+                </span>
+              </a>
+            ) : (
+              <div
+                key={contact.id}
+                className="footer-contact-row footer-contact-pending"
+              >
+                <Icon name={contact.icon} />
+                <span>
+                  {contact.label}
+                  <small>Очаква данни</small>
+                </span>
+              </div>
+            ),
+          )}
+          <Link href="/contact" className="footer-contact-row">
+            <Icon name="file" />
+            <span>Контактна страница</span>
           </Link>
-          <p>Контактни и фирмени данни: предстои потвърждение.</p>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} Saitena</p>
         <nav aria-label="Правни страници">
           {legalNavigation.map((item) => (
             <Link key={item.href} href={item.href}>
@@ -286,6 +234,7 @@ export function Footer() {
             </Link>
           ))}
         </nav>
+        <p className="footer-copyright">© {new Date().getFullYear()} Saitena</p>
       </div>
     </footer>
   );
@@ -320,77 +269,8 @@ export function Home() {
           <PlanCards />
         </div>
       </section>
-      <div className="faq-backdrop">
-        <section className="faq-section wrap section">
-          <svg
-            className="faq-art"
-            viewBox="0 0 1280 1000"
-            preserveAspectRatio="none"
-            fill="none"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <g
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path
-                d="M32 210C150 120 40 400 145 480S30 760 165 870M1240 100C1100 240 1270 350 1150 500S1280 730 1130 920"
-                strokeDasharray="7 14"
-              />
-              <path d="M38 60h105a20 20 0 0 1 20 20v75a20 20 0 0 1-20 20H85l-30 25v-25H38a20 20 0 0 1-20-20V80a20 20 0 0 1 20-20Z" />
-              <path d="M1100 730h130v95h-35l-25 23v-23h-70Z M1120 752h85m-85 20h60" />
-              <circle cx="98" cy="620" r="47" />
-              <circle cx="1180" cy="300" r="55" />
-              <path d="m50 945 18-18-18-18m40 36-18-18 18-18m1080-420 20 20 35-45" />
-            </g>
-            <g
-              fill="currentColor"
-              fontFamily="sans-serif"
-              fontSize="72"
-              textAnchor="middle"
-            >
-              <text x="90" y="143" transform="rotate(-10 90 143)">
-                ?
-              </text>
-              <text x="1180" y="325" transform="rotate(12 1180 325)">
-                ?
-              </text>
-              <text x="98" y="645">
-                ?
-              </text>
-            </g>
-          </svg>
-          <div>
-            <h2>Всичко важно, преди да започнем.</h2>
-            <p>
-              Колко струва сайтът? Какво включва абонаментът? Какво се случва,
-              ако решите да прекратите услугата? Отговаряме ясно на най-важните
-              въпроси, за да направите информиран избор.
-            </p>
-          </div>
-          <FAQ
-            items={faq.filter((item) =>
-              [
-                "subscription",
-                "pricing",
-                "timeline",
-                "monthly-changes",
-                "ownership",
-                "contract",
-              ].includes(item.id),
-            )}
-            label="Въпроси за добър старт"
-            className="faq-cards"
-          />
-          <span className="eyebrow faq-afterword">ДОБРЕ Е ДА ЗНАЕТЕ</span>
-          <Link href="/faq" className="button">
-            Всички въпроси и отговори <Arrow />
-          </Link>
-        </section>
-      </div>
+      <CustomPlanOffer />
+      <FAQPreview />
       <CTA forFAQ />
     </>
   );

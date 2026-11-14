@@ -6,7 +6,10 @@
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format:file": "prettier --write",
+    "format:check": "prettier --check",
+    "format:watch": "node scripts/format-watch.mjs"
   },
   "dependencies": {
     "@fontsource/lora": "5.3.0",
@@ -19,6 +22,7 @@
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "prettier": "3.10.1",
     "typescript": "7.0.2"
   }
 }

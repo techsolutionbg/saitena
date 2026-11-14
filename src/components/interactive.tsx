@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { projects } from "@/lib/content";
+import { inquiryPlanOptions, normalizeInquiryPlan, undecidedPlanValue } from "@/lib/plans";
 import { Arrow, Icon } from "./icons";
 import { WebsiteArtwork } from "./artwork";
 
@@ -68,21 +69,14 @@ export function PortfolioGallery({ limit }: { limit?: number }) {
 
 export function InquiryForm({
   kind,
-  initialPlan = "Не съм сигурен/а",
+  initialPlan = undecidedPlanValue,
 }: {
   kind: "contact" | "website";
   initialPlan?: string;
 }) {
   const [ready, setReady] = useState(false);
   const website = kind === "website";
-  const allowed = [
-    "Не съм сигурен/а",
-    "START",
-    "MEDIUM (концепция)",
-    "PREMIUM (концепция)",
-    "Индивидуална оферта",
-  ];
-  const plan = allowed.includes(initialPlan) ? initialPlan : "Не съм сигурен/а";
+  const plan = normalizeInquiryPlan(initialPlan);
   return (
     <form
       className="inquiry-form"
@@ -172,8 +166,8 @@ export function InquiryForm({
             <label>
               Интересувам се от
               <select key={plan} name="plan" defaultValue={plan}>
-                {allowed.map((p) => (
-                  <option key={p}>{p}</option>
+                {inquiryPlanOptions.map((option) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
               </select>
             </label>

@@ -3,7 +3,15 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 /** Enhances server-rendered children; content stays visible if JavaScript is unavailable. */
-export function HomeStoryMotion({ children, className }: { children: ReactNode; className: string }) {
+export function ScrollReveal({
+  children,
+  className,
+  animateOnLoad = false,
+}: {
+  children: ReactNode;
+  className: string;
+  animateOnLoad?: boolean;
+}) {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -11,7 +19,7 @@ export function HomeStoryMotion({ children, className }: { children: ReactNode; 
     if (!host || !("IntersectionObserver" in window)) return;
 
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const targets = host.querySelectorAll<HTMLElement>("[data-story-reveal]");
+    const targets = host.querySelectorAll<HTMLElement>("[data-scroll-reveal]");
     let observer: IntersectionObserver | undefined;
 
     function updateVisibility() {
@@ -27,8 +35,9 @@ export function HomeStoryMotion({ children, className }: { children: ReactNode; 
       }
 
       targets.forEach((target) => {
-        // Never hide content already reached on load, browser back, or an anchor jump.
-        if (target.getBoundingClientRect().top < window.innerHeight) {
+        // Keep passed content visible; optionally reveal items already in the initial viewport.
+        const bounds = target.getBoundingClientRect();
+        if (bounds.bottom <= 0 || (!animateOnLoad && bounds.top < window.innerHeight)) {
           target.dataset.revealed = "true";
         }
       });
@@ -60,7 +69,7 @@ export function HomeStoryMotion({ children, className }: { children: ReactNode; 
         delete target.dataset.revealed;
       });
     };
-  }, []);
+  }, [animateOnLoad]);
 
   return <div ref={hostRef} className={className}>{children}</div>;
 }
