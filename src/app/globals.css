@@ -48,6 +48,14 @@
   --modal-scrim: #0b1220;
   --cta-bg: #294feb;
   --cta-ink: #ffffff;
+  /* Atmospheric services hero: intentionally dark in both site themes. */
+  --services-hero-bg: #081a2f;
+  --services-hero-ink: #f5f8ff;
+  --services-hero-muted: #d9e5f4;
+  --services-accent-design: #45c3ff;
+  --services-accent-hosting: #b496ff;
+  --services-accent-security: #38e0bd;
+  --services-accent-growth: #ffc16b;
   color-scheme: light;
 }
 /* Phone defaults stay proportional to the visitor's text-size preference. */

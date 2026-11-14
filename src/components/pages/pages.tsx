@@ -18,24 +18,20 @@ import { ContactQuickLinks } from "@/components/contact/contact-quick-links";
 import { ContactLocation } from "@/components/contact/contact-location";
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero";
 import { PortfolioCTA } from "@/components/portfolio/portfolio-cta";
+import { ServicesHero } from "@/components/services/services-hero";
+import { ServicesCatalog } from "@/components/services/services-catalog";
 import contactStyles from "@/components/contact/contact-page.module.css";
 
 export function ContentPage({ path, plan }: { path: string; plan?: string }) {
   if (path === "services")
     return (
       <>
-        <PageIntro
-          eyebrow="САЙТОВЕ НА АБОНАМЕНТ"
-          title="Професионален сайт. Постоянна грижа."
+        <ServicesHero />
+        <ServicesCatalog />
+        <section
+          id="website-services-details"
+          className="wrap service-overview"
         >
-          <p>
-            За частни лица, самостоятелни специалисти и малки и средни фирми в
-            България. Събираме изработката и текущата техническа поддръжка в
-            една услуга.
-          </p>
-          <ButtonLink to="prices">Разгледайте плановете</ButtonLink>
-        </PageIntro>
-        <section className="wrap service-overview">
           <div className="service-art">
             <WebsiteArtwork />
           </div>
