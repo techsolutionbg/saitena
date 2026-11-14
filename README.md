@@ -16,8 +16,8 @@ npm run dev
 ## Форматиране на файл
 
 ```powershell
-npm run format:file -- "src/components/plan-cards.tsx"
-npm run format:check -- "src/components/plan-cards.tsx"
+npm run format:file -- "src/components/pricing/plan-cards.tsx"
+npm run format:check -- "src/components/pricing/plan-cards.tsx"
 ```
 
 Командите използват локалния Prettier и `.prettierrc.json`. Подайте конкретен път; не се преформатира целият проект. Генерираните файлове и активите са изключени чрез `.prettierignore`.
@@ -25,7 +25,7 @@ npm run format:check -- "src/components/plan-cards.tsx"
 За автоматично форматиране на избран файл при запис от всеки редактор оставете тази команда да работи в отделен терминал:
 
 ```powershell
-npm run format:watch -- "src/components/plan-cards.tsx"
+npm run format:watch -- "src/components/pricing/plan-cards.tsx"
 ```
 
 Следи само посочения файл, включително при запис чрез временен файл и преименуване. Синтактична грешка се показва в терминала и файлът не се презаписва; след поправката следенето продължава. Собственият запис на formatter-а не предизвиква безкраен цикъл. Ctrl+C спира следенето.
@@ -53,12 +53,14 @@ npm run format:watch -- "src/components/plan-cards.tsx"
 | `src/app/artwork.css`             | Оригинални илюстративни сайт макети; техният декоративен текст не е реално съдържание |
 | `src/app/layout.tsx`              | Общи header/footer, език, метаданни и начално прилагане на темата                     |
 | `src/app/[...slug]/page.tsx`      | Server-rendered вътрешни страници                                                     |
-| `src/components/header.tsx`       | Desktop навигация и достъпен мобилен sidebar                                          |
-| `src/components/theme-toggle.tsx` | Checkbox превключвател и синхронизация на темата                                      |
-| `src/components/icons.tsx`        | Общи SVG икони                                                                        |
-| `src/components/site.tsx`         | Начална страница, планове, процес, FAQ, CTA и футър                                   |
+| `src/components/layout/header.tsx`       | Desktop навигация и достъпен мобилен sidebar                                          |
+| `src/components/appearance/theme-toggle.tsx` | Checkbox превключвател и синхронизация на темата                                      |
+| `src/components/ui/icons.tsx`        | Общи SVG икони                                                                        |
+| `src/components/home/home.tsx`         | Съставяне на началната страница                                                      |
 | `src/lib/navigation.ts`           | Основни, мобилни и правни връзки                                                      |
 | `src/lib/content.ts`              | Потвърден обхват на START, примерни проекти, FAQ и статии                             |
+
+Компонентите са подредени по предназначение; вижте [структурата на components](src/components/README.md). Header, Footer и Brand са в `layout/`, а общите UI елементи са в `ui/`.
 
 Българският е основен език. Английският остава архитектурно подготвен в `src/lib/i18n.ts`, без празни преведени страници.
 

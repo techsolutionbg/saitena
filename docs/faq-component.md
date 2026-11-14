@@ -1,9 +1,9 @@
 # Преизползваем FAQ компонент
 
-`src/components/faq.tsx` приема данните от страницата и не импортира общия списък с въпроси. Така всяка секция може да показва различно съдържание, без копиране на markup или стилове.
+`src/components/faq/faq.tsx` приема данните от страницата и не импортира общия списък с въпроси. Така всяка секция може да показва различно съдържание, без копиране на markup или стилове.
 
 ```tsx
-import { FAQ } from "@/components/faq";
+import { FAQ } from "@/components/faq/faq";
 
 <FAQ
   label="Въпроси за тази услуга"
@@ -36,8 +36,8 @@ import { FAQ } from "@/components/faq";
 
 ## Променени файлове и проверка
 
-- Нови: `src/components/faq.tsx` и `src/lib/faq.ts`.
-- Интеграция и данни: `src/components/site.tsx`, `src/components/pages.tsx` и `src/lib/content.ts`.
+- Нови: `src/components/faq/faq.tsx` и `src/lib/faq.ts`.
+- Интеграция и данни: `src/components/home/home.tsx`, `src/components/pages/pages.tsx` и `src/lib/content.ts`.
 - Стилове: `src/app/globals.css`. Актуализиран е и README с връзка към този документ.
 
 Успешни са `npm run build` и `npm run typecheck`. HTTP проверката потвърди 4/5/8 въпроса на трите страници, отговори в server-rendered HTML и статус 200.

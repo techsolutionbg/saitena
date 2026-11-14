@@ -1,4 +1,4 @@
-import type { IconName } from "@/components/icons";
+import type { IconName } from "@/components/ui/icons";
 export type NavigationItem = { href: string; label: string; icon: IconName };
 
 export const mainNavigation: NavigationItem[] = [

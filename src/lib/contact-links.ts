@@ -1,4 +1,4 @@
-import type { IconName } from "@/components/icons";
+import type { IconName } from "@/components/ui/icons";
 
 interface ContactSettings {
   email?: string;

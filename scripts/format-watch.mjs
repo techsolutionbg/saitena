@@ -15,7 +15,7 @@ const root = await realpath(fileURLToPath(new URL("../", import.meta.url)));
 const args = process.argv.slice(2);
 if (args.length !== 1) {
   console.error(
-    "Употреба: npm run format:watch -- src/components/plan-cards.tsx",
+    "Употреба: npm run format:watch -- src/components/pricing/plan-cards.tsx",
   );
   process.exit(1);
 }

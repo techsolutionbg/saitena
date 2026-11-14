@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allPages, articles, projects, routeTitles } from "@/lib/content";
-import { ContentPage } from "@/components/pages";
+import { ContentPage } from "@/components/pages/pages";
 import { faqMetadata } from "@/lib/faq-content";
 import { plansMetadata } from "@/lib/plans";
 import { portfolioMetadata } from "@/lib/portfolio-content";
