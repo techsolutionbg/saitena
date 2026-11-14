@@ -1,13 +1,13 @@
-import Link from "next/link";
 import { comparisonGroups, plans, priceLabel } from "@/lib/plans";
 import { plansFAQ } from "@/lib/plans-faq";
 import { PlanSecurity } from "./plan-security";
 import { PlanCards, CustomPlanOffer } from "./plan-cards";
-import { Arrow, Check, Icon } from "./icons";
+import { Check, Icon } from "./icons";
 import { FAQPreview } from "./faq-preview";
 import { getPlanFeatureHelp } from "@/lib/plan-feature-help";
 import { FeatureHelp } from "./feature-help";
 import { MobilePlanDisclosure } from "./mobile-plan-disclosure";
+import { PricesHero } from "./prices-hero";
 import styles from "./plans.module.css";
 
 function ComparisonValue({
@@ -105,30 +105,7 @@ export function PlansPage() {
   );
   return (
     <>
-      <header className={styles.hero}>
-        <div className="wrap">
-          <span className="eyebrow">АБОНАМЕНТНИ ПЛАНОВЕ</span>
-          <h1>Ориентировъчни цени за сайтове на абонамент.</h1>
-          <p>
-            Посочените цени са ориентировъчни и Ви помагат да сравните
-            плановете. Крайната оферта се определя след разговор за Вашия проект
-            и зависи от неговия обхват, необходимите функционалности, дизайна и
-            нуждите от поддръжка. Заедно уточняваме подходящото решение и
-            условията преди започване на работа.
-          </p>
-          <div className={styles.heroActions}>
-            <Link href="/contact" className="button">
-              Да създадем Вашия сайт <Arrow />
-            </Link>
-            <a
-              href="#subscription-plans-title"
-              className="button button-secondary"
-            >
-              Разгледайте плановете <Arrow />
-            </a>
-          </div>
-        </div>
-      </header>
+      <PricesHero />
       <CustomPlanOffer />
       <section
         className={`wrap ${styles.plans}`}

@@ -12,6 +12,7 @@ import { startPlan } from "@/lib/plans";
 import { ContactQuickLinks } from "./contact-quick-links";
 import { ContactLocation } from "./contact-location";
 import { PortfolioHero } from "./portfolio-hero";
+import { PortfolioCTA } from "./portfolio-cta";
 import contactStyles from "./contact-page.module.css";
 
 export function ContentPage({ path, plan }: { path: string; plan?: string }) {
@@ -90,7 +91,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
         >
           <PortfolioGallery />
         </section>
-        <CTA />
+        <PortfolioCTA />
       </>
     );
   if (path.startsWith("portfolio/")) {
