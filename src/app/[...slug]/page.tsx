@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { allPages, articles, projects, routeTitles } from "@/lib/content";
 import { ContentPage } from "@/components/pages";
+import { faqMetadata } from "@/lib/faq-content";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -14,6 +15,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const path = slug.join("/");
+  if (path === "faq") {
+    return {
+      title: { absolute: faqMetadata.title },
+      description: faqMetadata.description,
+      alternates: { canonical: "/faq" },
+    };
+  }
   const title =
     routeTitles[path] ??
     projects.find((project) => path === `portfolio/${project.slug}`)?.name ??

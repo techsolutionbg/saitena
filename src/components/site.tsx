@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { plans, startFeatures, faq, siteContent } from "@/lib/content";
+import { plans, startFeatures } from "@/lib/content";
+import { faq } from "@/lib/faq-content";
 import {
   mainNavigation,
   legalNavigation,
@@ -7,7 +8,8 @@ import {
 } from "@/lib/navigation";
 import { Arrow, Check, Icon, type IconName } from "./icons";
 import { Brand } from "./brand";
-import { HeroArtwork } from "./artwork";
+import { HomeHero } from "./home-hero";
+import { BenefitsMarquee } from "./benefits-marquee";
 import { PortfolioGallery } from "./interactive";
 import { FAQ } from "./faq";
 
@@ -191,12 +193,26 @@ export function CTA({ forFAQ = false }: { forFAQ?: boolean }) {
     <section className={`cta-section wrap${forFAQ ? " faq-cta" : ""}`}>
       <div className="cta-inner">
         <div>
-          <span className="eyebrow">{forFAQ ? "ГОТОВИ ЛИ СТЕ ДА ЗАПОЧНЕМ?" : "СЛЕДВАЩАТА СТЪПКА Е ВАША"}</span>
-          <h2>{forFAQ ? "Вашият бизнес заслужава силно онлайн присъствие." : "Готови за своето място онлайн?"}</h2>
-          <p>{forFAQ ? "Получете професионален уебсайт, техническа поддръжка и ясна месечна цена — без голяма първоначална инвестиция." : "Разкажете ни за бизнеса си. Ще започнем с разговор."}</p>
+          <span className="eyebrow">
+            {forFAQ ? "ГОТОВИ ЛИ СТЕ ДА ЗАПОЧНЕМ?" : "СЛЕДВАЩАТА СТЪПКА Е ВАША"}
+          </span>
+          <h2>
+            {forFAQ
+              ? "Вашият бизнес заслужава силно онлайн присъствие."
+              : "Готови за своето място онлайн?"}
+          </h2>
+          <p>
+            {forFAQ
+              ? "Получете професионален уебсайт, техническа поддръжка и ясна месечна цена — без голяма първоначална инвестиция."
+              : "Разкажете ни за бизнеса си. Ще започнем с разговор."}
+          </p>
         </div>
         <ButtonLink>Да създадем вашия сайт</ButtonLink>
-        {forFAQ && <Link className="button" href="/plans">Разгледайте плановете <Arrow /></Link>}
+        {forFAQ && (
+          <Link className="button" href="/plans">
+            Разгледайте плановете <Arrow />
+          </Link>
+        )}
         <img
           src="/brand/saitena-mark.svg"
           className="cta-watermark"
@@ -234,7 +250,9 @@ export function Footer() {
             <Link href={item.href} key={item.href}>
               <Icon name={item.icon} />
               <span>
-                {item.href === "/services" ? "Сайтове на абонамент" : item.label}
+                {item.href === "/services"
+                  ? "Сайтове на абонамент"
+                  : item.label}
               </span>
             </Link>
           ))}
@@ -271,61 +289,11 @@ export function Footer() {
     </footer>
   );
 }
-const benefits: { title: string; icon: IconName }[] = [
-  { title: "Индивидуален дизайн", icon: "sparkles" },
-  { title: "Хостинг и SSL*", icon: "shield" },
-  { title: "Месечни промени", icon: "growth" },
-  { title: "SEO и GEO", icon: "search" },
-];
 export function Home() {
   return (
     <>
-      <section className="hero wrap">
-        <div className="hero-copy">
-          <span className="eyebrow hero-kicker">
-            <Icon name="sparkles" />
-            ВАШИЯТ ДИГИТАЛЕН ПАРТНЬОР
-          </span>
-          <h1>
-            Вашият бизнес.
-            <br />
-            Следващата <span className="accent-line">му стъпка.</span>
-          </h1>
-          <p className="hero-intro">{siteContent.intro}</p>
-          <div className="hero-actions">
-            <ButtonLink>Да започнем</ButtonLink>
-            <Link href="/portfolio" className="text-link">
-              Разгледайте портфолиото <Arrow />
-            </Link>
-          </div>
-          <div className="hero-proof">
-            <span>
-              <Check />
-              Без първоначална такса
-            </span>
-            <span>
-              <Check />
-              START: 50 €/месец
-            </span>
-          </div>
-        </div>
-        <HeroArtwork />
-      </section>
-      <section
-        className="benefits-strip"
-        aria-label="Какво включва грижата за сайта"
-      >
-        <div className="wrap">
-          {benefits.map((item) => (
-            <div key={item.title}>
-              <span className="section-icon">
-                <Icon name={item.icon} />
-              </span>
-              <span>{item.title}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      <HomeHero />
+      <BenefitsMarquee />
       <section className="intro-section wrap section">
         <span className="eyebrow">ПОВЕЧЕ ОТ ИЗРАБОТКА НА САЙТ</span>
         <div>
@@ -370,34 +338,77 @@ export function Home() {
         </div>
       </section>
       <div className="faq-backdrop">
-      <section className="faq-section wrap section">
-        <svg className="faq-art" viewBox="0 0 1280 1000" preserveAspectRatio="none" fill="none" aria-hidden="true" focusable="false">
-          <g stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M32 210C150 120 40 400 145 480S30 760 165 870M1240 100C1100 240 1270 350 1150 500S1280 730 1130 920" strokeDasharray="7 14" />
-            <path d="M38 60h105a20 20 0 0 1 20 20v75a20 20 0 0 1-20 20H85l-30 25v-25H38a20 20 0 0 1-20-20V80a20 20 0 0 1 20-20Z" />
-            <path d="M1100 730h130v95h-35l-25 23v-23h-70Z M1120 752h85m-85 20h60" />
-            <circle cx="98" cy="620" r="47" /><circle cx="1180" cy="300" r="55" />
-            <path d="m50 945 18-18-18-18m40 36-18-18 18-18m1080-420 20 20 35-45" />
-          </g>
-          <g fill="currentColor" fontFamily="sans-serif" fontSize="72" textAnchor="middle">
-            <text x="90" y="143" transform="rotate(-10 90 143)">?</text>
-            <text x="1180" y="325" transform="rotate(12 1180 325)">?</text>
-            <text x="98" y="645">?</text>
-          </g>
-        </svg>
-        <div>
-          <h2>Всичко важно, преди да започнем.</h2>
-          <p>Колко струва сайтът? Какво включва абонаментът? Какво се случва, ако решите да прекратите услугата? Отговаряме ясно на най-важните въпроси, за да направите информиран избор.</p>
-        </div>
-        <FAQ items={faq.filter((item) => ["subscription", "pricing", "timeline", "monthly-changes", "ownership", "contract"].includes(item.id))} label="Въпроси за добър старт" className="faq-cards" />
-        <span className="eyebrow faq-afterword">ДОБРЕ Е ДА ЗНАЕТЕ</span>
-        <Link href="/faq" className="button">
-          Всички въпроси и отговори <Arrow />
-        </Link>
-      </section>
+        <section className="faq-section wrap section">
+          <svg
+            className="faq-art"
+            viewBox="0 0 1280 1000"
+            preserveAspectRatio="none"
+            fill="none"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <g
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path
+                d="M32 210C150 120 40 400 145 480S30 760 165 870M1240 100C1100 240 1270 350 1150 500S1280 730 1130 920"
+                strokeDasharray="7 14"
+              />
+              <path d="M38 60h105a20 20 0 0 1 20 20v75a20 20 0 0 1-20 20H85l-30 25v-25H38a20 20 0 0 1-20-20V80a20 20 0 0 1 20-20Z" />
+              <path d="M1100 730h130v95h-35l-25 23v-23h-70Z M1120 752h85m-85 20h60" />
+              <circle cx="98" cy="620" r="47" />
+              <circle cx="1180" cy="300" r="55" />
+              <path d="m50 945 18-18-18-18m40 36-18-18 18-18m1080-420 20 20 35-45" />
+            </g>
+            <g
+              fill="currentColor"
+              fontFamily="sans-serif"
+              fontSize="72"
+              textAnchor="middle"
+            >
+              <text x="90" y="143" transform="rotate(-10 90 143)">
+                ?
+              </text>
+              <text x="1180" y="325" transform="rotate(12 1180 325)">
+                ?
+              </text>
+              <text x="98" y="645">
+                ?
+              </text>
+            </g>
+          </svg>
+          <div>
+            <h2>Всичко важно, преди да започнем.</h2>
+            <p>
+              Колко струва сайтът? Какво включва абонаментът? Какво се случва,
+              ако решите да прекратите услугата? Отговаряме ясно на най-важните
+              въпроси, за да направите информиран избор.
+            </p>
+          </div>
+          <FAQ
+            items={faq.filter((item) =>
+              [
+                "subscription",
+                "pricing",
+                "timeline",
+                "monthly-changes",
+                "ownership",
+                "contract",
+              ].includes(item.id),
+            )}
+            label="Въпроси за добър старт"
+            className="faq-cards"
+          />
+          <span className="eyebrow faq-afterword">ДОБРЕ Е ДА ЗНАЕТЕ</span>
+          <Link href="/faq" className="button">
+            Всички въпроси и отговори <Arrow />
+          </Link>
+        </section>
       </div>
       <CTA forFAQ />
     </>
   );
 }
-

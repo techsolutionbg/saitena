@@ -9,17 +9,18 @@ import "@fontsource/lora/400-italic.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/site";
 import { themeBootstrap } from "@/lib/theme";
+import { AppearanceControls } from "@/components/appearance-controls";
 import "./globals.css";
 import "./artwork.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Saitena — професионални сайтове на абонамент",
+    default: "Сайтове на абонамент с изработка и поддръжка | Saitena",
     template: "%s | Saitena",
   },
   description:
-    "Професионални сайтове на месечен абонамент. Изработка, техническа поддръжка и грижа за вашия бизнес.",
-  robots: { index: false, follow: false, nocache: true },
+    "Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за 50 €/месец без първоначална такса.",
+  robots: { index: true, follow: true },
   icons: { icon: [{ url: "/brand/saitena-mark.svg", type: "image/svg+xml" }] },
 };
 export default function RootLayout({
@@ -35,7 +36,9 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
       </head>
-      <body>
+      {/* Browser tools inject body attributes (e.g. cz-shortcut-listen) before hydration.
+          Tolerate those only in development; descendants remain checked. */}
+      <body suppressHydrationWarning={process.env.NODE_ENV === "development"}>
         <a className="skip-link" href="#main">
           Към съдържанието
         </a>
@@ -43,6 +46,9 @@ export default function RootLayout({
           <Header />
           <main id="main">{children}</main>
           <Footer />
+        </div>
+        <div className="floating-theme">
+          <AppearanceControls />
         </div>
       </body>
     </html>

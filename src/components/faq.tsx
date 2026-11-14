@@ -3,14 +3,22 @@
 import { useId, useState } from "react";
 import type { FAQItem } from "@/lib/faq";
 import { Icon } from "./icons";
+import Link from "next/link";
 
 type FAQProps = {
   items: readonly FAQItem[];
   label?: string;
   className?: string;
+  openId?: string | null;
+  onOpenChange?: (id: string | null) => void;
 };
 
-function FAQEntry({ item, open, onToggle, onOpen }: {
+function FAQEntry({
+  item,
+  open,
+  onToggle,
+  onOpen,
+}: {
   item: FAQItem;
   open: boolean;
   onToggle: () => void;
@@ -22,21 +30,23 @@ function FAQEntry({ item, open, onToggle, onOpen }: {
 
   return (
     <div className={`faq-item${open ? " is-open" : ""}`}>
-      <button
-        className="faq-trigger"
-        type="button"
-        id={triggerId}
-        aria-expanded={open}
-        aria-controls={panelId}
-        onClick={onToggle}
-        onFocus={(event) => {
-          if (event.currentTarget.matches(":focus-visible")) onOpen();
-        }}
-      >
-        <Icon name="help" />
-        <span>{item.question}</span>
-        <Icon name="chevron" className="faq-chevron" />
-      </button>
+      <h3 className="faq-question">
+        <button
+          className="faq-trigger"
+          type="button"
+          id={triggerId}
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={onToggle}
+          onFocus={(event) => {
+            if (event.currentTarget.matches(":focus-visible")) onOpen();
+          }}
+        >
+          <Icon name="help" />
+          <span>{item.question}</span>
+          <Icon name="chevron" className="faq-chevron" />
+        </button>
+      </h3>
       <div
         className="faq-answer"
         id={panelId}
@@ -47,6 +57,11 @@ function FAQEntry({ item, open, onToggle, onOpen }: {
         <div className="faq-answer-content">
           <div className="faq-answer-copy">
             <p>{item.answer}</p>
+            {item.relatedLink && (
+              <Link className="text-link" href={item.relatedLink.href}>
+                {item.relatedLink.label}
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -59,8 +74,13 @@ export function FAQ({
   items,
   label = "Често задавани въпроси",
   className = "",
+  openId: controlledOpenId,
+  onOpenChange,
 }: FAQProps) {
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [localOpenId, setLocalOpenId] = useState<string | null>(null);
+  const openId =
+    controlledOpenId === undefined ? localOpenId : controlledOpenId;
+  const setOpenId = onOpenChange ?? setLocalOpenId;
   if (items.length === 0) return null;
   return (
     <section
@@ -76,7 +96,7 @@ export function FAQ({
           item={item}
           open={openId === item.id}
           onOpen={() => setOpenId(item.id)}
-          onToggle={() => setOpenId((current) => current === item.id ? null : item.id)}
+          onToggle={() => setOpenId(openId === item.id ? null : item.id)}
         />
       ))}
     </section>

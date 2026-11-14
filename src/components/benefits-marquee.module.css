@@ -1,0 +1,74 @@
+.section {
+  --visible: 4;
+  padding-block: 28px;
+  border-block: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.viewport { overflow: hidden; }
+
+.track {
+  display: flex;
+  width: calc(1200% / var(--visible));
+  animation: advance 18s cubic-bezier(.22, .68, .2, 1) infinite;
+  animation-play-state: var(--benefit-motion, running);
+}
+
+.group {
+  display: flex;
+  flex: 0 0 50%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  flex: 0 0 calc(100% / 6);
+  min-width: 0;
+  padding: 8px 18px;
+  text-align: center;
+}
+
+.icon {
+  display: inline-grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--bg);
+  color: var(--primary);
+}
+
+.icon svg { width: 32px; height: 32px; }
+.item h3 { margin: 0 0 8px; font-size: 24px; font-weight: 600; }
+.item p { margin: 0; color: var(--muted); font-size: 18px; font-weight: 400; }
+
+.section:focus-visible { outline: 2px solid var(--focus); outline-offset: -3px; }
+.track[data-paused="true"], .section:focus-visible { --benefit-motion: paused; }
+
+/* Touch uses pointer events, avoiding sticky hover after lifting a finger. */
+@media (hover: hover) {
+  .section:hover { --benefit-motion: paused; }
+}
+
+/* Six steps: hold for 2.4 seconds, then slide one card in 0.6 seconds. */
+@keyframes advance {
+  0%, 13.3333% { transform: translateX(0); }
+  16.6667%, 30% { transform: translateX(-8.333333%); }
+  33.3333%, 46.6667% { transform: translateX(-16.666667%); }
+  50%, 63.3333% { transform: translateX(-25%); }
+  66.6667%, 80% { transform: translateX(-33.333333%); }
+  83.3333%, 96.6667% { transform: translateX(-41.666667%); }
+  100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 1024px) { .section { --visible: 2; } }
+@media (max-width: 640px) { .section { --visible: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .track { width: 100%; animation: none; }
+  .group { display: grid; flex-basis: 100%; grid-template-columns: repeat(var(--visible), minmax(0, 1fr)); gap: 24px 0; }
+  .group[aria-hidden="true"] { display: none; }
+}

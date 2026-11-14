@@ -1,8 +1,10 @@
 "use client";
 
 import { useId, useSyncExternalStore } from "react";
+import { flushSync } from "react-dom";
 import { Icon } from "./icons";
 import { themeStorageKey as storageKey } from "@/lib/theme";
+import { revealTheme } from "@/lib/theme-transition";
 
 const themeEvent = "saitena-theme-change";
 
@@ -49,7 +51,14 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
         id={id}
         type="checkbox"
         checked={dark}
-        onChange={(event) => changeTheme(event.target.checked)}
+        onChange={(event) => {
+          const checked = event.target.checked;
+          const origin =
+            event.currentTarget.parentElement?.querySelector<HTMLElement>(
+              ".theme-switch-track",
+            ) ?? event.currentTarget;
+          void revealTheme(origin, () => flushSync(() => changeTheme(checked)));
+        }}
         aria-label="Тъмна тема"
       />
       <span className="theme-switch-track" aria-hidden="true">

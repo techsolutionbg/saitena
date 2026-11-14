@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  articles,
-  projects,
-  routeTitles,
-  startFeatures,
-  faq,
-} from "@/lib/content";
+import { articles, projects, routeTitles, startFeatures } from "@/lib/content";
 import { WebsiteArtwork } from "./artwork";
 import { InquiryForm, PortfolioGallery } from "./interactive";
 import { Arrow, Check, Icon } from "./icons";
@@ -18,6 +12,8 @@ import {
   SectionHeading,
 } from "./site";
 import { FAQ } from "./faq";
+import { faq, faqCategories } from "@/lib/faq-content";
+import { FAQDirectory } from "./faq-directory";
 
 export function ContentPage({ path, plan }: { path: string; plan?: string }) {
   if (path === "services")
@@ -386,17 +382,24 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
           <div className="wrap faq-hero-inner">
             <div>
               <span className="eyebrow">ЧЕСТО ЗАДАВАНИ ВЪПРОСИ</span>
-              <h1>Ясни отговори.<br />Уверена първа стъпка.</h1>
-              <p>От цената и изработката до поддръжката и условията на абонамента — всичко важно, преди да създадем вашия сайт.</p>
+              <h1>Често задавани въпроси за изработка на сайт на абонамент</h1>
+              <p>
+                Всичко важно за цените, изработката, поддръжката и условията на
+                Saitena — обяснено ясно и разбираемо.
+              </p>
               <div className="faq-hero-actions">
-                <Link className="button" href="#answers">Разгледайте отговорите <Arrow /></Link>
-                <Link className="text-link" href="/inquiry">Задайте ни въпрос <Arrow /></Link>
+                <Link className="button" href="#answers">
+                  Разгледайте отговорите <Arrow />
+                </Link>
+                <Link className="text-link" href="/inquiry">
+                  Задайте ни въпрос <Arrow />
+                </Link>
               </div>
             </div>
           </div>
         </section>
         <section className="wrap faq-page" id="answers">
-          <FAQ items={faq} className="faq-cards" />
+          <FAQDirectory items={faq} categories={faqCategories} />
         </section>
         <CTA />
       </>

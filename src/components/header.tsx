@@ -10,7 +10,7 @@ import {
 } from "@/lib/navigation";
 import { Arrow, Icon } from "./icons";
 import { Brand } from "./brand";
-import { ThemeToggle } from "./theme-toggle";
+import { AppearanceControls } from "./appearance-controls";
 
 export function Header() {
   const pathname = usePathname();
@@ -99,9 +99,6 @@ export function Header() {
           ))}
         </nav>
         <div className="header-actions">
-          <div className="desktop-theme">
-            <ThemeToggle compact />
-          </div>
           <Link className="button header-cta" href="/inquiry">
             Да поговорим <Arrow />
           </Link>
@@ -194,10 +191,6 @@ export function Header() {
             </details>
           </div>
           <div className="sidebar-footer">
-            <div className="sidebar-theme">
-              <span className="eyebrow">ВАШЕТО ПРЕДПОЧИТАНИЕ</span>
-              <ThemeToggle />
-            </div>
             <Link
               className="button sidebar-cta"
               href="/inquiry"
@@ -207,10 +200,12 @@ export function Header() {
               <span>Запитване за сайт</span>
               <Arrow />
             </Link>
+            <div className="sidebar-theme">
+              <AppearanceControls sidebar />
+            </div>
           </div>
         </dialog>
       </div>
     </header>
   );
 }
-

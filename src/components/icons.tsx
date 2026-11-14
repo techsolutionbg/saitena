@@ -2,6 +2,46 @@ import type { SVGProps } from "react";
 import type { ReactNode } from "react";
 
 const iconPaths = {
+  palette: (
+    <>
+      <path d="M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 1.4-3.4 1.5 1.5 0 0 1 1.1-2.6H18a3 3 0 0 0 3-3 9 9 0 0 0-9-9Z" />
+      <path d="M7.5 11h.01M9 7.5h.01M13 6.5h.01M17 9h.01" strokeWidth="3" />
+    </>
+  ),
+  phone: (
+    <>
+      <rect x="6" y="2" width="12" height="20" rx="3" />
+      <path d="M11 18h2" />
+    </>
+  ),
+  headphones: (
+    <>
+      <path d="M4 14v-3a8 8 0 0 1 16 0v7a4 4 0 0 1-4 4h-3" />
+      <rect x="3" y="11" width="5" height="8" rx="2" />
+      <rect x="16" y="11" width="5" height="8" rx="2" />
+    </>
+  ),
+  gauge: (
+    <>
+      <path d="M5.6 19a9 9 0 1 1 12.8 0M12 13l4-6M4 12h1m14 0h1M7 6l.7.7" />
+      <circle cx="12" cy="13" r="1" />
+    </>
+  ),
+  searchCheck: (
+    <>
+      <circle cx="10" cy="10" r="7" />
+      <path d="m15 15 6 6M7 10l2 2 4-4" />
+    </>
+  ),
+  pause: <path d="M8 5v14M16 5v14" strokeWidth="3" />,
+  play: <path d="m8 4 12 8-12 8Z" />,
+  settings: (
+    <>
+      <path d="M4 7h16M4 17h16" />
+      <circle cx="9" cy="7" r="3" fill="var(--bg)" />
+      <circle cx="15" cy="17" r="3" fill="var(--bg)" />
+    </>
+  ),
   home: (
     <>
       <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z" />

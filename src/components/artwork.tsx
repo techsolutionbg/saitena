@@ -1,5 +1,3 @@
-import { Icon } from "./icons";
-
 export function WebsiteArtwork({
   kind = "architecture",
   compact = false,
@@ -103,43 +101,6 @@ export function WebsiteArtwork({
           </div>
         </>
       )}
-    </div>
-  );
-}
-
-export function HeroArtwork() {
-  return (
-    <div className="hero-art">
-      <div className="art-grid" aria-hidden="true" />
-      <div className="browser-window">
-        <div className="browser-toolbar">
-          <span>
-            <i />
-            <i />
-            <i />
-          </span>
-          <span>вашият-бизнес.bg</span>
-          <Icon name="external" />
-        </div>
-        <WebsiteArtwork kind="architecture" />
-      </div>
-      <div className="floating-care">
-        <span className="care-icon">
-          <Icon name="sparkles" />
-        </span>
-        <div>
-          <strong>Добри ръце. Всеки месец.</strong>
-          <span>Дизайн · Поддръжка · Развитие</span>
-        </div>
-      </div>
-      <div className="floating-price">
-        <span>START</span>
-        <div>
-          50 €<span>/месец</span>
-        </div>
-        <span>Без първоначална такса</span>
-      </div>
-      <span className="art-footnote">Илюстративна концепция за сайт</span>
     </div>
   );
 }
