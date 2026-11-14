@@ -6,7 +6,7 @@ import {
   type NavigationItem,
 } from "@/lib/navigation";
 import { Arrow, Icon, type IconName } from "./icons";
-import { PlanCards, CustomPlanOffer } from "./plan-cards";
+import { CustomPlanOffer } from "./plan-cards";
 import { Brand } from "./brand";
 import { HomeHero } from "./home-hero";
 import { BenefitsMarquee } from "./benefits-marquee";
@@ -15,7 +15,7 @@ import { PortfolioGallery } from "./interactive";
 import { FAQPreview } from "./faq-preview";
 
 export function ButtonLink({
-  to = "inquiry",
+  to = "contact",
   children,
   secondary = false,
 }: {
@@ -131,7 +131,7 @@ export function CTA({ forFAQ = false }: { forFAQ?: boolean }) {
         </div>
         <ButtonLink>Да създадем вашия сайт</ButtonLink>
         {forFAQ && (
-          <Link className="button" href="/plans">
+          <Link className="button" href="/prices">
             Разгледайте плановете <Arrow />
           </Link>
         )}
@@ -247,26 +247,20 @@ export function Home() {
       <HomeStory />
       <section className="portfolio-section section">
         <div className="wrap">
-          <SectionHeading
-            eyebrow="ИДЕИ СЪС СОБСТВЕН ХАРАКТЕР"
-            title="Вашият бизнес заслужава свой облик."
-          >
-            <Link href="/portfolio" className="text-link">
-              Всички примерни проекти <Arrow />
+          <header className="home-projects-heading">
+            <h2>Нашите проекти</h2>
+            <p>
+              Разработваме фирмени сайтове, сайтове за услуги и онлайн
+              представяне на самостоятелни специалисти. Разгледайте проектите ни
+              за различни дейности — с ясна структура, адаптивно оформление и
+              собствен визуален характер. Те показват как можем да представим и
+              Вашия бизнес онлайн.
+            </p>
+            <Link href="/portfolio" className="button">
+              Всички проекти <Arrow />
             </Link>
-          </SectionHeading>
-          <PortfolioGallery limit={2} />
-        </div>
-      </section>
-      <section className="pricing-section section">
-        <div className="wrap">
-          <SectionHeading
-            eyebrow="ПЛАН ЗА ВАШЕТО ПРИСЪСТВИЕ"
-            title="Малка месечна стъпка. Голямо начало."
-          >
-            <p>Започнете със START. Обсъдете следващите възможности.</p>
-          </SectionHeading>
-          <PlanCards />
+          </header>
+          <PortfolioGallery limit={4} mobileLimit={2} />
         </div>
       </section>
       <CustomPlanOffer />

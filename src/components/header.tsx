@@ -16,6 +16,7 @@ export function Header() {
   const pathname = usePathname();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const active = (href: string) =>
@@ -69,14 +70,16 @@ export function Header() {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const desktop = window.matchMedia("(min-width: 1281px)");
+    const toggle = menuToggleRef.current;
     const onResize = () => {
-      if (desktop.matches) dialogRef.current?.close();
+      if (toggle && getComputedStyle(toggle).display === "none")
+        dialogRef.current?.close();
     };
-    desktop.addEventListener("change", onResize);
+    const observer = new ResizeObserver(onResize);
+    if (toggle) observer.observe(toggle);
     return () => {
       document.body.style.overflow = previousOverflow;
-      desktop.removeEventListener("change", onResize);
+      observer.disconnect();
     };
   }, [open]);
 
@@ -99,10 +102,11 @@ export function Header() {
           ))}
         </nav>
         <div className="header-actions">
-          <Link className="button header-cta" href="/inquiry">
+          <Link className="button header-cta" href="/contact">
             Да поговорим <Arrow />
           </Link>
           <button
+            ref={menuToggleRef}
             type="button"
             className="menu-toggle"
             aria-label="Отвори менюто"
@@ -193,7 +197,7 @@ export function Header() {
           <div className="sidebar-footer">
             <Link
               className="button sidebar-cta"
-              href="/inquiry"
+              href="/contact"
               onClick={close}
             >
               <Icon name="message" />

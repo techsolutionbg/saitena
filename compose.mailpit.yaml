@@ -1,0 +1,25 @@
+name: saitena-website-mail
+
+services:
+  mailpit:
+    image: axllent/mailpit:v1.33.1
+    container_name: saitena-website-mailpit
+    restart: "no"
+    ports:
+      - "127.0.0.1:18025:8025"
+      - "127.0.0.1:11025:1025"
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_MAX_MESSAGES: 500
+    volumes:
+      - mailpit-data:/data
+    networks:
+      - mail
+
+networks:
+  mail:
+    name: saitena-website-mail
+
+volumes:
+  mailpit-data:
+    name: saitena-website-mailpit-data

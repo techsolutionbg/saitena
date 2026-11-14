@@ -4,6 +4,7 @@ import { allPages, articles, projects, routeTitles } from "@/lib/content";
 import { ContentPage } from "@/components/pages";
 import { faqMetadata } from "@/lib/faq-content";
 import { plansMetadata } from "@/lib/plans";
+import { portfolioMetadata } from "@/lib/portfolio-content";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -16,11 +17,18 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const path = slug.join("/");
-  if (path === "plans") {
+  if (path === "portfolio") {
+    return {
+      title: { absolute: portfolioMetadata.title },
+      description: portfolioMetadata.description,
+      alternates: { canonical: "/portfolio" },
+    };
+  }
+  if (path === "prices") {
     return {
       title: { absolute: plansMetadata.title },
       description: plansMetadata.description,
-      alternates: { canonical: "/plans" },
+      alternates: { canonical: "/prices" },
     };
   }
   if (path === "faq") {
@@ -29,6 +37,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: faqMetadata.description,
       alternates: { canonical: "/faq" },
     };
+  }
+  if (path === "contact") {
+    return { title: "Контакти", alternates: { canonical: "/contact" } };
   }
   const title =
     routeTitles[path] ??
@@ -43,7 +54,7 @@ export default async function PublicPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const path = slug.join("/");
   if (!allPages.includes(path)) notFound();
-  const query = path === "inquiry" ? await searchParams : {};
+  const query = path === "contact" ? await searchParams : {};
   return (
     <ContentPage
       path={path}
@@ -51,4 +62,3 @@ export default async function PublicPage({ params, searchParams }: Props) {
     />
   );
 }
-

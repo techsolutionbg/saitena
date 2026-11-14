@@ -21,8 +21,15 @@
   max-width: 900px;
   margin: auto;
 }
+.heroActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
 .plans {
-  padding-bottom: 48px;
+  padding-block: 48px 20px;
 }
 .cards {
   --reveal-step: 140ms;
@@ -256,12 +263,12 @@
   rotate: 90deg;
 }
 .comparisonSection {
-  padding-block: 40px 72px;
+  padding-block: 16px 32px;
 }
 .comparisonIntro {
   max-width: 880px;
   margin: 0 auto 36px;
-  padding-block: 20px 0;
+  padding-block: 0;
   text-align: center;
 }
 .comparisonIntro h2::after {
@@ -274,7 +281,7 @@
   background: var(--action);
 }
 .comparisonIntro h2 {
-  margin: 16px auto 20px;
+  margin: 0 auto 20px;
   scroll-margin-top: 36px;
 }
 .comparisonIntro .tableHint {
@@ -374,42 +381,23 @@
 .custom {
   padding-block: 56px;
   border-block: 1px solid var(--line);
-  background: var(--surface);
-}
-.customCard {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-  align-items: center;
-  gap: 40px;
-  padding: 48px;
-  border: 1px solid var(--line);
-  border-radius: 32px;
   background:
     radial-gradient(
-      ellipse at 100% 40%,
+      ellipse at 50% 35%,
       color-mix(in srgb, var(--action) 13%, transparent),
       transparent 65%
     ),
-    var(--bg);
-  box-shadow: var(--shadow);
+    var(--surface);
 }
-.customCard::before {
-  content: "";
-  position: absolute;
-  top: 48px;
-  bottom: 48px;
-  left: -1px;
-  width: 3px;
-  border-radius: 4px;
-  background: linear-gradient(transparent, var(--action), transparent);
+.customCard {
+  text-align: center;
 }
 .customCopy {
   min-width: 0;
 }
 .customEyebrow {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   margin-bottom: 22px;
@@ -422,11 +410,12 @@
   height: 28px;
 }
 .custom h2 {
-  max-width: 630px;
-  margin-bottom: 18px;
+  max-width: 880px;
+  margin: 0 auto 18px;
 }
 .customCopy > p {
   max-width: 650px;
+  margin-inline: auto;
 }
 .customButton {
   margin-top: 28px;
@@ -444,6 +433,8 @@
 .customArt {
   position: relative;
   width: 100%;
+  max-width: 420px;
+  margin: 0 auto 40px;
   height: 320px;
   min-width: 0;
 }
@@ -533,6 +524,61 @@
   font-size: var(--font-small);
   color: var(--muted);
 }
+@media (min-width: 901px) {
+  .custom {
+    background: var(--surface);
+  }
+  .customCard {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    align-items: center;
+    gap: 40px;
+    padding: 48px;
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    background:
+      radial-gradient(
+        ellipse at 100% 40%,
+        color-mix(in srgb, var(--action) 13%, transparent),
+        transparent 65%
+      ),
+      var(--bg);
+    box-shadow: var(--shadow);
+    text-align: start;
+  }
+  .customCard::before {
+    content: "";
+    position: absolute;
+    inset-block: 48px;
+    left: -1px;
+    width: 3px;
+    background: linear-gradient(transparent, var(--action), transparent);
+  }
+  .customCopy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .customArt {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
+  .customEyebrow {
+    justify-content: flex-start;
+  }
+  .custom h2,
+  .customCopy > p {
+    margin-inline: 0;
+  }
+}
+@media (min-width: 901px) and (max-width: 1100px) {
+  .customCard {
+    gap: 24px;
+    padding: 36px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  }
+}
 @media (max-width: 1100px) {
   .cards {
     gap: 16px;
@@ -550,11 +596,6 @@
   }
   .description {
     min-height: 158px;
-  }
-  .customCard {
-    gap: 24px;
-    padding: 36px;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
   }
   .customTag {
     font-size: var(--font-small);
@@ -592,19 +633,11 @@
     padding-block: 44px 36px;
   }
   .comparisonSection {
-    padding-bottom: 48px;
-  }
-  .customCard {
-    grid-template-columns: 1fr;
-    gap: 36px;
+    padding-bottom: 24px;
   }
   .customArt {
     max-width: 360px;
     justify-self: center;
-  }
-  .custom h2,
-  .customCopy > p {
-    max-width: none;
   }
 }
 @media (max-width: 480px) {
@@ -622,11 +655,6 @@
   }
   .custom {
     padding-block: 32px;
-  }
-  .customCard {
-    padding: 26px 20px 38px;
-    border-radius: 24px;
-    gap: 32px;
   }
   .customEyebrow {
     font-size: var(--font-small);
@@ -800,7 +828,115 @@
     min-width: 0;
   }
 }
+.mobileComparison {
+  display: none;
+}
+@media (max-width: 640px) {
+  .heroActions > a {
+    width: 100%;
+    white-space: normal;
+  }
+  .plans {
+    padding-top: 32px;
+  }
+  .tableContainer {
+    display: none;
+  }
+  .mobileComparison {
+    --comparison-bleed: 20px;
+    display: grid;
+    gap: 28px;
+    width: calc(100% + var(--comparison-bleed) * 2);
+    margin-inline: calc(-1 * var(--comparison-bleed));
+  }
+  .mobileComparisonPlan {
+    min-width: 0;
+    border-block: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .mobileComparisonHeader {
+    display: block;
+    padding: 22px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--action);
+    color: var(--on-action);
+    cursor: pointer;
+    list-style: none;
+  }
+  .mobileComparisonHeader::-webkit-details-marker {
+    display: none;
+  }
+  .mobileComparisonHeader:focus-visible {
+    outline: 3px solid var(--on-action);
+    outline-offset: -6px;
+  }
+  .mobileComparisonHeader h3 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 28px;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    color: inherit;
+  }
+  .mobileComparisonHeader svg {
+    width: 28px;
+    height: 28px;
+    transform: rotate(90deg);
+    transition: transform 180ms ease;
+  }
+  .mobileComparisonPlan[open] > .mobileComparisonHeader svg {
+    transform: rotate(-90deg);
+  }
+  .mobileComparisonPrice {
+    grid-column: 1 / -1;
+    font-size: var(--font-body);
+    font-weight: var(--weight-body);
+  }
+  .mobileComparisonGroup {
+    padding: 0;
+  }
+  .mobileComparisonGroup h4 {
+    margin: 0;
+    padding: 18px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-alt);
+    overflow-wrap: anywhere;
+  }
+  .mobileComparisonGroup dl {
+    margin: 0;
+  }
+  .mobileComparisonFeature {
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
+    font-size: var(--font-body);
+    overflow-wrap: anywhere;
+  }
+  .mobileComparisonFeature:last-child {
+    border-bottom: 0;
+  }
+  .mobileComparisonFeature dt {
+    font-weight: var(--weight-heading);
+  }
+  .mobileComparisonFeature dd {
+    margin: 0;
+    color: var(--muted);
+  }
+  .mobileComparisonFeature .included {
+    align-items: center;
+    gap: 8px;
+  }
+}
+@media (max-width: 360px) {
+  .mobileComparison {
+    --comparison-bleed: 16px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
+  .mobileComparisonHeader svg {
+    transition: none;
+  }
   .cards .card {
     opacity: 1 !important;
     translate: none !important;

@@ -1,4 +1,71 @@
 /* Original, code-drawn illustrative portfolio artwork. */
+.website-art.art-movement {
+  background: #e8ece4;
+  color: #243d37;
+}
+.movement-copy {
+  position: absolute;
+  z-index: 2;
+  top: 25%;
+  left: 6%;
+  width: 57%;
+}
+.movement-copy > span {
+  display: block;
+  font-size: 1.6cqw;
+  letter-spacing: 0.12em;
+}
+.movement-copy strong {
+  display: block;
+  margin-block: 5%;
+  font-size: 7.7cqw;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+.movement-copy small {
+  display: inline-block;
+  padding: 4% 6%;
+  border-radius: 30px;
+  background: #243d37;
+  color: #f3f4ea;
+  font-size: 1.8cqw;
+}
+.movement-shapes {
+  position: absolute;
+  width: 49%;
+  height: 75%;
+  right: -3%;
+  bottom: 11%;
+  rotate: -18deg;
+}
+.movement-shapes i {
+  position: absolute;
+  inset: 0 15%;
+  border: 4cqw solid #9eaf91;
+  border-radius: 50%;
+}
+.movement-shapes i:nth-child(2) {
+  inset: 12% -8% 12% 32%;
+  border-color: #d5b78e;
+  rotate: 35deg;
+}
+.movement-shapes i:nth-child(3) {
+  inset: 40% 21% -5% -8%;
+  border-width: 2cqw;
+  border-color: #52756a;
+  rotate: -30deg;
+}
+.movement-footer {
+  position: absolute;
+  inset: auto 6% 5%;
+  display: flex;
+  gap: 6%;
+  font-size: 1.5cqw;
+  letter-spacing: 0.1em;
+  border-top: 1px solid #243d3733;
+  padding-top: 3%;
+}
 .website-art {
   container-type: inline-size;
   position: relative;

@@ -122,7 +122,7 @@ export function FAQDirectory({
         </div>
         <div className="faq-topics-contact">
           <p>Имате друг въпрос?</p>
-          <Link href="/inquiry">
+          <Link href="/contact">
             Пишете ни <Icon name="external" />
           </Link>
         </div>

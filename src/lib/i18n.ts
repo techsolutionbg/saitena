@@ -6,10 +6,8 @@ export type Locale = (typeof locales)[number];
 export const localePrefixes: Record<Locale, string> = { bg: "", en: "/en" };
 export const translatedRoutes = {
   services: { bg: "/services", en: "/en/services" },
-  plans: { bg: "/plans", en: "/en/plans" },
+  prices: { bg: "/prices", en: "/en/prices" },
   portfolio: { bg: "/portfolio", en: "/en/portfolio" },
   about: { bg: "/about", en: "/en/about" },
   contact: { bg: "/contact", en: "/en/contact" },
-  inquiry: { bg: "/inquiry", en: "/en/inquiry" },
 } as const;
-

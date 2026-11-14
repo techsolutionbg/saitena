@@ -100,28 +100,6 @@ export function CustomPlanOffer() {
     <section className={styles.custom} aria-labelledby="custom-plan-title">
       <div className={`wrap ${styles.customInner}`}>
         <div className={styles.customCard}>
-          <div className={styles.customCopy}>
-            <span className={styles.customEyebrow}>
-              <Icon name="sparkles" />
-              ИНДИВИДУАЛНО РЕШЕНИЕ
-            </span>
-            <h2 id="custom-plan-title">
-              Индивидуална оферта за изработка на сайт на абонамент
-            </h2>
-            <p>
-              Всеки бизнес е различен. Ако стандартните планове не покриват
-              Вашите нужди, можем да предложим индивидуално решение с
-              подходящите функционалности, дизайн и техническа поддръжка.
-            </p>
-            <Link
-              href={`/inquiry?plan=${encodeURIComponent(customPlanValue)}`}
-              className={`button ${styles.customButton}`}
-            >
-              Поискайте индивидуална оферта
-              <Arrow />
-            </Link>
-            <p className={styles.customNote}>Разкажете ни какво Ви е нужно.</p>
-          </div>
           <div className={styles.customArt} aria-hidden="true">
             <div className={styles.customOrbit} />
             <div className={styles.customOrbitInner} />
@@ -143,6 +121,29 @@ export function CustomPlanOffer() {
             <span className={styles.customArtCaption}>
               Вашата идея. Нашата грижа.
             </span>
+          </div>
+          <div className={styles.customCopy}>
+            <span className={styles.customEyebrow}>
+              <Icon name="sparkles" />
+              ИНДИВИДУАЛНО РЕШЕНИЕ
+            </span>
+            <h2 id="custom-plan-title">
+              Индивидуална оферта за изработка на сайт на абонамент
+            </h2>
+
+            <p>
+              Всеки бизнес е различен. Ако стандартните планове не покриват
+              Вашите нужди, можем да предложим индивидуално решение с
+              подходящите функционалности, дизайн и техническа поддръжка.
+            </p>
+            <Link
+              href={`/contact?plan=${encodeURIComponent(customPlanValue)}`}
+              className={`button ${styles.customButton}`}
+            >
+              Поискайте индивидуална оферта
+              <Arrow />
+            </Link>
+            <p className={styles.customNote}>Разкажете ни какво Ви е нужно.</p>
           </div>
         </div>
       </div>

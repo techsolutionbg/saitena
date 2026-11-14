@@ -32,9 +32,9 @@ export const faqCategories: readonly FAQCategory[] = [
 
 const contextualLinks: Record<number, NonNullable<FAQItem["relatedLink"]>> = {
   4: { href: "/services", label: "Какво включва услугата" },
-  8: { href: "/plans", label: "Разгледайте абонаментните планове" },
-  15: { href: "/plans", label: "Вижте предложените планове" },
-  16: { href: "/inquiry", label: "Опишете вашия проект" },
+  8: { href: "/prices", label: "Разгледайте абонаментните планове" },
+  15: { href: "/prices", label: "Вижте предложените планове" },
+  16: { href: "/contact", label: "Опишете вашия проект" },
   25: { href: "/portfolio", label: "Разгледайте примерни проекти" },
 };
 

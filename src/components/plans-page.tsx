@@ -1,23 +1,95 @@
+import Link from "next/link";
 import { comparisonGroups, plans, priceLabel } from "@/lib/plans";
+import { plansFAQ } from "@/lib/plans-faq";
+import { PlanSecurity } from "./plan-security";
 import { PlanCards, CustomPlanOffer } from "./plan-cards";
-import { Check, Icon } from "./icons";
+import { Arrow, Check, Icon } from "./icons";
 import { FAQPreview } from "./faq-preview";
 import { getPlanFeatureHelp } from "@/lib/plan-feature-help";
 import { FeatureHelp } from "./feature-help";
+import { MobilePlanDisclosure } from "./mobile-plan-disclosure";
 import styles from "./plans.module.css";
 
-function ComparisonValue({ value }: { value: boolean | string }) {
+function ComparisonValue({
+  value,
+  showLabel = false,
+}: {
+  value: boolean | string;
+  showLabel?: boolean;
+}) {
   if (typeof value === "string") return value;
   return value ? (
     <span className={styles.included}>
       <Check />
-      <span className={styles.srOnly}>Включено</span>
+      <span className={showLabel ? undefined : styles.srOnly}>Включено</span>
     </span>
   ) : (
     <span className={styles.notIncluded}>
       <span aria-hidden="true">—</span>
-      <span className={styles.srOnly}>Не е включено</span>
+      <span className={showLabel ? undefined : styles.srOnly}>
+        Не е включено
+      </span>
     </span>
+  );
+}
+
+function MobilePlanComparison() {
+  const features = comparisonGroups.flatMap((group) => group.features);
+
+  return (
+    <div className={styles.mobileComparison}>
+      {plans.map((plan) => {
+        const helpSequence = features.map((feature) =>
+          getPlanFeatureHelp(feature.id, plan, feature.label),
+        );
+
+        return (
+          <MobilePlanDisclosure
+            planId={plan.id}
+            price={priceLabel(plan)}
+            key={plan.id}
+          >
+            {comparisonGroups.map((group) => (
+              <section
+                className={styles.mobileComparisonGroup}
+                key={group.title}
+              >
+                <h4>{group.title}</h4>
+                <dl>
+                  {group.features.map((feature) => {
+                    const index = features.findIndex(
+                      (item) => item.id === feature.id,
+                    );
+
+                    return (
+                      <div
+                        className={styles.mobileComparisonFeature}
+                        key={feature.id}
+                      >
+                        <dt className={styles.featureLabel}>
+                          <span>{feature.label}</span>
+                          <FeatureHelp
+                            help={helpSequence[index]}
+                            sequence={helpSequence}
+                            initialIndex={index}
+                          />
+                        </dt>
+                        <dd>
+                          <ComparisonValue
+                            value={feature.value(plan)}
+                            showLabel
+                          />
+                        </dd>
+                      </div>
+                    );
+                  })}
+                </dl>
+              </section>
+            ))}
+          </MobilePlanDisclosure>
+        );
+      })}
+    </div>
   );
 }
 
@@ -44,13 +116,35 @@ export function PlansPage() {
             нуждите от поддръжка. Заедно уточняваме подходящото решение и
             условията преди започване на работа.
           </p>
+          <div className={styles.heroActions}>
+            <Link href="/contact" className="button">
+              Да създадем Вашия сайт <Arrow />
+            </Link>
+            <a
+              href="#subscription-plans-title"
+              className="button button-secondary"
+            >
+              Разгледайте плановете <Arrow />
+            </a>
+          </div>
         </div>
       </header>
+      <CustomPlanOffer />
       <section
         className={`wrap ${styles.plans}`}
-        aria-label="Абонаментни планове"
+        aria-labelledby="subscription-plans-title"
       >
-        <PlanCards headingLevel="h2" />
+        <header className={styles.comparisonIntro}>
+          <h2 id="subscription-plans-title">Планове за сайтове на абонамент</h2>
+          <p>
+            Изберете план според нуждите и целите на Вашия бизнес. Всеки
+            абонамент включва изработка на уебсайт, хостинг, техническа
+            поддръжка и грижа за сигурността, без първоначална такса за
+            разработка. Сравнете възможностите и месечните цени, за да откриете
+            най-подходящото решение за Вас.
+          </p>
+        </header>
+        <PlanCards />
         <a className={styles.comparisonLink} href="#plan-comparison">
           Вижте всички характеристики
           <Icon name="chevron" />
@@ -61,13 +155,13 @@ export function PlansPage() {
         aria-labelledby="plan-comparison"
       >
         <header className={styles.comparisonIntro}>
-          <span className="eyebrow">ДЕТАЙЛИТЕ НА ЕДНО МЯСТО</span>
           <h2 id="plan-comparison">
-            Сравнете плановете и открийте подходящия за Вас
+            Сравнение на плановете за сайтове на абонамент
           </h2>
           <p className={styles.tableHint} id="comparison-help">
-            Вижте какво включва всеки план и сравнете възможностите, за да
-            изберете подходящото решение за Вашия бизнес.
+            Сравнете START, BUSINESS и PREMIUM по брой страници, дизайн,
+            хостинг, сигурност, оптимизация и месечна поддръжка. Открийте
+            подходящия план за изработка и развитие на сайта на Вашия бизнес.
           </p>
         </header>
         <div
@@ -160,17 +254,24 @@ export function PlansPage() {
             ))}
           </table>
         </div>
+        <MobilePlanComparison />
         <p className={styles.terms}>
-          Всички посочени цени на сайта са в евро и са без начислен ДДС. Цените
-          са ориентировъчни и не са фиксирани. Окончателната месечна такса се
-          определя индивидуално според избрания абонаментен план, необходимите
-          функционалности, обема на разработката и специфичните изисквания на
-          клиента. Преди започване на работа ще получите конкретна оферта с ясно
-          описани услуги и условия.
+          Saitena не е регистрирана по ДДС и не начислява ДДС върху посочените
+          цени. Всички цени са в евро. Цените са ориентировъчни и не са
+          фиксирани. Окончателната месечна такса се определя индивидуално според
+          избрания абонаментен план, необходимите функционалности, обема на
+          разработката и специфичните изисквания на клиента. Преди започване на
+          работа ще получите конкретна оферта с ясно описани услуги и условия.
         </p>
       </section>
-      <CustomPlanOffer />
-      <FAQPreview title="Имате въпроси за абонамента?" />
+      <PlanSecurity />
+      <FAQPreview
+        showContactLink
+        items={plansFAQ}
+        label="Въпроси за избора и сравнението на абонаментни планове"
+        title="Често задавани въпроси за сайтовете на абонамент"
+        description="Разгледайте отговорите за разликите между START, BUSINESS и PREMIUM, общите услуги и включените лимити. Те ще Ви помогнат да сравните плановете и да изберете подходящия обхват за Вашия сайт на абонамент."
+      />
     </>
   );
 }

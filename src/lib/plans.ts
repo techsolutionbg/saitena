@@ -112,7 +112,7 @@ export const plans: readonly SubscriptionPlan[] = [
 export const customPlanValue = "Индивидуална оферта";
 export const undecidedPlanValue = "Не съм сигурен/а";
 export const planInquiryHref = (plan: SubscriptionPlan) =>
-  `/inquiry?plan=${plan.id}`;
+  `/contact?plan=${plan.id}`;
 export const priceLabel = (plan: SubscriptionPlan) => `${plan.price} €`;
 export const monthlyTimeLabel = (plan: SubscriptionPlan) =>
   `${plan.monthlyHours} ${plan.monthlyHours === 1 ? "час" : "часа"}`;

@@ -10,13 +10,13 @@ export default async function PreviousConceptUrl({
   searchParams,
 }: Props) {
   const { concept, slug = [] } = await params;
-  const path = slug.join("/");
+  const oldPath = slug.join("/");
+  const path = oldPath === "inquiry" ? "contact" : oldPath;
   if (concept !== "clarity" || !allPages.includes(path)) notFound();
   const { plan } = await searchParams;
   const query =
-    path === "inquiry" && typeof plan === "string"
+    path === "contact" && typeof plan === "string"
       ? `?${new URLSearchParams({ plan })}`
       : "";
   permanentRedirect(`/${path}${query}`);
 }
-

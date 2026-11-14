@@ -1,21 +1,40 @@
 import Link from "next/link";
 import { faq } from "@/lib/faq-content";
+import type { FAQItem } from "@/lib/faq";
 import { FAQ } from "./faq";
 import { Arrow } from "./icons";
 
 /** Shared FAQ preview for the homepage and plans, using the same accordion behavior. */
 export function FAQPreview({
   title = "Всичко важно, преди да започнем.",
+  description = "Колко струва сайтът? Какво включва абонаментът? Какво се случва, ако решите да прекратите услугата? Отговаряме ясно на най-важните въпроси, за да направите информиран избор.",
+  items = faq.filter((item) =>
+    [
+      "subscription",
+      "pricing",
+      "timeline",
+      "monthly-changes",
+      "ownership",
+      "contract",
+    ].includes(item.id),
+  ),
+  label = "Въпроси за добър старт",
+  showContactLink = false,
 }: {
   title?: string;
+  description?: string;
+  items?: readonly FAQItem[];
+  label?: string;
+  showContactLink?: boolean;
 }) {
   return (
-      <div className="faq-backdrop">
-        <section className="faq-section wrap section" aria-label={title}>
+    <div className="faq-backdrop">
+      <div className="faq-art" aria-hidden="true">
+        {(["left", "right"] as const).map((side) => (
           <svg
-            className="faq-art"
-            viewBox="0 0 1280 1000"
-            preserveAspectRatio="none"
+            key={side}
+            viewBox={side === "left" ? "0 0 200 1000" : "1080 0 200 1000"}
+            preserveAspectRatio="xMidYMin meet"
             fill="none"
             aria-hidden="true"
             focusable="false"
@@ -53,33 +72,26 @@ export function FAQPreview({
               </text>
             </g>
           </svg>
-          <div>
-            <h2>{title}</h2>
-            <p>
-              Колко струва сайтът? Какво включва абонаментът? Какво се случва,
-              ако решите да прекратите услугата? Отговаряме ясно на най-важните
-              въпроси, за да направите информиран избор.
-            </p>
-          </div>
-          <FAQ
-            items={faq.filter((item) =>
-              [
-                "subscription",
-                "pricing",
-                "timeline",
-                "monthly-changes",
-                "ownership",
-                "contract",
-              ].includes(item.id),
-            )}
-            label="Въпроси за добър старт"
-            className="faq-cards"
-          />
-          <span className="eyebrow faq-afterword">ДОБРЕ Е ДА ЗНАЕТЕ</span>
+        ))}
+      </div>
+      <section className="faq-section wrap section" aria-label={title}>
+        <div>
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </div>
+        <FAQ items={items} label={label} className="faq-cards" />
+        <span className="eyebrow faq-afterword">ДОБРЕ Е ДА ЗНАЕТЕ</span>
+        <div className="faq-actions">
           <Link href="/faq" className="button">
             Всички въпроси и отговори <Arrow />
           </Link>
-        </section>
-      </div>
+          {showContactLink && (
+            <Link href="/contact" className="button button-secondary">
+              Свържете се с нас <Arrow />
+            </Link>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }

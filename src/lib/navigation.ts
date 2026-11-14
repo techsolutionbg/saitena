@@ -5,9 +5,9 @@ export const mainNavigation: NavigationItem[] = [
   { href: "/about", label: "За нас", icon: "users" },
   { href: "/services", label: "Услуги", icon: "monitor" },
   { href: "/portfolio", label: "Портфолио", icon: "grid" },
-  { href: "/plans", label: "Планове", icon: "wallet" },
+  { href: "/prices", label: "Цени", icon: "wallet" },
+  { href: "/faq", label: "ЧЗВ", icon: "help" },
   { href: "/contact", label: "Контакти", icon: "mail" },
-  { href: "/faq", label: "Често задавани въпроси", icon: "help" },
 ];
 export const mobileNavigation: NavigationItem[] = [
   { href: "/", label: "Начална страница", icon: "home" },
@@ -29,4 +29,3 @@ export const legalNavigation: NavigationItem[] = [
     icon: "layers",
   },
 ];
-

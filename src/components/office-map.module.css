@@ -1,0 +1,91 @@
+.section {
+  margin-bottom: 36px;
+}
+.card {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.header,
+.footer {
+  padding: 24px;
+}
+.header h2 {
+  margin: 0 0 12px;
+}
+.header p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.header svg {
+  color: var(--primary);
+}
+.canvas {
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+  height: 400px;
+  background: var(--surface-alt);
+  font-family: var(--font-family);
+}
+.marker {
+  background: transparent;
+  border: 0;
+}
+.pin {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 60px;
+  border: 3px solid var(--on-action);
+  border-radius: 26px 26px 26px 4px;
+  background: var(--action);
+  color: var(--on-action) !important;
+  box-shadow: var(--shadow);
+  pointer-events: auto;
+}
+.pin svg {
+  width: 32px;
+  height: 32px;
+}
+.pin:hover {
+  outline: 3px solid var(--action);
+}
+.pin:focus-visible {
+  outline: 4px solid var(--ink);
+  outline-offset: 4px;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.footer > a {
+  flex-shrink: 0;
+}
+.error {
+  padding: 16px 24px;
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+@media (max-width: 700px) {
+  .header,
+  .footer {
+    padding: 20px 16px;
+  }
+  .canvas {
+    height: 320px;
+  }
+  .footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

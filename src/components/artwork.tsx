@@ -5,10 +5,44 @@ export function WebsiteArtwork({
   kind?: string;
   compact?: boolean;
 }) {
+  if (kind === "movement")
+    return (
+      <div
+        className={`website-art art-movement ${compact ? "art-compact" : ""}`}
+        role="img"
+        aria-label="Дизайн на сайт за студио за движение"
+      >
+        <div className="art-top">
+          <b>move /</b>
+          <span>Занимания &nbsp; Програма &nbsp; Контакти ↗</span>
+        </div>
+        <div className="movement-copy">
+          <span>ПРОСТРАНСТВО ЗА ВАШИЯ РИТЪМ</span>
+          <strong>
+            Движение.
+            <br />
+            Баланс.
+            <br />
+            Всеки ден.
+          </strong>
+          <small>Открийте своето занимание ↗</small>
+        </div>
+        <div className="movement-shapes">
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="movement-footer">
+          <span>ЙОГА</span>
+          <span>ПИЛАТЕС</span>
+          <span>ДВИЖЕНИЕ</span>
+        </div>
+      </div>
+    );
   return (
     <div
       className={`website-art art-${kind} ${compact ? "art-compact" : ""}`}
-      aria-label={`Илюстративен дизайн на ${kind === "architecture" ? "архитектурен" : kind === "botanical" ? "флорален" : "консултантски"} сайт`}
+      aria-label={`Дизайн на ${kind === "architecture" ? "архитектурен" : kind === "botanical" ? "флорален" : "консултантски"} сайт`}
       role="img"
     >
       <div className="art-top">

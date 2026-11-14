@@ -3,18 +3,16 @@ import { articles, projects, routeTitles, startFeatures } from "@/lib/content";
 import { WebsiteArtwork } from "./artwork";
 import { InquiryForm, PortfolioGallery } from "./interactive";
 import { Arrow, Check, Icon } from "./icons";
-import {
-  ButtonLink,
-  CTA,
-  PageIntro,
-  Process,
-  SectionHeading,
-} from "./site";
+import { ButtonLink, CTA, PageIntro, Process, SectionHeading } from "./site";
 import { FAQ } from "./faq";
 import { faq, faqCategories } from "@/lib/faq-content";
 import { FAQDirectory } from "./faq-directory";
 import { PlansPage } from "./plans-page";
 import { startPlan } from "@/lib/plans";
+import { ContactQuickLinks } from "./contact-quick-links";
+import { ContactLocation } from "./contact-location";
+import { PortfolioHero } from "./portfolio-hero";
+import contactStyles from "./contact-page.module.css";
 
 export function ContentPage({ path, plan }: { path: string; plan?: string }) {
   if (path === "services")
@@ -29,7 +27,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
             България. Събираме изработката и текущата техническа поддръжка в
             една услуга.
           </p>
-          <ButtonLink to="plans">Разгледайте плановете</ButtonLink>
+          <ButtonLink to="prices">Разгледайте плановете</ButtonLink>
         </PageIntro>
         <section className="wrap service-overview">
           <div className="service-art">
@@ -80,21 +78,16 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
         <CTA />
       </>
     );
-  if (path === "plans") return <PlansPage />;
+  if (path === "prices") return <PlansPage />;
   if (path === "portfolio")
     return (
       <>
-        <PageIntro
-          eyebrow="ПОРТФОЛИО / ДИЗАЙН КОНЦЕПЦИИ"
-          title="Всеки бизнес има собствена история."
+        <PortfolioHero />
+        <section
+          id="portfolio-projects"
+          className="wrap portfolio-page"
+          aria-label="Галерия с проекти за сайтове"
         >
-          <p>
-            Три илюстративни проекта показват как структурата и дизайнът могат
-            да отразят различни дейности. Реални клиентски проекти ще бъдат
-            добавени с потвърдени права и информация.
-          </p>
-        </PageIntro>
-        <section className="wrap portfolio-page">
           <PortfolioGallery />
         </section>
         <CTA />
@@ -109,10 +102,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
           <span>/</span>
           {project.name}
         </div>
-        <PageIntro
-          eyebrow={`${project.type.toUpperCase()} · ИЛЮСТРАТИВНА КОНЦЕПЦИЯ`}
-          title={project.name}
-        >
+        <PageIntro eyebrow={project.type.toUpperCase()} title={project.name}>
           <p>{project.description}</p>
         </PageIntro>
         <section className="wrap case-study">
@@ -124,16 +114,12 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
               <span className="eyebrow">ЗАДАЧАТА</span>
               <h2>{project.title}</h2>
               <p>
-                Примерен бриф: ясно представяне на дейността, удобен мобилен
-                преглед и кратък път от интерес към запитване.
-              </p>
-              <p>
-                Не е реален клиентски проект. Няма заявени резултати, срок или
-                клиентски отзив.
+                Ясно представяне на дейността, удобен мобилен преглед и кратък
+                път от интерес към запитване.
               </p>
             </div>
             <div>
-              <span className="eyebrow">ПРЕДЛОЖЕНА СТРУКТУРА</span>
+              <span className="eyebrow">СТРУКТУРА НА САЙТА</span>
               <ul className="feature-list">
                 {project.scope.map((item) => (
                   <li key={item}>
@@ -226,68 +212,28 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
         <CTA />
       </>
     );
-  if (path === "contact" || path === "inquiry") {
-    const website = path === "inquiry";
+  if (path === "contact") {
     return (
-      <>
-        <PageIntro
-          eyebrow={website ? "ЗАПИТВАНЕ ЗА САЙТ" : "КОНТАКТИ"}
-          title={
-            website
-              ? "Всяка добра идея започва с разговор."
-              : "Насреща сме за следващата ви стъпка."
-          }
-        >
-          <p>
-            {website
-              ? "Разкажете ни накратко за бизнеса и сайта, който си представяте. Не е нужно да имате готов технически бриф."
-              : "Имате въпрос за Saitena, плановете или начина на работа? Тук е мястото да го зададете."}
-          </p>
-        </PageIntro>
-        <section className="wrap contact-layout">
-          <aside className="contact-aside">
-            <span className="eyebrow">
-              {website ? "КАКВО СЛЕДВА" : "ДА СЕ СВЪРЖЕМ"}
-            </span>
-            <h2>
-              {website
-                ? "Първо разбираме. После предлагаме."
-                : "Един ясен разговор е добро начало."}
-            </h2>
+      <div className={contactStyles.page}>
+        <section className={contactStyles.hero} aria-labelledby="contact-title">
+          <div className={`wrap ${contactStyles.heroInner}`}>
+            <h1 id="contact-title">Контакти</h1>
             <p>
-              {website
-                ? "В бъдещата работеща версия: преглеждаме запитването, уточняваме нуждите и предлагаме обхват. Срокът за отговор ще бъде потвърден преди стартиране."
-                : "Контактният имейл, телефонът, работното време и фирмените данни предстои да бъдат потвърдени."}
+              Имате въпрос за сайтовете на абонамент или искате да обсъдим Вашия
+              проект? Свържете се с нас по телефон, Viber или имейл, или ни
+              пишете чрез формата по-долу.
             </p>
-            <div className="contact-crosslink">
-              <span>
-                {website ? "Имате общ въпрос?" : "Планирате нов сайт?"}
-              </span>
-              <Link
-                className="text-link"
-                href={`/${website ? "contact" : "inquiry"}`}
-              >
-                {website ? "Обща контактна форма" : "Запитване за изработка"}
-                <Arrow />
-              </Link>
-            </div>
-            <div className="map-placeholder">
-              <span aria-hidden="true">
-                <Icon name="location" />
-              </span>
-              <b>Място за Google Maps</b>
-              <p>
-                Само след потвърждение на публичен адрес и настройките за
-                поверителност. В този прототип не се зарежда външна карта.
-              </p>
-            </div>
-          </aside>
-          <InquiryForm
-            kind={website ? "website" : "contact"}
-            initialPlan={plan}
-          />
+            <ContactQuickLinks />
+          </div>
         </section>
-      </>
+        <ContactLocation />
+        <section
+          id="contact-form"
+          className={`wrap ${contactStyles.formContainer}`}
+        >
+          <InquiryForm kind="contact" initialPlan={plan} />
+        </section>
+      </div>
     );
   }
   if (path === "faq")
@@ -306,7 +252,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
                 <Link className="button" href="#answers">
                   Разгледайте отговорите <Arrow />
                 </Link>
-                <Link className="text-link" href="/inquiry">
+                <Link className="text-link" href="/contact">
                   Задайте ни въпрос <Arrow />
                 </Link>
               </div>
@@ -383,7 +329,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
           ))}
           <div className="article-related">
             <h2>Продължете с конкретния обхват.</h2>
-            <ButtonLink to="plans">Вижте абонаментните планове</ButtonLink>
+            <ButtonLink to="prices">Вижте абонаментните планове</ButtonLink>
           </div>
           <p className="editor-note">
             Преди реално публикуване: редакционен преглед, потвърден автор, дата
@@ -531,4 +477,3 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
     </>
   );
 }
-

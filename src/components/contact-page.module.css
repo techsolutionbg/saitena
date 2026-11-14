@@ -1,0 +1,218 @@
+.page {
+  background: var(--bg);
+}
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-bottom: 40px;
+  padding-block: clamp(56px, 6vw, 88px);
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(
+      ellipse at 15% 100%,
+      color-mix(in srgb, var(--action) 11%, transparent),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 90% 0,
+      color-mix(in srgb, var(--primary) 9%, transparent),
+      transparent 50%
+    ),
+    var(--surface);
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -60% -15%;
+  rotate: -12deg;
+  opacity: 0.45;
+  background: repeating-radial-gradient(
+    ellipse at 90% 10%,
+    transparent 0 60px,
+    color-mix(in srgb, var(--primary) 22%, transparent) 60px 61px,
+    transparent 61px 95px
+  );
+  pointer-events: none;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: clamp(240px, 36vw, 600px);
+  aspect-ratio: 1;
+  top: -90%;
+  left: -12%;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 32px color-mix(in srgb, var(--primary) 3%, transparent),
+    0 0 0 64px color-mix(in srgb, var(--primary) 2%, transparent);
+  pointer-events: none;
+}
+.heroInner {
+  text-align: center;
+}
+.hero h1 {
+  font-size: var(--font-section);
+  font-weight: var(--weight-heading);
+  line-height: var(--line-section);
+}
+.hero h1::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  margin: 22px auto 24px;
+  border-radius: 4px;
+  background: var(--action);
+}
+.hero p {
+  max-width: 720px;
+  margin-inline: auto;
+  text-wrap: pretty;
+}
+.quickLinks {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  margin: 36px auto 0;
+  text-align: start;
+}
+.quickLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 56px;
+  padding: 20px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+a.quickLink:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--surface);
+}
+a.quickLink:focus-visible {
+  outline-offset: 5px;
+}
+.quickIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: var(--primary);
+}
+.quickIcon svg {
+  width: 30px;
+  height: 30px;
+}
+.quickCopy {
+  min-width: 0;
+  flex: 1;
+  max-width: 100%;
+}
+.quickLabel {
+  display: block;
+  color: var(--primary);
+  font-size: var(--font-small);
+  margin-bottom: 4px;
+}
+.quickValue {
+  display: block;
+  overflow-wrap: anywhere;
+  font-family: var(--font-paragraph);
+}
+.unavailable .quickValue {
+  color: var(--muted);
+}
+.formContainer {
+  max-width: 900px;
+  padding-bottom: 85px;
+}
+.formContainer :global(.form-heading) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 32px 24px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background:
+    radial-gradient(
+      ellipse at 50% 0,
+      color-mix(in srgb, var(--action) 10%, transparent),
+      transparent 70%
+    ),
+    var(--bg);
+  text-align: center;
+}
+.formContainer :global(.form-heading)::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -105px;
+  right: -105px;
+  width: 230px;
+  height: 230px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 26px color-mix(in srgb, var(--primary) 3%, transparent),
+    0 0 0 52px color-mix(in srgb, var(--primary) 2%, transparent);
+  pointer-events: none;
+}
+.formContainer :global(.form-heading > .section-icon) {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 22px;
+  border-color: color-mix(in srgb, var(--on-action) 25%, transparent);
+  border-radius: 20px;
+  background: var(--action);
+  color: var(--on-action);
+  box-shadow: var(--shadow);
+  rotate: -6deg;
+}
+.formContainer :global(.form-heading > .section-icon svg) {
+  rotate: 6deg;
+}
+.formContainer :global(.form-heading h2) {
+  max-width: 580px;
+  margin: 14px auto 0;
+}
+.formContainer :global(.form-heading h2)::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  margin: 22px auto 0;
+  border-radius: 4px;
+  background: var(--action);
+}
+.formContainer :global(.form-heading p) {
+  max-width: 580px;
+  margin: 20px auto 0;
+  text-wrap: pretty;
+}
+@media (max-width: 700px) {
+  .formContainer :global(.form-heading) {
+    padding: 24px 16px;
+  }
+  .quickLinks {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    width: 100%;
+  }
+  .formContainer {
+    padding-bottom: 48px;
+  }
+  .page :global(.page-intro h1),
+  .page :global(.page-intro-copy) {
+    max-width: none;
+  }
+}

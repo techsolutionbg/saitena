@@ -6,11 +6,13 @@ const config: NextConfig = {
   async redirects() {
     const routes = [
       ["uslugi", "services"],
-      ["planove", "plans"],
+      ["planove", "prices"],
+      ["plans", "prices"],
       ["za-nas", "about"],
       ["kontakti", "contact"],
       ["vuprosi", "faq"],
-      ["zapitvane", "inquiry"],
+      ["zapitvane", "contact"],
+      ["inquiry", "contact"],
       ["karta-na-saita", "sitemap"],
       ["pravni/poveritelnost", "legal/privacy"],
       ["pravni/biskvitki", "legal/cookies"],
