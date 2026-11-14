@@ -681,18 +681,6 @@ body:has(#mobile-sidebar[open]) .floating-theme {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.intro-section {
-  display: grid;
-  grid-template-columns: 0.8fr 1.6fr;
-  gap: 85px;
-}
-.intro-section p {
-  margin-top: 22px;
-  max-width: 750px;
-}
-.intro-section .text-link {
-  margin-top: 25px;
-}
 .section-heading {
   display: flex;
   justify-content: space-between;
@@ -1850,10 +1838,6 @@ body:has(#mobile-sidebar[open]) .floating-theme {
 @media (max-width: 900px) {
   .wrap {
     width: calc(100% - 56px);
-  }
-  .intro-section {
-    grid-template-columns: 1fr;
-    gap: 24px;
   }
   .plans-grid {
     grid-template-columns: 1fr;

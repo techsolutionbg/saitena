@@ -10,6 +10,7 @@ import { Arrow, Check, Icon, type IconName } from "./icons";
 import { Brand } from "./brand";
 import { HomeHero } from "./home-hero";
 import { BenefitsMarquee } from "./benefits-marquee";
+import { HomeStory } from "./home-story";
 import { PortfolioGallery } from "./interactive";
 import { FAQ } from "./faq";
 
@@ -294,24 +295,7 @@ export function Home() {
     <>
       <HomeHero />
       <BenefitsMarquee />
-      <section className="intro-section wrap section">
-        <span className="eyebrow">ПОВЕЧЕ ОТ ИЗРАБОТКА НА САЙТ</span>
-        <div>
-          <h2>
-            Вие градите бизнеса.
-            <br />
-            <span>Ние се грижим за сайта.</span>
-          </h2>
-          <p>
-            Сайтът не е еднократна задача. Той е вашата визитка, място за
-            услугите ви и начало на нови разговори. Събираме изработката и
-            техническата грижа в ясен месечен абонамент.
-          </p>
-          <Link href="/services" className="text-link">
-            Как работи абонаментът <Arrow />
-          </Link>
-        </div>
-      </section>
+      <HomeStory />
       <section className="portfolio-section section">
         <div className="wrap">
           <SectionHeading
@@ -325,7 +309,6 @@ export function Home() {
           <PortfolioGallery limit={2} />
         </div>
       </section>
-      <Process />
       <section className="pricing-section section">
         <div className="wrap">
           <SectionHeading
