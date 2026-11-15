@@ -38,7 +38,10 @@ export function buildContactLinks(
 ): readonly ContactLink[] {
   const email = settings.email?.trim() ?? "";
   const phone = settings.phone?.trim() ?? "";
-  const phoneNumber = phone.replace(/[\s().-]/g, "");
+  const compactPhone = phone.replace(/[\s().-]/g, "");
+  const phoneNumber = /^0[1-9]\d{7,8}$/.test(compactPhone)
+    ? `+359${compactPhone.slice(1)}`
+    : compactPhone.replace(/^00(?=[1-9])/, "+");
   return [
     {
       id: "email",

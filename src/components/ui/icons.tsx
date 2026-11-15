@@ -2,6 +2,37 @@ import type { SVGProps } from "react";
 import type { ReactNode } from "react";
 
 const iconPaths = {
+  clock: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 6v6l4 2" />
+    </>
+  ),
+  calendar: (
+    <>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M7 3v4m10-4v4M3 11h18M7 15h2m4 0h4m-10 3h2" />
+    </>
+  ),
+  codeMonitor: (
+    <>
+      <rect x="2" y="3" width="20" height="14" rx="2" />
+      <path d="m8 7-3 3 3 3m8-6 3 3-3 3m-3-7-2 8M8 21h8m-4-4v4" />
+    </>
+  ),
+  server: (
+    <>
+      <rect x="3" y="3" width="18" height="7" rx="2" />
+      <rect x="3" y="14" width="18" height="7" rx="2" />
+      <path d="M7 6.5h.01M7 17.5h.01M11 6.5h6M11 17.5h6" />
+    </>
+  ),
+  rocket: (
+    <>
+      <path d="M12 15 9 12c2-5 5-8 12-9 0 7-4 11-9 12Zm-3-3-5 1 1-5 8-1m-1 8-1 5 5-1 1-8M7 16l-3 4m1-5-2 2m5 2-2 2" />
+      <circle cx="16" cy="8" r="1.5" />
+    </>
+  ),
   call: (
     <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2Z" />
   ),

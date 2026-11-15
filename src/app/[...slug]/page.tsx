@@ -5,10 +5,11 @@ import { ContentPage } from "@/components/pages/pages";
 import { faqMetadata } from "@/lib/faq-content";
 import { plansMetadata } from "@/lib/plans";
 import { portfolioMetadata } from "@/lib/portfolio-content";
+import type { BlogQuery } from "@/lib/blog-catalog";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
-  searchParams: Promise<{ plan?: string | string[] }>;
+  searchParams: Promise<BlogQuery>;
 };
 export const dynamicParams = false;
 export function generateStaticParams() {
@@ -54,11 +55,12 @@ export default async function PublicPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const path = slug.join("/");
   if (!allPages.includes(path)) notFound();
-  const query = path === "contact" ? await searchParams : {};
+  const query = path === "contact" || path === "blog" ? await searchParams : {};
   return (
     <ContentPage
       path={path}
       plan={typeof query.plan === "string" ? query.plan : undefined}
+      blogQuery={path === "blog" ? query : undefined}
     />
   );
 }

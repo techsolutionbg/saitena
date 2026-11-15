@@ -1,0 +1,13 @@
+# Hero на блога
+
+Компонент: `src/components/blog/blog-hero.tsx`, CSS module и типизирани теми в `src/lib/blog-hero.ts`. Интеграция само в клона `/blog` на `ContentPage`; списъкът и съдържанието на статиите са запазени. Един H1, съществуващи metadata и canonical, server-rendered текст. Двата CTA водят към реалния `#blog-articles` с глобалното плавно превъртане и reduced-motion fallback.
+
+Няма newsletter система: вторият CTA е работещата алтернатива „Всички публикации“. Петте тематични направления са информационни, тъй като няма съответстващи маршрути за категории. Не е създавана система за абониране.
+
+Илюстрация: `public/images/blog-hero-studio-v1.webp`, 1200 × 1000, 182 746 bytes, прозрачна, декоративна (`alt=""`), responsive Next Image с предварително определени размери. Генерирана с вградения imagegen; оптимизирана с наличния sharp. Основното заглавие, описанието, бутоните и темите са HTML. Цветовете използват съществуващите семантични променливи. `overflow: clip` избягва вътрешно превъртане на декоративната секция при фокус и преоразмеряване.
+
+Проверки: TypeScript, Prettier и production build. Няма конфигуриран ESLint script. Визуален преглед на 1600, 768, 390 и 320 px; светла и тъмна тема; един H1, две запазени публикации, без хоризонтален overflow. Двата CTA са проверени с реално кликване до публикациите. Не е извършван production deployment.
+
+## Финален prompt — built-in imagegen
+
+Use case: stylized-concept. Asset type: standalone decorative website hero illustration for Bulgarian web agency Saitena blog. Create a premium polished cinematic 3D product scene isolated on genuinely transparent background: modern open silver laptop in three-quarter perspective, on its screen a clean blog grid with six article cards, thumbnail pictograms showing web development laptop, SEO rising graph, security shield. Screen small brand word Saitena, no other readable text required; all article copy represented by subtle abstract lines. Beside laptop a blue ceramic mug bearing an S, green plant in white pot, a small stack of books; behind laptop a beautiful black desk lamp with warm glow. Elegant navy and cobalt blue lighting, cyan highlights, warm lamp accent. Balanced wide compact composition, all objects fully within frame, foreground laptop large, no people. This is ONLY the illustration placed to the right of real HTML copy, not a screenshot or complete hero: NO headings, NO marketing text, NO CTA buttons, NO navigation, NO category strip, NO watermark. Transparent background and restrained soft contact shadows, look excellent against both pale blue and deep navy website backgrounds. Landscape 4:3 composition.

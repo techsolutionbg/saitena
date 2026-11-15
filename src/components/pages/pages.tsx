@@ -21,9 +21,21 @@ import { ServicesHero } from "@/components/services/services-hero";
 import { ServicesCatalog } from "@/components/services/services-catalog";
 import { WorkProcess } from "@/components/services/work-process";
 import { ServicesCTA } from "@/components/services/services-cta";
+import { BlogHero } from "@/components/blog/blog-hero";
+import { BlogCatalog } from "@/components/blog/blog-catalog";
+import { blogPosts } from "@/lib/blog-posts";
+import { parseBlogFilters, type BlogQuery } from "@/lib/blog-catalog";
 import contactStyles from "@/components/contact/contact-page.module.css";
 
-export function ContentPage({ path, plan }: { path: string; plan?: string }) {
+export function ContentPage({
+  path,
+  plan,
+  blogQuery,
+}: {
+  path: string;
+  plan?: string;
+  blogQuery?: BlogQuery;
+}) {
   if (path === "services")
     return (
       <>
@@ -223,40 +235,11 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
   if (path === "blog")
     return (
       <>
-        <PageIntro
-          eyebrow="БЛОГ / ПОЛЕЗНО"
-          title="По-ясен поглед към вашето онлайн присъствие."
-        >
-          <p>
-            Практични материали за хората зад малкия бизнес. Двете примерни
-            статии показват бъдещата структура на блога.
-          </p>
-        </PageIntro>
-        <section className="wrap article-grid">
-          {articles.map((article, i) => (
-            <Link
-              href={`/blog/${article.slug}`}
-              className="article-card"
-              key={article.slug}
-            >
-              <div
-                className={`article-art article-art-${i}`}
-                aria-hidden="true"
-              >
-                <span>{i === 0 ? "сайт\n+ грижа" : "идея\n→ сайт"}</span>
-                <i>0{i + 1} / НАРЪЧНИК</i>
-              </div>
-              <span className="eyebrow">
-                {article.category} · Примерен материал
-              </span>
-              <h2>{article.title}</h2>
-              <p>{article.description}</p>
-              <span className="text-link">
-                Прочетете <Arrow />
-              </span>
-            </Link>
-          ))}
-        </section>
+        <BlogHero />
+        <BlogCatalog
+          posts={blogPosts}
+          initialFilters={parseBlogFilters(blogQuery ?? {})}
+        />
         <CTA />
       </>
     );
