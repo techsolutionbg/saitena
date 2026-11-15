@@ -13,6 +13,16 @@ const names = [
   "Deployment failure and rollback rehearsal",
 ];
 const fixture = () => ({
+  branchProtection: {
+    required_status_checks: { contexts: ["verify"], strict: true },
+    required_pull_request_reviews: {
+      required_approving_review_count: 1,
+      dismiss_stale_reviews: true,
+    },
+    enforce_admins: { enabled: true },
+    allow_force_pushes: { enabled: false },
+    allow_deletions: { enabled: false },
+  },
   tag: "v1.0.0",
   sha,
   release: {
@@ -54,6 +64,18 @@ const fixture = () => ({
 });
 test("only an exact protected main release passes", () =>
   assert.doesNotThrow(() => assertReleasePolicy(fixture())));
+test("missing or bypassable main protection is not an approved release", () => {
+  for (const mutate of [
+    (x) => (x.branchProtection = undefined),
+    (x) => (x.branchProtection.required_status_checks.contexts = []),
+    (x) => (x.branchProtection.allow_force_pushes.enabled = true),
+    (x) => (x.branchProtection.enforce_admins.enabled = false),
+  ]) {
+    const x = fixture();
+    mutate(x);
+    assert.throws(() => assertReleasePolicy(x));
+  }
+});
 test("failed/skipped/cancelled/incomplete CI can never authorize deployment", () => {
   for (const conclusion of ["failure", "skipped", "cancelled", null]) {
     const x = fixture();

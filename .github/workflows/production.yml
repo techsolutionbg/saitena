@@ -25,7 +25,7 @@ jobs:
         with: {node-version: 24}
       - id: policy
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.SAITENA_RELEASE_POLICY_TOKEN || github.token }}
           RELEASE_TAG: ${{ inputs.release_tag }}
         run: node scripts/authorize-release.mjs
   build:

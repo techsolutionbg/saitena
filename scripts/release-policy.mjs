@@ -5,10 +5,31 @@ export function assertReleasePolicy({
   run,
   jobs,
   environment,
+  branchProtection,
 }) {
   const reject = (message) => {
     throw new Error(message);
   };
+  const contexts = [
+    ...(branchProtection?.required_status_checks?.contexts ?? []),
+    ...(branchProtection?.required_status_checks?.checks ?? []).map(
+      (c) => c.context,
+    ),
+  ];
+  if (
+    !contexts.includes("verify") ||
+    branchProtection?.required_status_checks?.strict !== true ||
+    (branchProtection?.required_pull_request_reviews
+      ?.required_approving_review_count ?? 0) < 1 ||
+    branchProtection?.required_pull_request_reviews?.dismiss_stale_reviews !==
+      true ||
+    branchProtection?.enforce_admins?.enabled !== true ||
+    branchProtection?.allow_force_pushes?.enabled !== false ||
+    branchProtection?.allow_deletions?.enabled !== false
+  )
+    reject(
+      "Actual main protection with required CI and independent PR review is required",
+    );
   if (
     !/^v\d+\.\d+\.\d+$/.test(tag) ||
     release.tag_name !== tag ||

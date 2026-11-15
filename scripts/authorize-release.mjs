@@ -25,5 +25,6 @@ const run = runs.find((r) => r.head_sha === sha);
 if (!run) throw new Error("No CI run for exact release commit");
 const jobs = api(`repos/${repo}/actions/runs/${run.id}/jobs?per_page=100`).jobs;
 const environment = api(`repos/${repo}/environments/production`);
-assertReleasePolicy({ tag, release, sha, run, jobs, environment });
+const branchProtection = api(`repos/${repo}/branches/main/protection`);
+assertReleasePolicy({ tag, release, sha, run, jobs, environment, branchProtection });
 appendFileSync(process.env.GITHUB_OUTPUT, `sha=${sha}\nci_run=${run.id}\n`);
