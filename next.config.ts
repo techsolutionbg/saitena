@@ -4,6 +4,21 @@ const config: NextConfig = {
   poweredByHeader: false,
   devIndicators: false,
   async redirects() {
+    const authRedirects =
+      process.env.NODE_ENV === "production" &&
+      process.env.NEXT_PUBLIC_AUTH_ENABLED !== "true"
+        ? [
+            "login",
+            "register",
+            "forgot-password",
+            "reset-password",
+            "verify-email",
+          ].map((path) => ({
+            source: `/${path}`,
+            destination: "/",
+            permanent: false,
+          }))
+        : [];
     const routes = [
       ["uslugi", "services"],
       ["planove", "prices"],
@@ -24,17 +39,21 @@ const config: NextConfig = {
         "blog/how-to-prepare-website-content",
       ],
     ];
-    return routes.flatMap(([oldPath, newPath]) => [
-      { source: `/${oldPath}`, destination: `/${newPath}`, permanent: true },
-      {
-        source: `/concepts/clarity/${oldPath}`,
-        destination: `/${newPath}`,
-        permanent: true,
-      },
-    ]);
+    return [
+      ...authRedirects,
+      ...routes.flatMap(([oldPath, newPath]) => [
+        { source: `/${oldPath}`, destination: `/${newPath}`, permanent: true },
+        {
+          source: `/concepts/clarity/${oldPath}`,
+          destination: `/${newPath}`,
+          permanent: true,
+        },
+      ]),
+    ];
   },
   // This isolated preview has no connection to the frozen hosting platform.
   async headers() {
+    if (process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true") return [];
     return [
       {
         source: "/:path*",

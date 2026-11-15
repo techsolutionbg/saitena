@@ -1,0 +1,25 @@
+name: saitena-website-public-release
+services:
+  site:
+    image: ${SAITENA_IMAGE:?Set reviewed immutable image digest}
+    env_file: ${CONTACT_ENV_FILE:?Set protected runtime SMTP env file path}
+    ports: ["127.0.0.1:13000:3000"]
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 1
+    networks:
+      edge:
+        aliases: [saitena-public-candidate]
+    logging:
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+networks:
+  edge:
+    external: true
+    name: ${EDGE_NETWORK:?Verify actual Caddy network before approval}

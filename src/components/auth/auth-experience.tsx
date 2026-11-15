@@ -203,17 +203,19 @@ export function AuthExperience({ mode }: { mode: Mode }) {
     };
     window.history.replaceState(null, "", "/verify-email");
 
-    if (
-      !/^\d+$/.test(credentials.id) ||
-      !/^[a-f\d]{40}$/i.test(credentials.hash) ||
-      !/^\d+$/.test(credentials.expires) ||
-      !/^[a-f\d]{64}$/i.test(credentials.signature)
-    ) {
-      setVerificationState("invalid");
-      return;
+    async function verifyCredentials() {
+      if (
+        !/^\d+$/.test(credentials.id) ||
+        !/^[a-f\d]{40}$/i.test(credentials.hash) ||
+        !/^\d+$/.test(credentials.expires) ||
+        !/^[a-f\d]{64}$/i.test(credentials.signature)
+      ) {
+        throw new AuthApiError(403);
+      }
+      await verifyEmail(credentials);
     }
 
-    verifyEmail(credentials)
+    verifyCredentials()
       .then(() => setVerificationState("success"))
       .catch((cause: unknown) => {
         if (cause instanceof AuthApiError && cause.status === 429) {

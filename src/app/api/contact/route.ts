@@ -1,5 +1,5 @@
 import { validateContactMessage } from "@/lib/contact-message";
-import { sendLocalContactMail } from "@/lib/local-contact-mail";
+import { sendContactMail } from "@/lib/contact-mail";
 
 export const runtime = "nodejs";
 const MAX_BODY_BYTES = 20_000;
@@ -13,11 +13,6 @@ function response(error: string, status: number) {
 }
 
 export async function POST(request: Request) {
-  if (process.env.NODE_ENV !== "development")
-    return response(
-      "Изпращането е достъпно само в локалната тестова среда.",
-      503,
-    );
   if (
     request.headers.get("origin") !==
       `${new URL(request.url).protocol}//${request.headers.get("host")}` ||
@@ -62,7 +57,7 @@ export async function POST(request: Request) {
   if (!validation.ok) return response(validation.error, 400);
 
   try {
-    await sendLocalContactMail(validation.message);
+    await sendContactMail(validation.message);
     return Response.json(
       { ok: true },
       { headers: { "Cache-Control": "no-store" } },

@@ -1,0 +1,13 @@
+.git
+.env*
+node_modules
+.next
+tools/lint/node_modules
+qa-output
+docs/**
+!docs/binary-review-manifest.json
+public/brand/saitena-logo-master.png
+public/images/portfolio-hero-v1.webp
+.vscode
+*.tsbuildinfo
+*.log

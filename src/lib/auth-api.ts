@@ -6,6 +6,8 @@ export class AuthApiError extends Error {
 }
 
 function apiUrl(): string {
+  if (process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_AUTH_ENABLED !== "true")
+    throw new AuthApiError(-1);
   const value =
     process.env.NEXT_PUBLIC_API_URL ||
     (process.env.NODE_ENV === "production" ? "https://api.saitena.com" : "");
