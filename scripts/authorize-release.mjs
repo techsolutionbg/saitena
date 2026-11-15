@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { appendFileSync } from "node:fs";
+import { appendFileSync, readFileSync } from "node:fs";
 import { assertReleasePolicy } from "./release-policy.mjs";
 const tag = process.env.RELEASE_TAG;
 const repo = process.env.GITHUB_REPOSITORY;
@@ -26,5 +26,20 @@ if (!run) throw new Error("No CI run for exact release commit");
 const jobs = api(`repos/${repo}/actions/runs/${run.id}/jobs?per_page=100`).jobs;
 const environment = api(`repos/${repo}/environments/production`);
 const branchProtection = api(`repos/${repo}/branches/main/protection`);
-assertReleasePolicy({ tag, release, sha, run, jobs, environment, branchProtection });
+const approvalPolicy = JSON.parse(
+  readFileSync(".deployment/solo-maintainer.json", "utf8"),
+);
+assertReleasePolicy({
+  tag,
+  release,
+  sha,
+  run,
+  jobs,
+  environment,
+  branchProtection,
+  approvalPolicy,
+  actor: process.env.GITHUB_ACTOR,
+  triggeringActor: process.env.GITHUB_TRIGGERING_ACTOR,
+  confirmation: process.env.RELEASE_CONFIRMATION,
+});
 appendFileSync(process.env.GITHUB_OUTPUT, `sha=${sha}\nci_run=${run.id}\n`);

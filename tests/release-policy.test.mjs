@@ -13,11 +13,15 @@ const names = [
   "Deployment failure and rollback rehearsal",
 ];
 const fixture = () => ({
+  approvalPolicy: { mode: "solo-maintainer", maintainers: ["techsolutionbg"] },
+  actor: "techsolutionbg",
+  triggeringActor: "techsolutionbg",
+  confirmation: "v1.0.0",
   branchProtection: {
     required_status_checks: { contexts: ["verify"], strict: true },
     required_pull_request_reviews: {
-      required_approving_review_count: 1,
-      dismiss_stale_reviews: true,
+      required_approving_review_count: 0,
+      dismiss_stale_reviews: false,
     },
     enforce_admins: { enabled: true },
     allow_force_pushes: { enabled: false },
@@ -30,6 +34,7 @@ const fixture = () => ({
     draft: false,
     prerelease: false,
     published_at: "2026-11-15",
+    author: { login: "techsolutionbg" },
   },
   run: {
     head_sha: sha,
@@ -52,11 +57,12 @@ const fixture = () => ({
     },
   ],
   environment: {
+    can_admins_bypass: false,
     protection_rules: [
       {
         type: "required_reviewers",
-        prevent_self_review: true,
-        reviewers: [{ type: "Team" }],
+        prevent_self_review: false,
+        reviewers: [{ type: "User", reviewer: { login: "techsolutionbg" } }],
       },
     ],
     deployment_branch_policy: { protected_branches: true },
@@ -64,6 +70,24 @@ const fixture = () => ({
 });
 test("only an exact protected main release passes", () =>
   assert.doesNotThrow(() => assertReleasePolicy(fixture())));
+test("solo approval is explicit and cannot be silently treated as independent review", () => {
+  for (const mutate of [
+    (x) => (x.actor = "other"),
+    (x) => (x.triggeringActor = "other"),
+    (x) => (x.confirmation = ""),
+    (x) => (x.release.author.login = "other"),
+    (x) => (x.environment.can_admins_bypass = true),
+    (x) => (x.environment.protection_rules[0].reviewers = []),
+    (x) => (x.environment.protection_rules[0].prevent_self_review = true),
+    (x) => (x.branchProtection.required_pull_request_reviews = null),
+    (x) =>
+      (x.branchProtection.required_pull_request_reviews.required_approving_review_count = 1),
+  ]) {
+    const x = fixture();
+    mutate(x);
+    assert.throws(() => assertReleasePolicy(x));
+  }
+});
 test("missing or bypassable main protection is not an approved release", () => {
   for (const mutate of [
     (x) => (x.branchProtection = undefined),
@@ -91,6 +115,7 @@ test("failed/skipped/cancelled/incomplete CI can never authorize deployment", ()
 test("PR artifacts, wrong SHA, missing tests, draft releases and unprotected environment are refused", () => {
   for (const mutate of [
     (x) => (x.run.event = "pull_request"),
+    (x) => (x.run.head_branch = "dev"),
     (x) => (x.run.head_sha = "b".repeat(40)),
     (x) => x.jobs[0].steps.pop(),
     (x) => (x.release.draft = true),

@@ -6,10 +6,22 @@ export function assertReleasePolicy({
   jobs,
   environment,
   branchProtection,
+  approvalPolicy,
+  actor,
+  triggeringActor,
+  confirmation,
 }) {
   const reject = (message) => {
     throw new Error(message);
   };
+  if (
+    approvalPolicy?.mode !== "solo-maintainer" ||
+    !approvalPolicy.maintainers?.includes(actor) ||
+    !approvalPolicy.maintainers.includes(triggeringActor) ||
+    confirmation !== tag ||
+    !approvalPolicy.maintainers.includes(release.author?.login)
+  )
+    reject("Explicit solo-maintainer release authorization is required");
   const contexts = [
     ...(branchProtection?.required_status_checks?.contexts ?? []),
     ...(branchProtection?.required_status_checks?.checks ?? []).map(
@@ -19,17 +31,17 @@ export function assertReleasePolicy({
   if (
     !contexts.includes("verify") ||
     branchProtection?.required_status_checks?.strict !== true ||
-    (branchProtection?.required_pull_request_reviews
-      ?.required_approving_review_count ?? 0) < 1 ||
-    branchProtection?.required_pull_request_reviews?.dismiss_stale_reviews !==
-      true ||
+    branchProtection?.required_pull_request_reviews
+      ?.required_approving_review_count !== 0 ||
+    branchProtection?.required_pull_request_reviews
+      ?.require_code_owner_reviews === true ||
+    branchProtection?.required_pull_request_reviews
+      ?.require_last_push_approval === true ||
     branchProtection?.enforce_admins?.enabled !== true ||
     branchProtection?.allow_force_pushes?.enabled !== false ||
     branchProtection?.allow_deletions?.enabled !== false
   )
-    reject(
-      "Actual main protection with required CI and independent PR review is required",
-    );
+    reject("Actual solo main protection with mandatory CI and PR is required");
   if (
     !/^v\d+\.\d+\.\d+$/.test(tag) ||
     release.tag_name !== tag ||
@@ -79,10 +91,16 @@ export function assertReleasePolicy({
   );
   if (
     !rule?.reviewers?.length ||
-    rule.prevent_self_review !== true ||
+    !rule.reviewers.some(
+      (r) =>
+        r.type === "User" &&
+        approvalPolicy.maintainers.includes(r.reviewer?.login),
+    ) ||
+    rule.prevent_self_review !== false ||
+    environment.can_admins_bypass !== false ||
     environment.deployment_branch_policy?.protected_branches !== true
   )
     reject(
-      "Protected production environment with independent reviewers is required",
+      "Protected production environment with explicit owner review is required (not independent review)",
     );
 }

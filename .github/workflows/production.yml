@@ -5,6 +5,9 @@ on:
       release_tag:
         description: Published stable release tag on reviewed main (vX.Y.Z)
         required: true
+      confirm_release_tag:
+        description: Owner confirmation — type the exact same release tag again
+        required: true
 permissions:
   contents: read
 concurrency:
@@ -27,6 +30,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.SAITENA_RELEASE_POLICY_TOKEN || github.token }}
           RELEASE_TAG: ${{ inputs.release_tag }}
+          RELEASE_CONFIRMATION: ${{ inputs.confirm_release_tag }}
         run: node scripts/authorize-release.mjs
   build:
     timeout-minutes: 30
