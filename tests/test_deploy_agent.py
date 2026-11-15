@@ -79,6 +79,14 @@ class DeploymentTests(unittest.TestCase):
         with self.assertRaises(RuntimeError): agent.transact(self.request,self.config,runtime)
         runtime.content=b"later-release"
         with self.assertRaisesRegex(RuntimeError,"routing_changed_since"): agent.recover(Path(self.temp.name)/"v1.0.0.json",runtime)
+    def test_automatic_rollback_preserves_concurrent_operator_edit(self):
+        runtime=FakeRuntime()
+        def changed(expected=None):
+            runtime.content=b"operator-change"
+            raise RuntimeError("fixture_failure")
+        runtime.public_checks=changed
+        with self.assertRaisesRegex(RuntimeError,"manual_recovery_required"): agent.transact(self.request,self.config,runtime)
+        self.assertEqual(runtime.content,b"operator-change")
 
 
 if __name__ == "__main__": unittest.main()

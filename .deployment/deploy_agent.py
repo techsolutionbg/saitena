@@ -34,6 +34,11 @@ def save(path, value):
         stream.flush()
         os.fsync(stream.fileno())
     os.replace(temp, path)
+    directory = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
 
 
 class Runtime:
@@ -170,6 +175,8 @@ def transact(request, config, runtime):
     except Exception:
         if switched:
             try:
+                if runtime.route() not in [candidate, original]:
+                    raise RuntimeError("concurrent_routing_change_rollback_refused")
                 runtime.apply(original)
                 runtime.rollback_checks(entry["baseline_digest"])
                 entry["phase"] = "rolled_back"
