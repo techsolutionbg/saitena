@@ -183,6 +183,16 @@ summary {
   min-height: 100vh;
   overflow-x: clip;
 }
+/* Authentication screens use a focused layout while retaining the shared root layout. */
+.site:has(.auth-page) > .site-header,
+.site:has(.auth-page) > .site-footer,
+body:has(.auth-page) > .floating-theme,
+body:has(.auth-page) > a[aria-label^="Обадете се на Saitena"] {
+  display: none;
+}
+.site:has(.auth-page) > main {
+  min-height: 100svh;
+}
 .wrap {
   width: calc(100% - 96px);
   max-width: 1280px;

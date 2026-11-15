@@ -89,7 +89,15 @@
   flex: 1 1 250px;
   white-space: normal;
 }
+.actions > a:first-child {
+  flex-basis: 260px;
+  justify-content: center;
+  gap: 12px;
+}
 .actions .secondary {
+  flex-basis: 260px;
+  justify-content: center;
+  gap: 8px;
   color: var(--services-hero-ink);
   background: color-mix(in srgb, var(--services-hero-bg) 70%, transparent);
   border-color: var(--services-accent-design);
@@ -233,6 +241,13 @@
     min-width: 0;
     text-align: center;
     padding-inline: 16px;
+  }
+  .actions .secondary {
+    flex-basis: 100%;
+    gap: 12px;
+  }
+  .actions > a:first-child {
+    flex-basis: 100%;
   }
   .actions a span {
     min-width: 0;

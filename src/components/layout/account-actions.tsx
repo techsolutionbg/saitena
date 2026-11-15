@@ -1,4 +1,5 @@
 import { Icon } from "@/components/ui/icons";
+import Link from "next/link";
 import styles from "./account-actions.module.css";
 
 export interface HeaderUser {
@@ -22,20 +23,17 @@ export function AccountActions({ user }: { user?: HeaderUser | null }) {
       >
         <Icon name="cart" />
       </button>
-      <button
-        type="button"
+      <Link
         className={`${styles.control} ${fullName ? styles.profile : ""}`}
         aria-label={
-          fullName
-            ? `Профил: ${fullName} — предстои`
-            : "Потребителски профил — предстои"
+          fullName ? `Вход в профила: ${fullName}` : "Вход в клиентската зона"
         }
-        aria-disabled="true"
-        title="Потребителски профил — функционалността предстои"
+        href="/login"
+        title="Вход в клиентската зона"
       >
         <Icon name="user" />
         {fullName && <span className={styles.name}>{fullName}</span>}
-      </button>
+      </Link>
     </div>
   );
 }
