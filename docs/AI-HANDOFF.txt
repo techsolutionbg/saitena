@@ -1,0 +1,461 @@
+SAITENA WEBSITE — ПРЕДАВАНЕ НА ПРОЕКТА КЪМ СЛЕДВАЩ AI
+Актуално към 15.11.2026 г.
+
+Това е контекст за продължаване на съществуващ проект, а не задача за нова инициализация.
+Не съдържа пароли, токени или копие на .env.
+
+1. КАКЪВ Е ПРОЕКТЪТ
+
+Публичният сайт на Saitena — услуга за изработка на сайтове на месечен абонамент.
+Аудитория: частни лица, самонаети специалисти и малки/средни фирми в България.
+Основен език: български. URL slug-овете са на английски.
+Има i18n подготовка в src/lib/i18n.ts, но няма завършена английска версия.
+Съдържанието се управлява през код; няма CMS или административен панел.
+
+Този сайт НЕ е хостинг платформата Saitena. Платформата е отделен, замразен проект.
+Не се променят нейният код, база данни, DNS, Cloudflare, инфраструктура или поддомейни.
+Няма извършван production deployment от този разговор.
+
+Последната известна директория преди планираното преместване:
+C:\Users\krisi\Desktop\tech-solution\saitena
+Потребителят ще премества проекта. Първо установи новия реален път; не използвай стария на сляпо.
+В тази директория вече има .git. Не инициализирай ново Git repository и не заличавай текущата работа.
+
+2. ЗАДЪЛЖИТЕЛНИ ПРАВИЛА И ПРЕДПОЧИТАНИЯ
+
+Първо прочети AGENTS.md и .agents/skills/saitena-development/SKILL.md в проекта.
+Следвай KPK: четим и надежден код, DRY, KISS, strict TypeScript, ясни отговорности,
+SOLID/OOP само когато са подходящи; не налагай класове върху React функционални компоненти.
+Без ненужни зависимости, големи несвързани рефакторирания и отслабване на типовете.
+Запазвай паралелните промени; чети актуалните файлове преди редакция.
+Не създавай нов проект. Не променяй глобални настройки или други проекти.
+Не спирай чужди процеси/контейнери. Проверявай за конфликти на портове.
+Не прави production deployment без отделна изрична задача.
+Преди Next.js промени прочети релевантните локални ръководства в node_modules/next/dist/docs/.
+
+Потребителят предпочита директно изпълнение на ясните задачи, без повтарящи се потвърждения.
+Общувай на български. При UI промени провери desktop/mobile и двете теми според обхвата.
+Отчитай само реално изпълнени проверки. Няма конфигуриран ESLint script.
+Не връщай избор на дизайн между три концепции: единствената одобрена посока е „Ясно напред“.
+Приложените изображения служат като визуални референции; HTML текстът и контролите трябва да са реални компоненти.
+Не превръщай цяла секция в един растерен банер.
+
+3. ВАЖНИ ПРОТИВОРЕЧИЯ В СТАРИ ДОКУМЕНТИ
+
+README.md е актуализиран след съставянето на това предаване и вече описва текущото състояние.
+docs/stage-1.md остава историческо предложение. В по-стари документи/копия на README
+може да има твърдения, че START е 50 EUR, адресите са /planove и /kontakti,
+няма работеща локална форма/карта или се запазва само темата; те вече не са актуални.
+Текущите цени са 30/50/70 EUR, canonical ценовата страница е /prices,
+контактната е /contact, има локално изпращане през Mailpit, OpenStreetMap и настройка за размер на текста.
+
+AGENTS.md също е актуализиран: описва общите typography tokens, визуалните роли,
+по-малките базови размери на телефон, двете теми и text scale 80–150%.
+Правилата са синхронизирани с README и текущия код; старото универсално правило
+за 24px заглавия вече не важи. Подробности: docs/typography.md.
+Някои docs още споменават /plans; действителният адрес е /prices с redirect от /plans.
+Старите screenshots показват история, не всички са актуален целеви дизайн.
+
+4. ТЕХНОЛОГИИ
+
+Next.js 16.4.6, App Router; React/React DOM 19.3.1; TypeScript 7.0.2.
+Последно използван Node.js 24.20.0, npm, Windows PowerShell.
+CSS Modules за новите секции плюс src/app/globals.css и src/app/artwork.css.
+Prettier 3.10.1, без Tailwind и без тежка анимационна библиотека.
+@fontsource/manrope и @fontsource/lora 5.3.0; параграфите са със Segoe UI.
+Leaflet 1.9.4 за OpenStreetMap.
+Nodemailer 10.5.0 за локалната тестова поща.
+Точните зависимости са в package.json и package-lock.json; не ги обновявай без необходимост.
+
+5. АРХИТЕКТУРА
+
+src/app/layout.tsx: общ Header, main, Footer, AppearanceControls, FloatingCall,
+метаданни, lang=bg, ранно прилагане на тема и размер на текста.
+src/app/page.tsx: начална страница.
+src/app/[...slug]/page.tsx: вътрешни маршрути, metadata, static params и query input.
+src/components/pages/pages.tsx: композиция на вътрешните страници чрез ContentPage.
+src/app/api/contact/route.ts: локална контактна API функционалност.
+src/app/loading.tsx и [...slug]/loading.tsx: Next route loading fallback със spinner.
+Това е fallback за готовността на route съдържанието, не изкуствен loader до всяка lazy снимка.
+src/app/robots.ts и next.config.ts: preview ограничения за индексирането и redirects.
+
+Компонентите са разделени по папки:
+  appearance/ — appearance-controls, theme-toggle
+  layout/ — header, footer, brand, account-actions
+  ui/ — icons, scroll-reveal, feature-help, button-link, section-heading, page-intro
+  illustrations/ — artwork
+  home/ — home, home-hero, hero-waves, benefits-marquee, home-story
+  pricing/ — plans-page, prices-hero, plan-cards, plan-security, mobile-plan-disclosure
+  contact/ — inquiry-form, contact-success-dialog, quick links, location, office-map, floating-call
+  portfolio/ — portfolio-hero, portfolio-gallery, portfolio-cta
+  services/ — services-hero, services-catalog, work-process, services-cta
+  faq/ — faq, faq-preview, faq-directory
+  blog/ — blog-hero, blog-catalog, blog-post-card, blog-pagination
+  pages/ — pages.tsx
+  shared/ — cta, process
+
+Старите смесени site.tsx и interactive.tsx са разделени на модули.
+Не ги възстановявай и не смесвай ненужно server/client границите.
+src/components/README.md описва организацията.
+
+src/lib/ съдържа типизирани данни, metadata, логика за планове, FAQ, блог,
+контакти, теми, typography, вълни и отделните съдържателни секции.
+Изображения: public/images. Брандиране: public/brand.
+Генерираните илюстрации са запазени в проекта; не зависи от временни attachment paths.
+Прозрачните SVG лога съдържат вграден растер, не са истинско векторно прерисуване.
+
+6. АДРЕСИ И НАВИГАЦИЯ
+
+/ — начална
+/about — за нас
+/services — услуги
+/portfolio — портфолио
+/portfolio/[slug] — проект
+/prices — ориентировъчни цени/планове
+/faq — всички въпроси и отговори
+/contact — контактна страница и форма
+/blog — блог
+/blog/[slug] — статия
+/sitemap — HTML карта на сайта
+/legal/privacy, /legal/cookies, /legal/terms, /legal/subscription-terms — правни страници
+
+Главното меню е: За нас, Услуги, Портфолио, Цени, ЧЗВ, Блог, Контакти.
+Един източник mainNavigation в src/lib/navigation.ts за desktop и mobile.
+Актуалните redirects са в next.config.ts:
+/plans и /planove -> /prices; /vuprosi -> /faq;
+/inquiry и /zapitvane -> /contact; старите български slug-ове -> английските.
+Не добавяй паралелна контактна страница. Изборът на план води към /contact?plan=START|BUSINESS|PREMIUM.
+
+Header се прибира при скрол надолу и се показва при скрол нагоре.
+Мобилното меню е native modal dialog sidebar с икони, Escape, focus trap и reduced motion.
+Надписите „ЯСНО НАПРЕД“ и „Вашето място онлайн.“ са премахнати от sidebar.
+Настройките за изглед са долу в sidebar на малък екран.
+Desktop breakpoint е container query 60rem спрямо наличната ширина и избрания text scale.
+
+Бутонът „Да поговорим“ е заменен от иконки за количка и профил.
+AccountActions приема user?: { firstName, lastName }; без user показва само иконка,
+с user показва име и фамилия. Header може да получи същите данни.
+Това е само UI подготовка: няма auth, регистрация, количка, checkout, поръчки или плащания.
+Контролите са aria-disabled и не извършват действия.
+
+7. ДИЗАЙН СИСТЕМА И ОБЩО ПОВЕДЕНИЕ
+
+Две теми чрез data-theme върху html, едни компоненти и CSS semantic variables.
+Ключови tokens: --bg, --surface, --surface-alt, --ink, --muted, --primary,
+--action, --on-action, --line, --focus, --shadow.
+Има допълнителни services-hero/accent tokens за технологичните илюстрации.
+Използвай общите бутони, Brand и Icon от src/components/ui/icons.tsx.
+
+Основна desktop типография при 100%: body 18 px/400, компактни заглавия 24 px/600,
+секционни заглавия responsive до 40 px, малки надписи 14 px.
+До 640 px: body 16, compact heading 22, section 26, small 13 px.
+Началният H1 има отделна одобрена по-голяма скала, uppercase и weight 800.
+Подчертаващите декоративни черти стоят под заглавието, преди описанието.
+Новите бутони с икони в ServicesHero/ServicesCTA са центрирани, с фиксиран разумен gap,
+за да не се разпиляват текстът и иконата в двата края.
+
+Долу вляво има popup „Изглед“: тема, пауза на hero вълните, общ размер на текста 80–150% през 10%.
+Скалата --text-scale върху html мащабира текстовете заедно, не отделно за всеки тип.
+Theme key: saitena-theme; text scale key: saitena-text-size. Прилагат се преди първо рисуване.
+Смяната на тема има ефект на полумесец чрез View Transitions с fallback/reduced motion.
+Пауза на вълните е клиентско състояние; не приемай, че е персистирана в localStorage.
+
+Общият ScrollReveal използва IntersectionObserver. Без JavaScript съдържанието остава видимо.
+Появяване при скрол има за home story, планове, security cards, портфолио и блог.
+Следвай reduced motion и незабавно показване при keyboard focus.
+
+Долу вдясно на всички страници има плаваща телефонна иконка FloatingCall.
+Връзката е tel: от SAITENA_CONTACT_PHONE; при липса/невалиден номер е disabled.
+Последната поправка: contact-links.ts приема български номер с 0 и го нормализира към +359;
+приема също международни номера с + и 00; отхвърля невалидни/опасни стойности.
+Не е извършвано реално обаждане при тестовете. Бутонът се скрива при отворен мобилен sidebar.
+
+8. НАЧАЛНА СТРАНИЦА
+
+HomeHero -> BenefitsMarquee -> HomeStory -> Нашите проекти -> CustomPlanOffer -> FAQPreview -> финален CTA.
+Няма секция с планови карти на началната страница.
+Hero: центриран текст и canvas вълни, отделни оптимизирани светли/тъмни фонове.
+H1: „Сайтове на абонамент с красив дизайн, бързина и сигурност“.
+Визуално uppercase, бяло/тъмно според темата; „БЪРЗИНА“ и „СИГУРНОСТ“ са бели върху син фон.
+„КРАСИВ“ остава нормална част от заглавието без син фон.
+Малък надпис: „БЕЗ ПЪРВОНАЧАЛНА ТАКСА“.
+Няма отделен ценови ред и стария долен ред с трите преимущества в hero.
+Точният актуален текст е в компонента; не възстановявай стари версии от screenshots.
+Появяване: 500 ms с последователни закъснения, приблизително 1 секунда общо.
+
+BenefitsMarquee е full width, 4 видими елемента desktop, 2 tablet, 1 phone.
+Движи се на стъпки: бързо преместване с анимация и пауза, после повторение.
+Пауза с hover/докосване, без отделен бутон за спиране.
+
+HomeStory: дизайн за бизнеса; технологии; сигурност/бързина; поддръжка след публикуване.
+Редува текст/оригинални визуални панели, има scroll reveal и леки анимации.
+Премахнати са сините номера 01/02 и декоративни надписи. Линковете за действие са истински site buttons.
+Старата секция „Лесно начало. Постоянна грижа.“ с три стъпки е премахната от home.
+Home показва 4 проекта на desktop и 2 на phone.
+
+9. ЦЕНИ И ПЛАНОВЕ
+
+Единен източник src/lib/plans.ts; подробно обяснение на характеристики в plan-feature-help.ts.
+Сегашни стойности:
+  START: 30 EUR/месец, до 6 основни страници, 2 часа промени/месец, 1 GB имейл.
+  BUSINESS: 50 EUR/месец, до 12 страници, 4 часа, 5 GB имейл.
+  PREMIUM: 70 EUR/месец, до 20 страници, 6 часа, 10 GB имейл.
+BUSINESS е визуално акцентиран. В модела още има proposed flags за BUSINESS/PREMIUM,
+но labels „потвърден/предложен план“ и старият предупредителен банер са премахнати по искане.
+Цените са ориентировъчни; крайната оферта зависи от проекта. Има текст за нерегистрация по ДДС.
+Не превръщай текстовете в измислени договорни обещания.
+
+Картите съдържат одобрените descriptions от plans.ts и въпроси за всяка характеристика.
+FeatureHelp показва диалог с резюме, умерено bold и предишна/следваща характеристика.
+SEO/GEO описанията са различни за всеки план и се управляват централно.
+
+PricesHero е с текст вляво и отделна илюстрация на лаптоп с плановете вдясно.
+CustomPlanOffer е непосредствено след Hero, преди картите.
+Desktop офертата е текст вляво/илюстрация вдясно в оформен контейнер.
+На phone е full width, без заобляне, илюстрация първа, после заглавие/описание.
+
+Под картите има подробно сравнение. Desktop е таблица.
+Phone: три самостоятелни разгъваеми блока START/BUSINESS/PREMIUM,
+START е отворен по подразбиране, само един отворен наведнъж.
+Имат еднакъв gap, малък страничен padding, rounded ръбове и 44px иконка-бутон вдясно,
+центрирана вертикално. Отваряне/затваряне е плавно чрез details-content/interpolate-size,
+с native fallback; има логика за запазване позицията при смяна на дълъг план.
+Не променяй ненужно тази логика; потребителят вече е потвърждавал, че работи.
+
+След характеристиките има security секция с 6 карти:
+SSL/HTTPS, DDoS, WAF, контролиран достъп, backups, актуализации/monitoring.
+Картите се появяват последователно. На phone илюстрацията е първа,
+съдържанието е центрирано и блоковете са full width със специфичните мобилни правила.
+FAQPreview в цените споделя дизайна/поведението на home и има бутон към /contact.
+Въпросите в plans-faq.ts са отделни от дублиращите се въпроси на пълната FAQ страница.
+
+10. УСЛУГИ
+
+Текущ ред: ServicesHero -> ServicesCatalog -> WorkProcess -> ServicesCTA.
+Старите две последващи секции с общо описание/START са премахнати.
+ServicesHero: тъмен технологичен studio дизайн и 4 блока, отделна WebP илюстрация.
+Основен CTA към #services-overview; вторичен към /contact.
+Каталог: шест карти — изработка, хостинг/домейн, сигурност/GDPR, поддръжка, SEO, развитие.
+Използва шест отделни оптимизирани прозрачни илюстрации и истински маршрути/anchor-и.
+WorkProcess: 5 стъпки — разговор, оферта, изработка, преглед/старт, поддръжка.
+Финален ServicesCTA: „Готови ли сте да започнем Вашия проект?“ с отделна илюстрация.
+Основният бутон води към /contact; вторичният е tel: при наличен телефон,
+иначе „Напишете ни“ към /contact#contact-form.
+В ServicesCTA текстът и иконите са центрирани на всички ширини, включително desktop.
+
+11. ПОРТФОЛИО
+
+PortfolioHero -> филтри/PortfolioGallery -> PortfolioCTA -> останалото общо оформление.
+Последният Hero дизайн е двуколонен по предоставена референция,
+„Разгледайте нашите проекти“, CTA към #portfolio-projects и /contact,
+отделна прозрачна илюстрация, двете теми, последователно появяване.
+Не връщай по-стария centered full-background hero само заради стари screenshots.
+Галерия: 3 колони desktop, 2 tablet, 1 phone; филтрите са центрирани.
+Има анимация при смяна на филтъра и scroll reveal на картите.
+Данните все още са примерни: Forma Studio, Bloom Botanics, Добрева Консулт, Studio Move.
+Потребителят планира да ги замени с реални проекти; не измисляй реални клиенти/резултати.
+PortfolioCTA е непосредствено след галерията: „Готови ли сте за своя нов сайт?“,
+илюстрация разработчик вляво и бутони /contact и /prices.
+
+12. FAQ
+
+Универсален FAQ компонент с динамични items, рамки, hover и slide animation.
+Само един отворен въпрос. При Tab към следващ въпрос той се отваря и предишният се затваря;
+след последния фокусът продължава към бутона за всички въпроси.
+Не използвай justify в самите отговори.
+FAQPreview е една колона: заглавие/описание отгоре, въпросите, „ДОБРЕ Е ДА ЗНАЕТЕ“ след тях, CTA.
+Фонът с питанки е full width, но фигурите не се разтягат непропорционално.
+Пълната /faq има собствен Hero, category sidebar, търсене и пълния набор въпроси (58 в текущия етап).
+Филтрирането е в faq-directory.tsx; данните — faq-content.ts, моделът — faq.ts.
+
+13. КОНТАКТИ И EMAIL
+
+Контактната страница е /contact. Hero е full width, центрирано „Контакти“ и описание.
+Бързите контакти са в hero като кутийки; точната композиция е в ContactQuickLinks.
+H2 използват общата секционна typography. Формата има оформена центрирана горна част.
+Има OpenStreetMap/Leaflet над формата, а не iframe на Google Maps.
+Адрес: гр. Дупница, ул. „Благодарност“ 9а.
+Координати: 42.2679971, 23.122418; източник src/lib/office-location.ts.
+Пинът/бутонът отваря Google Maps directions с destination и без origin,
+за да може Google Maps да използва текущото местоположение при позволение.
+Не се иска геолокация автоматично от сайта.
+Картата се зарежда отложено; има attribution и resize handling.
+
+Публични env ключове (стойностите са в локалния .env, не ги публикувай):
+  SAITENA_CONTACT_EMAIL
+  SAITENA_CONTACT_PHONE
+  SAITENA_VIBER_URL
+Контактите се валидират в contact-links.ts, не поставяй secrets в клиентски код.
+Самото наличие на .env не е достатъчно: полетата трябва да са валидни.
+Поправен е случаят с местен телефон с начална 0; сега се конвертира към +359.
+След env промени се съобразявай с Next dev reload; production статично съдържание изисква rebuild.
+
+Контактната форма реално изпраща САМО локално в development чрез Mailpit.
+API извън development връща 503; production SMTP не е реализиран.
+SMTP: 127.0.0.1:11025. Mailpit UI: http://127.0.0.1:18025.
+Писма: from contact@saitena.test, to inbox@saitena.test, visitor email е Reply-To.
+Няма relay към интернет и няма автоматично писмо до посетителя.
+Докато изпраща: disabled fieldset/button, loading, защита от повторен submit.
+Успех: native центриран dialog с иконка/затваряне, Escape и връщане на фокуса.
+Reset само след SMTP acceptance; при грешка съдържанието се запазва.
+Валидация: Origin/Host, JSON, лимити/дължини, email, header injection, request size;
+20 заявки/минута за процеса. Това не е production antispam решение.
+Форма kind=website остава демонстрационна; не приемай, че изпраща реално.
+
+14. БЛОГ — ПОСЛЕДНИТЕ РЕАЛИЗИРАНИ ЗАДАЧИ
+
+BlogHero не е статичен банер: HTML заглавие/описание/CTA, отделна декоративна илюстрация.
+Етикет: „Блог на Saitena“.
+H1: „Полезни статии, съвети и идеи за Вашия онлайн бизнес“; последните думи са сини.
+Описание: „Практични ръководства, актуални тенденции и полезни съвети за изработка на сайтове,
+SEO, хостинг, сигурност и развитие на бизнеса в интернет.“
+CTA: „Разгледайте статиите“ и „Всички публикации“, и двата към #blog-articles.
+Няма newsletter система; не показвай фалшив бутон за абониране.
+Има пет информационни тематични направления с икони, без фиктивни category routes.
+Илюстрация public/images/blog-hero-studio-v1.webp: 1200x1000, прозрачна, 182746 bytes,
+лаптоп с блог cards, лампа, книги, растение и Saitena чаша; генерирана с built-in imagegen.
+Пълният prompt е записан в docs/blog-hero.md.
+Двете теми са отделно оформени чрез същите tokens.
+Hero animation: заглавие, описание, първи/втори CTA с 500ms duration,
+delays 0/165/330/500ms; reduced motion и незабавно показване при focus-within.
+overflow: clip е умишлено, за да не се превърта вътрешно hero при фокус/resize.
+
+Новата основна секция е BlogCatalog, непосредствено след Hero:
+badge „Блог статии“, H2 „Последни публикации“, описание, search, category filters,
+cards, live results, pagination и 6/9/12 selector.
+Две съществуващи статии, без добавени измислени постове:
+  /blog/what-is-a-website-subscription — тематично „Развитие на бизнеса“.
+  /blog/how-to-prepare-website-content — тематично „Уеб разработка“.
+Оригиналните текстове и редакционни категории остават в src/lib/content.ts.
+src/lib/blog-posts.ts е адаптер за thumbnails/направления/reading time, не нов CMS.
+Няма дати в източника: UI показва „Без посочена дата“, моделът поддържа publishedAt.
+Време: целият текст / 200 думи/минута, минимум 1 минута.
+Няма нови thumbnail assets: използвани services-studio-v1.webp и process-offer-v1.webp.
+Картите са с Next Image, зададено съотношение 2:1, alt="" за декоративни изображения, lazy loading.
+
+Филтри: Всички, Уеб разработка, SEO и видимост, Хостинг и домейни, Сигурност, Развитие на бизнеса.
+Броячите са реални (2 общо, по 1 в development/business, останалите 0).
+Търсене: title, excerpt, тематична и редакционна категория, slug; case-insensitive Bulgarian.
+При category/search/perPage page се връща на 1; out-of-range page се ограничава.
+Празно състояние с бутон за reset. Pagination има previous/next/current и compact многоточие.
+С текущите 2 статии има само 1 страница; не добавяй fake posts за демонстрация.
+URL parameters: category, search, page, perPage. Parse/validation на сървъра;
+native history push/replace за клиентските действия, popstate възстановява Back/Forward.
+/blog чете searchParams и е динамично server-rendered, за да има филтрирано HTML съдържание.
+Не прехвърляй всичко към client-only rendering само заради филтрите.
+Desktop 3 колони, tablet 2, mobile 1; mobile категориите са хоризонтално scrollable вътре в секцията.
+
+Най-последната UI промяна: картите вече имат scroll reveal чрез общия ScrollReveal.
+650ms duration, 16px движение, delays 0/110/220ms с ограничение до третата колона.
+Reveal wrapper се пресъздава по показаните slugs при нов набор резултати;
+търсенето/филтрите са извън него и запазват фокуса.
+data-scroll-reveal="blog-post" върху article.
+При focus-within картата става веднага видима, при reduced motion няма анимация.
+Текстът остава server-rendered и видим без JavaScript.
+Файлове: blog-catalog.tsx, blog-post-card.tsx, blog-catalog.module.css.
+
+15. ЛОКАЛНО СТАРТИРАНЕ И СЪСТОЯНИЕ СЛЕД СПИРАНЕТО
+
+Последната задача беше да се освободят ресурсите за преместване на папката.
+Спрени са Next dev, npm/shell процесите му, LAN proxy и saitena-website-mailpit.
+Последната проверка установи 0 site workers и 0 listeners на 3000/3001/11025/18025.
+CUA JS kernel е reset-нат. Старите browser/runtime променливи не са налични.
+Не са деинсталирани пакети, трити файлове или Docker томове.
+Не рестартирай услугите, докато потребителят не приключи преместването/не възложи работа.
+
+След преместване:
+  Отвори новата root папка в редактора и Codex.
+  Провери наличието на .env, .agents, .vscode, package-lock.json, public и docs.
+  npm ci е нужно само ако dependencies липсват/трябва чисто възстановяване.
+  npm run dev
+  Сайт: http://127.0.0.1:3000
+  В отделен терминал при нужда: npm run dev:lan
+  LAN proxy е на порт 3001; използвай IP от изхода, не стария 192.168.1.213 на сляпо.
+  npm run mail:up — само ако е нужно локално тестване на формата.
+
+Mailpit Compose: compose.mailpit.yaml, project saitena-website-mail,
+container saitena-website-mailpit, network saitena-website-mail,
+named volume saitena-website-mailpit-data, image axllent/mailpit:v1.33.1.
+Данните са в named volume, не в изтрит контейнер или временен project path.
+Не изпълнявай docker global cleanup, down -v или операции по чужди контейнери.
+
+LAN helper: scripts/lan-preview.mjs, same-subnet/Host/Origin проверки,
+HTTP + WebSocket proxy към localhost, поддръжка на Fast Refresh.
+Не променя автоматично Firewall/DNS; не отваря порт в рутера.
+Опции: SAITENA_LAN_HOST, SAITENA_LAN_PORT.
+
+16. ФОРМАТИРАНЕ И ПРОВЕРКИ
+
+VS Code е редакторът на потребителя. .vscode/settings.json активира format on save
+с esbenp.prettier-vscode. Extension е препоръчан в .vscode/extensions.json.
+Има VS Code task за текущия файл. Не променяй глобални editor settings.
+
+Команди:
+  npm run format:file -- "път/до/файл.tsx"
+  npm run format:check -- "път/до/файл.tsx"
+  npm run format:watch -- "път/до/файл.tsx"
+  npm run typecheck
+  npm run build
+  npm run test:contact
+  node --test tests/contact-links.test.mjs
+  node --test tests/blog-catalog.test.mjs
+  npm run test:contact:integration
+
+Integration тестът изисква работещи Next dev и Mailpit и изпраща само тестова локална поща.
+Останалите тестове са unit tests; за тях сайтът и контейнерът не са нужни.
+tests/contact-message.test.mjs — 5 tests.
+tests/contact-links.test.mjs — 3 tests за phone normalization/validation.
+tests/blog-catalog.test.mjs — 6 tests, включително synthetic 50 posts само в тестовете.
+Node може да показва MODULE_TYPELESS_PACKAGE_JSON warning; не е основание да сменяш module режима.
+
+Последни резултати:
+  След пълния blog catalog: typecheck, Prettier, production build, 6 tests успешни.
+  HTTP SSR: /blog -> 2 cards, category=development -> 1, несъществуващо search -> 0, всички HTTP 200.
+  Browser: филтри, празно състояние/reset, perPage/reload/Back, article link, light/dark,
+  widths 1600/768/390/320, без page horizontal overflow.
+  След последната blog-card animation промяна: typecheck/Prettier успешни;
+  browser потвърди 650ms, 110ms delay, category change и reduced motion.
+  Build не е повтарян специално след тази последна малка animation промяна.
+  Последният phone fix имаше 3 успешни tests, typecheck, Prettier и валидна tel връзка в браузъра.
+Не твърди, че ESLint е изпълнен: няма lint script/конфигурация.
+Windows sandbox може да блокира .next mkdir с EPERM; при такъв доказан проблем
+build е изпълняван извън файловото sandbox ограничение, без да е променяна инфраструктура.
+
+17. SEO, РЕАЛНИ ОГРАНИЧЕНИЯ И НЕГОТОВИ НЕЩА
+
+Сайтът има server-rendered текст, metadata и английски slug-ове, но е изолиран preview.
+next.config.ts изпраща X-Robots-Tag: noindex, nofollow, noarchive.
+robots.ts забранява обхождането на всички пътища.
+Root metadata има index/follow, но HTTP header/robots реално ограничават индексирането.
+Не премахвай preview ограниченията без изрично решение за публикуване.
+Няма src/app/sitemap.ts в текущата структура; /sitemap е HTML карта,
+а споменаването на XML sitemap в характеристиките на услугата не доказва готов route за този сайт.
+Също не приемай изброените GA4/Search Console/SEO услуги за реално настроени интеграции.
+
+Правните страници са първоначални текстове/структури и изискват преглед преди публично използване.
+Няма готов production email transport, CMS, auth, user accounts, cart backend, checkout,
+плащания, admin panel или реализиран newsletter.
+В текста на home се споменава AI асистент, но в текущата структура не е изградена chatbot услуга.
+Примерните portfolio проекти и blog материали трябва впоследствие да се заменят/редактират от собственика.
+Не измисляй факти, отзиви, клиенти, дати, обещания за класиране или гаранции за сигурност.
+Няма изрично възложена следваща разработка след предаването; изчакай конкретната нова задача.
+
+18. КЪДЕ Е ПОДРОБНАТА ДОКУМЕНТАЦИЯ
+
+AGENTS.md и .agents/skills/saitena-development/SKILL.md — задължителни правила.
+src/components/README.md — компонентна структура.
+docs/design-system.md, docs/typography.md, docs/appearance-controls.md, docs/brand-assets.md.
+docs/home-hero.md, docs/services-hero.md, docs/services-catalog.md, docs/work-process.md, docs/services-cta.md.
+docs/subscription-plans.md, docs/prices-hero.md, docs/mobile-plan-animation.md.
+docs/portfolio-hero-redesign.md, docs/portfolio-cta.md.
+docs/faq-component.md, docs/faq-directory.md.
+docs/contact-details.md, docs/local-contact-mail.md, docs/office-map.md, docs/local-network.md.
+docs/blog-hero.md и docs/blog-catalog.md — най-новите blog решения и проверки.
+docs/screenshots/selected/ — визуални проверки; имената отразяват и исторически варианти.
+
+Основна насока за продължаване:
+Първо установи актуалния root и прочети локалните правила и актуализирания README.
+Пази работещото поведение, двете теми, адаптивността, server rendering и достъпността.
+Променяй само необходимото за следващата конкретна задача; не възстановявай стари
+решения от исторически документи или screenshots.
+Не възстановявай заменени решения от стари документи и screenshots.

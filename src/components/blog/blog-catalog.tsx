@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "@/components/ui/icons";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 import {
   blogCategories,
   getBlogResults,
@@ -135,11 +136,17 @@ export function BlogCatalog({
             );
           })}
         </div>
-        <div id="blog-post-grid" className={styles.grid}>
-          {results.posts.map((post) => (
-            <BlogPostCard key={post.slug} post={post} />
-          ))}
-        </div>
+        <ScrollReveal
+          key={results.posts.map((post) => post.slug).join("|")}
+          className={styles.reveal}
+          animateOnLoad
+        >
+          <div id="blog-post-grid" className={styles.grid}>
+            {results.posts.map((post, index) => (
+              <BlogPostCard key={post.slug} post={post} revealIndex={index} />
+            ))}
+          </div>
+        </ScrollReveal>
         {!results.total && (
           <div className={styles.empty}>
             <Icon name="search" />

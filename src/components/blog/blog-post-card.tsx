@@ -4,10 +4,21 @@ import { Arrow, Icon } from "@/components/ui/icons";
 import { blogCategories, type BlogPost } from "@/lib/blog-catalog";
 import styles from "./blog-catalog.module.css";
 
-export function BlogPostCard({ post }: { post: BlogPost }) {
+export function BlogPostCard({
+  post,
+  revealIndex = 0,
+}: {
+  post: BlogPost;
+  revealIndex?: number;
+}) {
   const category = blogCategories.find((item) => item.id === post.categoryId);
   return (
-    <article className={styles.card} data-category={post.categoryId}>
+    <article
+      className={styles.card}
+      data-category={post.categoryId}
+      data-scroll-reveal="blog-post"
+      style={{ animationDelay: `${Math.min(revealIndex, 2) * 110}ms` }}
+    >
       <Link href={`/blog/${post.slug}`} className={styles.cardLink}>
         <div className={styles.thumbnail}>
           <Image
