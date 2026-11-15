@@ -228,6 +228,15 @@
   }
   .actions a {
     flex-basis: 100%;
+    justify-content: center;
+    gap: 12px;
+    min-width: 0;
+    text-align: center;
+    padding-inline: 16px;
+  }
+  .actions a span {
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .cards {
     grid-template-columns: minmax(0, 1fr);

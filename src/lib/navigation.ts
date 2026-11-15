@@ -7,17 +7,8 @@ export const mainNavigation: NavigationItem[] = [
   { href: "/portfolio", label: "Портфолио", icon: "grid" },
   { href: "/prices", label: "Цени", icon: "wallet" },
   { href: "/faq", label: "ЧЗВ", icon: "help" },
-  { href: "/contact", label: "Контакти", icon: "mail" },
-];
-export const mobileNavigation: NavigationItem[] = [
-  { href: "/", label: "Начална страница", icon: "home" },
-  ...mainNavigation.map((item) =>
-    item.href === "/services"
-      ? { ...item, label: "Сайтове на абонамент" }
-      : item,
-  ),
   { href: "/blog", label: "Блог", icon: "book" },
-  { href: "/sitemap", label: "Карта на сайта", icon: "sitemap" },
+  { href: "/contact", label: "Контакти", icon: "mail" },
 ];
 export const legalNavigation: NavigationItem[] = [
   { href: "/legal/privacy", label: "Поверителност", icon: "shield" },

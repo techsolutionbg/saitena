@@ -12,6 +12,7 @@ import { themeBootstrap } from "@/lib/theme";
 import { textSizeBootstrap } from "@/lib/text-size";
 import { AppearanceControls } from "@/components/appearance/appearance-controls";
 import { startPlan } from "@/lib/plans";
+import { FloatingCall } from "@/components/contact/floating-call";
 import "./globals.css";
 import "./artwork.css";
 
@@ -52,6 +53,7 @@ export default function RootLayout({
         <div className="floating-theme">
           <AppearanceControls />
         </div>
+        <FloatingCall />
       </body>
     </html>
   );

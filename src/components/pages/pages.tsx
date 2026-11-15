@@ -20,6 +20,7 @@ import { PortfolioCTA } from "@/components/portfolio/portfolio-cta";
 import { ServicesHero } from "@/components/services/services-hero";
 import { ServicesCatalog } from "@/components/services/services-catalog";
 import { WorkProcess } from "@/components/services/work-process";
+import { ServicesCTA } from "@/components/services/services-cta";
 import contactStyles from "@/components/contact/contact-page.module.css";
 
 export function ContentPage({ path, plan }: { path: string; plan?: string }) {
@@ -29,7 +30,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
         <ServicesHero />
         <ServicesCatalog />
         <WorkProcess />
-        <CTA />
+        <ServicesCTA />
       </>
     );
   if (path === "prices") return <PlansPage />;

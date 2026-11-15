@@ -3,16 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import {
-  mainNavigation,
-  mobileNavigation,
-  legalNavigation,
-} from "@/lib/navigation";
-import { Arrow, Icon } from "@/components/ui/icons";
+import { mainNavigation } from "@/lib/navigation";
+import { Icon } from "@/components/ui/icons";
 import { Brand } from "./brand";
 import { AppearanceControls } from "@/components/appearance/appearance-controls";
+import { AccountActions, type HeaderUser } from "./account-actions";
 
-export function Header() {
+export function Header({ user }: { user?: HeaderUser | null }) {
   const pathname = usePathname();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -102,9 +99,9 @@ export function Header() {
           ))}
         </nav>
         <div className="header-actions">
-          <Link className="button header-cta" href="/contact">
-            Да поговорим <Arrow />
-          </Link>
+          <div className="header-utilities">
+            <AccountActions user={user} />
+          </div>
           <button
             ref={menuToggleRef}
             type="button"
@@ -125,7 +122,7 @@ export function Header() {
           id="mobile-sidebar"
           className="mobile-sidebar"
           ref={dialogRef}
-          aria-labelledby="mobile-navigation-title"
+          aria-label="Мобилно меню"
           onKeyDown={keepFocusInPanel}
           onClose={() => setOpen(false)}
           onClick={(event) => {
@@ -152,12 +149,8 @@ export function Header() {
             </button>
           </div>
           <div className="sidebar-scroll">
-            <div className="sidebar-intro">
-              <span className="eyebrow">ЯСНО НАПРЕД</span>
-              <h2 id="mobile-navigation-title">Вашето място онлайн.</h2>
-            </div>
             <nav aria-label="Мобилна навигация" className="sidebar-nav">
-              {mobileNavigation.map((item, index) => (
+              {mainNavigation.map((item, index) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -173,37 +166,9 @@ export function Header() {
                 </Link>
               ))}
             </nav>
-            <details className="sidebar-legal">
-              <summary>
-                <Icon name="shield" />
-                <span>Правна информация</span>
-                <Icon name="chevron" />
-              </summary>
-              <nav aria-label="Правна информация">
-                {legalNavigation.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={close}
-                    aria-current={active(item.href) ? "page" : undefined}
-                  >
-                    <Icon name={item.icon} />
-                    <span>{item.label}</span>
-                  </Link>
-                ))}
-              </nav>
-            </details>
           </div>
           <div className="sidebar-footer">
-            <Link
-              className="button sidebar-cta"
-              href="/contact"
-              onClick={close}
-            >
-              <Icon name="message" />
-              <span>Запитване за сайт</span>
-              <Arrow />
-            </Link>
+            <AccountActions user={user} />
             <div className="sidebar-theme">
               <AppearanceControls sidebar />
             </div>

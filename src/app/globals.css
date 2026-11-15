@@ -374,13 +374,10 @@ summary {
   width: 28px;
   height: 28px;
 }
-.header-cta {
-  white-space: nowrap;
-}
 /* Scale the fit threshold with the visitor's chosen root font size. */
 @container header-navigation (max-width: 60rem) {
   .desktop-nav,
-  .header-cta {
+  .header-utilities {
     display: none;
   }
   .menu-toggle {
@@ -471,12 +468,6 @@ summary {
   scrollbar-gutter: stable;
   flex: 1;
   min-height: 0;
-}
-.sidebar-intro {
-  margin-bottom: 22px;
-}
-.sidebar-intro h2 {
-  margin-top: 8px;
 }
 .sidebar-nav {
   display: flex;
@@ -572,14 +563,6 @@ summary {
   border-top: 1px solid var(--line);
   background: var(--surface);
   flex: none;
-}
-.sidebar-cta {
-  width: 100%;
-  margin-top: 0;
-  gap: 12px;
-}
-.sidebar-cta > span {
-  flex: 1;
 }
 .sidebar-theme {
   margin-top: 16px;
@@ -2346,9 +2329,6 @@ body:has(#mobile-sidebar[open]) .floating-theme {
   }
   .sidebar-scroll {
     padding: 23px 14px;
-  }
-  .sidebar-intro {
-    padding-inline: 8px;
   }
   .sidebar-footer {
     padding: 18px 20px max(18px, env(safe-area-inset-bottom));

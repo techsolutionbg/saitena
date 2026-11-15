@@ -24,14 +24,14 @@ export function ServicesHero() {
             </p>
             <div className={styles.actions}>
               <a className="button" href="#services-overview">
-                Разгледайте услугите <Arrow />
+                <span>Разгледайте услугите</span> <Arrow />
               </a>
               <Link
                 className={`button button-secondary ${styles.secondary}`}
                 href="/contact"
               >
                 <Icon name="message" />
-                Обсъдете Вашите нужди
+                <span>Обсъдете Вашите нужди</span>
               </Link>
             </div>
           </header>

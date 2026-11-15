@@ -1,0 +1,47 @@
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  gap: 10px;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--primary);
+  cursor: default;
+}
+
+.control svg {
+  flex: none;
+  width: 28px;
+  height: 28px;
+}
+
+.control:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.profile {
+  flex: 0 1 auto;
+  min-width: 0;
+  padding-inline: 14px;
+}
+
+.name {
+  max-width: 12rem;
+  overflow-wrap: anywhere;
+  text-align: left;
+  font-size: var(--font-body);
+  font-weight: 400;
+}
