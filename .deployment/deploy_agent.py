@@ -91,8 +91,8 @@ class Runtime:
         canonical = "  redir @www https://saitena.com{uri} 302\n" if address == "saitena.com" else ""
         return f'''# SAITENA PRIVATE PREVIEW
 {hosts} {{
- header X-Robots-Tag "noindex, nofollow, noarchive"
- header Cache-Control "private, no-store"
+ header >X-Robots-Tag "noindex, nofollow, noarchive"
+ header >Cache-Control "private, no-store"
  @denied not {{
   remote_ip {peers}
   header X-Saitena-Preview-Key {token}

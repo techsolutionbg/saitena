@@ -14,7 +14,11 @@
 
 Пълните JSON fragments са в [.deployment/private-preview-cloudflare.rules.example.json](../.deployment/private-preview-cloudflare.rules.example.json), с `enabled:false`. Локалният QA пакет заменя единствено примерния IP с потвърдения адрес; secret остава placeholder. Няма global Allow/Skip и няма wildcard subdomains. Header се overwrite-ва, не се доверява на подадената от посетителя стойност, и се премахва преди Next.js upstream.
 
-Преди точен API diff е необходим authenticated **read-only** audit: zone/ruleset IDs, текущи rule IDs/order/versions, plan quotas, proxied A/AAAA, Full (strict), origin TLS, Workers/redirect/Origin Rules, Managed Transforms/Pseudo IPv4, Skip/IP Allow и cache overrides. Нямаме потвърден account audit и не твърдим, че тези условия са изпълнени. Rule fragments се добавят към съответните съществуващи rulesets; не се заменя целият ruleset. WAF трябва да се изпълнява без предходно bypass правило; header и cache rules трябва да имат ефективен precedence без последващо overwrite. Няма zone-wide purge. Event/CF-Ray се съпоставя с конкретния одобрен Block rule.
+Cache action допълнително задава `browser_ttl.mode=respect_origin` само за public/www. Глобалният Browser Cache TTL остава непроменен.
+
+Authenticated read-only dashboard audit на 15 ноември потвърди Active/Free зона, proxied apex/www, DNSSEC, Full (strict), активен Universal SSL, 0/5 WAF custom rules, 0/1 rate limits, 0 Cache/Cache Response Rules, 0 Page/Single/Bulk Redirects, без Worker routes или Workers/Pages приложения. Pseudo IPv4 и Remove visitor IP headers са Off. Browser Cache TTL е глобално 4 часа и не се променя. Подробният отчет е в частния ignored QA пакет.
+
+Това е UI audit, не пълен REST export на account-level legacy IP Access или rule IDs/versions; legacy Tools URL пренасочва към новия Security rules екран. Request-header phase/Rules Overview показват templates без запазен rule list. Преди промяна се сверяват текущите правила/позиции и се записват създадените rule IDs. Rule fragments се добавят без замяна на ruleset, global Allow/Skip или zone-wide purge. Event/CF-Ray се съпоставя с конкретния Block rule. Липсата на видими конфликти не заменя live home-positive/outside-negative тестове.
 
 Промени по `api`, `admin`, `infra`, `clients`, `portal`, PHP2, DNS или други hostnames не се включват. Няма автоматично активиране след CI. След одобрение собственикът може да приложи точните правила през dashboard, без да предоставя write token на CI. Ако се одобри API прилагане, token се ограничава до необходимата зона/операции и не се записва в Git/PR/чат.
 
@@ -28,8 +32,8 @@ Renderer: `Runtime.preview_block()` в [.deployment/deploy_agent.py](../.deploym
 # BEGIN SAITENA PUBLIC
 # SAITENA PRIVATE PREVIEW
 saitena.com, www.saitena.com {
- header X-Robots-Tag "noindex, nofollow, noarchive"
- header Cache-Control "private, no-store"
+ header >X-Robots-Tag "noindex, nofollow, noarchive"
+ header >Cache-Control "private, no-store"
  @denied not {
   remote_ip CF_IPV4_AND_IPV6_RANGES
   header X-Saitena-Preview-Key OWNER_GENERATED_64_HEX_TOKEN
@@ -56,6 +60,10 @@ http://127.0.0.1:9080 {
 Това е шаблон с явни placeholders, не готов за reload файл. Частният QA пакет съдържа конкретен review diff с потвърдения IP/текущите CF ranges, фиктивен token и ясно означен future upstream. Всички bytes извън public/www блока трябва да са запазени. 9080 е само loopback **в Caddy container**, без host port. Реалният secret не трябва да се появява в access/error logs, CI artifacts или публичния PR; Caddyfile/config/backups получават проверен root-only достъп след отделно одобрение.
 
 Bootstrap baseline не трябва да е незащитеният стар public block. Предлага се отделен retained under-construction container с одобрен immutable image и captured текуща страница, без host ports, който първо се поставя зад същия guard. Съдържанието, image digest и името още изискват одобрение; не се подменя съществуващият клиентски портал. Helper отказва bootstrap без същия guard или с различен probe upstream.
+
+За да се докаже защитата преди helper bootstrap, частният пакет вече отделя guard-only стъпка върху съществуващата under-construction страница: запазва се оригиналният public block вътре в разрешения handler, без нов upstream, markers или loopback probe. Тя изисква свое конкретно owner одобрение след успешен edge тест. Само след реални origin IPv4/IPv6 откази и home allow се преминава към отделно одобрен baseline/bootstrap. Live origin protection не може да се удостоверява преди самото прилагане на guard; локален тест не се представя за production доказателство. При неуспех е подготвен public-only deny-all fallback, без отваряне на бъдещ preview.
+
+Отложеното `>` задаване на privacy headers гарантира презаписване след upstream. Регресионният fixture подава конфликтни public-cache/index headers; проверяват се точните private/no-store/noindex стойности, както е описано в [Caddy header документацията](https://caddyserver.com/docs/caddyfile/directives/header).
 
 ## 3. Ограничен SSH и GHCR достъп
 
@@ -104,4 +112,4 @@ node scripts/check-preview-access.mjs blocked ORIGIN_IPV4
 node scripts/check-preview-access.mjs blocked ORIGIN_IPV6
 ```
 
-TLS verification остава включена. Извършват се само GET probes, без регистрации и customer mail. Owner-positive и independent outside-negative резултатите още липсват за реално внедрен preview. Липсват също authenticated Cloudflare audit/exact rule IDs, одобрен SSH network path и credentials, GHCR publish/pull acceptance и approved retained baseline image. Не се заявява успешно публикуване до преминаването им.
+TLS verification остава включена. Извършват се само GET probes, без регистрации и customer mail. Owner-positive и independent outside-negative резултатите още липсват за реално внедрен preview. Authenticated UI audit е изпълнен; exact new rule IDs/versions ще се запишат след отделно одобрено създаване и не са измисляни. Липсват одобрен SSH network path и credentials, GHCR publish/pull acceptance и approved retained baseline image. Не се заявява успешно публикуване до преминаването им.

@@ -1,6 +1,11 @@
 const http = require('http');
 const version = process.env.VERSION;
 http.createServer((req,res)=>{
+  if(req.url==='/conflicting-cache-headers'){
+    res.setHeader('Cache-Control','public, max-age=31536000');
+    res.setHeader('X-Robots-Tag','index, follow');
+    res.end('Original cache-header fixture');return;
+  }
   if(process.env.RELEASE_MODE==='private-preview'){
     res.setHeader('X-Robots-Tag','noindex, nofollow');
     if(req.url.startsWith('/legal/')){res.writeHead(404);res.end('Not found');return;}

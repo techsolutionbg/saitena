@@ -34,7 +34,10 @@
         "enabled": false,
         "action": "set_cache_settings",
         "expression": "(http.host in {\"saitena.com\" \"www.saitena.com\"})",
-        "action_parameters": { "cache": false }
+        "action_parameters": {
+          "cache": false,
+          "browser_ttl": { "mode": "respect_origin" }
+        }
       }
     }
   ]

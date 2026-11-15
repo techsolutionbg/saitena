@@ -65,6 +65,9 @@ else:raise RuntimeError("preview_fixture_not_ready")
 
 allowed={"X-Saitena-Preview-Key":"f"*64,"CF-Connecting-IP":"203.0.113.7"}
 assert get(headers=allowed).status==200
+with get('conflicting-cache-headers',headers=allowed) as response:
+    assert response.headers.get('Cache-Control')=='private, no-store','upstream cache policy was not overridden'
+    assert response.headers.get('X-Robots-Tag')=='noindex, nofollow, noarchive','upstream indexing policy was not overridden'
 denials=0
 for headers in [{},{"CF-Connecting-IP":"203.0.113.7"},dict(allowed,**{"CF-Connecting-IP":"203.0.113.8"}),dict(allowed,**{"CF-Worker":"other.example"}),dict(allowed,**{"X-Saitena-Preview-Key":"e"*64})]:
     try:get(headers=headers)
