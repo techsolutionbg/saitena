@@ -22,8 +22,7 @@ jobs:
       - run: npm ci --prefix tools/lint --no-audit --no-fund
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm run test:contact
-      - run: npm run test:contact:config
+      - run: node --test tests/*.test.mjs
       - run: node scripts/audit-git-candidate.mjs
       - run: npm run build
         env:
@@ -32,3 +31,14 @@ jobs:
           NEXT_TELEMETRY_DISABLED: "1"
       - run: node scripts/check-production-candidate.mjs
       - run: docker build --target candidate -f .deployment/Dockerfile -t saitena-public:check .
+      - name: Isolated HTTPS and SMTP integration
+        env:
+          SAITENA_STAGING_IMAGE: saitena-public:check
+        run: |
+          docker compose -p saitena-website-ci -f .deployment/compose.staging.yaml up -d --wait
+          mkdir -p qa-output
+          for i in $(seq 1 30); do
+            docker compose -p saitena-website-ci -f .deployment/compose.staging.yaml cp tls:/data/caddy/pki/authorities/local/root.crt qa-output/staging-root.crt && break
+            sleep 1
+          done
+          node scripts/check-https-contact.mjs

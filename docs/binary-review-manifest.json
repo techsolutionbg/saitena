@@ -1680,7 +1680,12 @@
     "height": 1000,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/blog-hero.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/faq-hero-background.png",
@@ -1691,7 +1696,12 @@
     "height": 724,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": null,
+      "origin": "no generation or license evidence located"
+    },
+    "replacementProposal": "Original CSS gradients and existing HeroWaves canvas, preserving palette/composition"
   },
   {
     "path": "public/images/home-hero-dark-mobile.webp",
@@ -1702,7 +1712,12 @@
     "height": 516,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "replacementProposal": "Original CSS gradients and existing HeroWaves canvas, preserving palette/composition"
   },
   {
     "path": "public/images/home-hero-dark.webp",
@@ -1713,7 +1728,12 @@
     "height": 780,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "replacementProposal": "Original CSS gradients and existing HeroWaves canvas, preserving palette/composition"
   },
   {
     "path": "public/images/home-hero-light-mobile.webp",
@@ -1724,7 +1744,12 @@
     "height": 386,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "replacementProposal": "Original CSS gradients and existing HeroWaves canvas, preserving palette/composition"
   },
   {
     "path": "public/images/home-hero-light.webp",
@@ -1735,7 +1760,12 @@
     "height": 780,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "replacementProposal": "Original CSS gradients and existing HeroWaves canvas, preserving palette/composition"
   },
   {
     "path": "public/images/portfolio-cta-developer-v1.webp",
@@ -1746,7 +1776,12 @@
     "height": 960,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/portfolio-cta.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/portfolio-hero-v1.webp",
@@ -1768,7 +1803,12 @@
     "height": 1100,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/portfolio-hero-redesign.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/prices-hero-v1.webp",
@@ -1779,7 +1819,12 @@
     "height": 1100,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/prices-hero.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/process-development-v1.webp",
@@ -1790,7 +1835,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/process-launch-v1.webp",
@@ -1801,7 +1851,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/process-offer-v1.webp",
@@ -1812,7 +1867,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/process-planning-v1.webp",
@@ -1823,7 +1883,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-contact-v1.webp",
@@ -1834,7 +1899,12 @@
     "height": 1100,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-cta.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-growth-v1.webp",
@@ -1845,7 +1915,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-hosting-v1.webp",
@@ -1856,7 +1931,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-security-v1.webp",
@@ -1867,7 +1947,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-seo-v1.webp",
@@ -1878,7 +1963,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-studio-v1.webp",
@@ -1889,7 +1979,12 @@
     "height": 1080,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-hero.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-support-v1.webp",
@@ -1900,7 +1995,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/images/services-website-v1.webp",
@@ -1911,7 +2011,12 @@
     "height": 320,
     "exif": false,
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "replacementProposal": "If reference rights cannot be confirmed, commission fresh original illustrations without source references"
   },
   {
     "path": "public/brand/saitena-logo-light.svg",
@@ -1919,7 +2024,12 @@
     "bytes": 669707,
     "format": "svg-with-embedded-png",
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/brand-assets.md",
+      "origin": "user-provided logo references; imagegen derivative embedded PNG"
+    },
+    "replacementProposal": "Retain brand pending owner confirmation; redesign only with explicit brand approval"
   },
   {
     "path": "public/brand/saitena-logo-dark.svg",
@@ -1927,7 +2037,12 @@
     "bytes": 670209,
     "format": "svg-with-embedded-png",
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/brand-assets.md",
+      "origin": "user-provided logo references; imagegen derivative embedded PNG"
+    },
+    "replacementProposal": "Retain brand pending owner confirmation; redesign only with explicit brand approval"
   },
   {
     "path": "public/brand/saitena-mark.svg",
@@ -1935,6 +2050,11 @@
     "bytes": 669705,
     "format": "svg-with-embedded-png",
     "decision": "private-review-only",
-    "publicationRights": "not-confirmed"
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/brand-assets.md",
+      "origin": "user-provided logo references; imagegen derivative embedded PNG"
+    },
+    "replacementProposal": "Retain brand pending owner confirmation; redesign only with explicit brand approval"
   }
 ]

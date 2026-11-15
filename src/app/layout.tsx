@@ -17,12 +17,16 @@ import "./globals.css";
 import "./artwork.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://saitena.com"),
   title: {
     default: "Сайтове на абонамент с изработка и поддръжка | Saitena",
     template: "%s | Saitena",
   },
   description: `Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за ${startPlan.price} €/месец без първоначална такса.`,
-  robots: { index: true, follow: true },
+  robots: {
+    index: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
+    follow: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
+  },
   icons: { icon: [{ url: "/brand/saitena-mark.svg", type: "image/svg+xml" }] },
 };
 export default function RootLayout({
