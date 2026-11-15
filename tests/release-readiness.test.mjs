@@ -16,6 +16,15 @@ test("release rejects pending rights, changed and unreviewed files and legal dra
       sha256: createHash("sha256").update("original").digest("hex"),
       publicationRights: "approved",
     };
+    writeFileSync(
+      join(root, "docs/release-approval.json"),
+      JSON.stringify({
+        company_data_approved: true,
+        legal_copy_approved: true,
+        contact_details_approved: true,
+        deployment_plan_approved: true,
+      }),
+    );
     writeFileSync(join(root, asset.path), "original");
     const manifest = () =>
       writeFileSync(

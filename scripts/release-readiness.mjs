@@ -16,6 +16,22 @@ export function releaseBlockers(root = process.cwd()) {
       .map((a) => a.path),
   );
   const blockers = [];
+  try {
+    const approval = JSON.parse(
+      readFileSync(join(root, "docs/release-approval.json"), "utf8"),
+    );
+    for (const key of [
+      "company_data_approved",
+      "legal_copy_approved",
+      "contact_details_approved",
+      "deployment_plan_approved",
+    ]) {
+      if (approval[key] !== true)
+        blockers.push(`Owner approval pending: ${key}`);
+    }
+  } catch {
+    blockers.push("Owner release approval record missing");
+  }
   for (const asset of assets) {
     if (asset.publicationRights !== "approved")
       blockers.push(`Rights pending: ${asset.path}`);

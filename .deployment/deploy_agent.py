@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """Root-owned forced-command helper. NOT installed or enabled by this PR.
 
 Only a fixed root-owned config supplies paths, network and protected URLs.

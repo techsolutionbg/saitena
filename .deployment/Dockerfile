@@ -21,7 +21,7 @@ EXPOSE 3000
 CMD ["npm", "run", "start", "--", "--hostname", "0.0.0.0"]
 
 FROM build AS release-review
-RUN node scripts/check-release-readiness.mjs
+RUN test "$NEXT_PUBLIC_AUTH_ENABLED" = false && test "$NEXT_PUBLIC_INDEXING_ENABLED" = false && test "$NEXT_PUBLIC_API_URL" = https://api.saitena.com && test "$NEXT_PUBLIC_CLIENT_AREA_URL" = https://portal.saitena.com && node scripts/check-release-readiness.mjs
 
 FROM candidate AS release
 COPY --from=release-review /app/docs/binary-review-manifest.json /app/release-assets.json
