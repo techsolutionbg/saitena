@@ -1,0 +1,86 @@
+name: Approved production release (disabled until activation)
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Published stable release tag on reviewed main (vX.Y.Z)
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: saitena-production
+  cancel-in-progress: false
+jobs:
+  authorize:
+    permissions: {contents: read, actions: read, deployments: read}
+    if: vars.SAITENA_PRODUCTION_ENABLED == 'true' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    outputs:
+      sha: ${{ steps.policy.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - id: policy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: node scripts/authorize-release.mjs
+  build:
+    timeout-minutes: 30
+    needs: authorize
+    runs-on: ubuntu-24.04
+    permissions: {contents: read, packages: write}
+    outputs:
+      digest: ${{ steps.image.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.authorize.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - run: node scripts/check-release-readiness.mjs
+      - name: Build and publish exact release image
+        id: image
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ needs.authorize.outputs.sha }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
+          trap 'docker logout ghcr.io >/dev/null 2>&1' EXIT
+          IMAGE=ghcr.io/techsolutionbg/saitena/public
+          docker build --target release --label "org.opencontainers.image.revision=$SHA" -f .deployment/Dockerfile -t "$IMAGE:$SHA" .
+          docker push "$IMAGE:$SHA"
+          DIGEST=$(docker image inspect "$IMAGE:$SHA" --format '{{index .RepoDigests 0}}')
+          [[ "$DIGEST" =~ ^ghcr.io/techsolutionbg/saitena/public@sha256:[a-f0-9]{64}$ ]]
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+  deploy:
+    timeout-minutes: 10
+    needs: [authorize, build]
+    environment: production
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Restricted deployment request
+        env:
+          DEPLOY_KEY: ${{ secrets.SAITENA_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.SAITENA_DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ vars.SAITENA_DEPLOY_HOST }}
+          SHA: ${{ needs.authorize.outputs.sha }}
+          IMAGE: ${{ needs.build.outputs.digest }}
+          RELEASE: ${{ inputs.release_tag }}
+        run: |
+          set -euo pipefail
+          [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
+          test -n "$DEPLOY_KEY" && test -n "$KNOWN_HOSTS"
+          umask 077
+          KEY=$(mktemp); HOSTS=$(mktemp)
+          trap 'rm -f "$KEY" "$HOSTS"' EXIT
+          printf '%s\n' "$DEPLOY_KEY" > "$KEY"
+          printf '%s\n' "$KNOWN_HOSTS" > "$HOSTS"
+          node -e 'console.log(JSON.stringify({release:process.env.RELEASE,sha:process.env.SHA,image:process.env.IMAGE}))' |
+            ssh -T -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$HOSTS" -i "$KEY" "saitena-deploy@$DEPLOY_HOST" deploy

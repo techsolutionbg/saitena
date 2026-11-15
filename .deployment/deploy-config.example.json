@@ -1,0 +1,16 @@
+{
+  "enabled": false,
+  "image_repository": "ghcr.io/techsolutionbg/saitena/public",
+  "public_url": "https://saitena.com/",
+  "caddy_file": "/REQUIRES-APPROVED-LIVE-MOUNT-PATH/Caddyfile",
+  "caddy_container": "tech-solution-caddy-1",
+  "network": "tech-solution_default",
+  "runtime_env": "/etc/saitena-deploy/contact.env",
+  "state_dir": "/srv/saitena-deploy-state",
+  "protected_urls": [
+    "https://api.saitena.com/api/health/ready",
+    "https://admin.saitena.com/",
+    "https://infra.saitena.com/",
+    "https://clients.saitena.com/"
+  ]
+}

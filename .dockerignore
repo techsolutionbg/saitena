@@ -11,3 +11,5 @@ public/images/portfolio-hero-v1.webp
 .vscode
 *.tsbuildinfo
 *.log
+**/__pycache__
+**/*.pyc

@@ -1,5 +1,7 @@
 name: Saitena checks (no deployment)
 on:
+  push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -23,6 +25,7 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: node --test tests/*.test.mjs
+      - run: python3 -m unittest discover -s tests -p 'test_deploy_agent.py' -v
       - run: node scripts/audit-git-candidate.mjs
       - run: npm run build
         env:
@@ -42,3 +45,5 @@ jobs:
             sleep 1
           done
           node scripts/check-https-contact.mjs
+      - name: Deployment failure and rollback rehearsal
+        run: python3 scripts/test-deployment-staging.py
