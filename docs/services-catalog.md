@@ -1,8 +1,8 @@
 # Services catalogue
 
-ServicesCatalog follows the unchanged ServicesHero on /services. It owns services-overview, so the existing hero anchor opens the catalogue. The former overview retains all content with website-services-details as its ID.
+ServicesCatalog follows the unchanged ServicesHero on /services. It owns services-overview, so the existing hero anchor opens the catalogue. The legacy website overview and START summary were subsequently removed at the user's request.
 
-Six server-rendered cards in src/lib/services-catalog.ts use existing destinations: website details, plans comparison, security, home-page maintenance and the custom offer. CTA links use /contact and /contact#contact-form. Each card is a single link, with no nested controls.
+Six server-rendered cards in src/lib/services-catalog.ts use existing destinations: portfolio examples, plans comparison, security, home-page maintenance and the custom offer. CTA links use /contact and /contact#contact-form. Each card is a single link, with no nested controls.
 
 The grid is 3 columns above 1200px, 2 through tablet and 1 below 680px. Semantic theme tokens control surfaces and text. Reduced motion disables hover movement. Decorative Next.js images reserve square space and load lazily.
 

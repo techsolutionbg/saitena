@@ -4,7 +4,7 @@ export const servicesCatalog = [
     title: "Изработка на уебсайт",
     description:
       "Разработваме модерни, бързи и адаптивни уебсайтове, съобразени с дейността, целите и нуждите на Вашия бизнес.",
-    href: "/services#website-services-details",
+    href: "/portfolio",
     accent: "design",
   },
   {

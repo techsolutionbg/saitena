@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { articles, projects, routeTitles, startFeatures } from "@/lib/content";
+import { articles, projects, routeTitles } from "@/lib/content";
 import { WebsiteArtwork } from "@/components/illustrations/artwork";
 import { InquiryForm } from "@/components/contact/inquiry-form";
 import { PortfolioGallery } from "@/components/portfolio/portfolio-gallery";
@@ -7,7 +7,6 @@ import { Arrow, Check, Icon } from "@/components/ui/icons";
 import { ButtonLink } from "@/components/ui/button-link";
 import { CTA } from "@/components/shared/cta";
 import { PageIntro } from "@/components/ui/page-intro";
-import { Process } from "@/components/shared/process";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { FAQ } from "@/components/faq/faq";
 import { faq, faqCategories } from "@/lib/faq-content";
@@ -20,6 +19,7 @@ import { PortfolioHero } from "@/components/portfolio/portfolio-hero";
 import { PortfolioCTA } from "@/components/portfolio/portfolio-cta";
 import { ServicesHero } from "@/components/services/services-hero";
 import { ServicesCatalog } from "@/components/services/services-catalog";
+import { WorkProcess } from "@/components/services/work-process";
 import contactStyles from "@/components/contact/contact-page.module.css";
 
 export function ContentPage({ path, plan }: { path: string; plan?: string }) {
@@ -28,55 +28,7 @@ export function ContentPage({ path, plan }: { path: string; plan?: string }) {
       <>
         <ServicesHero />
         <ServicesCatalog />
-        <section
-          id="website-services-details"
-          className="wrap service-overview"
-        >
-          <div className="service-art">
-            <WebsiteArtwork />
-          </div>
-          <div>
-            <span className="eyebrow">КАКВО ПОЛУЧАВАТЕ</span>
-            <h2>Вашето собствено място онлайн.</h2>
-            <p>
-              Ясна структура, адаптивен дизайн и съдържание, достъпно за хората
-              и търсачките. След стартиране — техническа грижа и включено време
-              за промени според плана.
-            </p>
-            <ul className="feature-list">
-              {[
-                "Дизайн според характера на бизнеса",
-                "Удобно разглеждане на телефон и компютър",
-                "Ясно представяне на услугите и контакти",
-                "Техническа основа за SEO и GEO",
-              ].map((text) => (
-                <li key={text}>
-                  <Check />
-                  {text}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-        <Process />
-        <section className="wrap section">
-          <SectionHeading
-            eyebrow="ПОТВЪРДЕНИЯТ ОБХВАТ"
-            title={`START: какво включва ${startPlan.price} €/месец.`}
-          />
-          <div className="feature-panel">
-            {startFeatures.map((feature, i) => (
-              <div key={feature}>
-                <span>{String(i + 1).padStart(2, "0")}</span>
-                <p>{feature}</p>
-              </div>
-            ))}
-          </div>
-          <p className="demo-note">
-            Без първоначална такса. Данъчният режим, срокът, собствеността и
-            останалите договорни условия предстои да се уточнят.
-          </p>
-        </section>
+        <WorkProcess />
         <CTA />
       </>
     );
