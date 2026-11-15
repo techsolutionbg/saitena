@@ -11,12 +11,15 @@ const names = [
   "Run node scripts/check-production-candidate.mjs",
   "Isolated HTTPS and SMTP integration",
   "Deployment failure and rollback rehearsal",
+  "Private Preview build and privacy checks",
 ];
 const fixture = () => ({
   approvalPolicy: { mode: "solo-maintainer", maintainers: ["techsolutionbg"] },
   actor: "techsolutionbg",
   triggeringActor: "techsolutionbg",
   confirmation: "v1.0.0",
+  releaseMode: "public",
+  modeConfirmation: "public",
   branchProtection: {
     required_status_checks: { contexts: ["verify"], strict: true },
     required_pull_request_reviews: {
@@ -70,6 +73,22 @@ const fixture = () => ({
 });
 test("only an exact protected main release passes", () =>
   assert.doesNotThrow(() => assertReleasePolicy(fixture())));
+test("preview retains main, owner and environment gates and needs its own mode confirmation", () => {
+  const x = fixture();
+  x.releaseMode = x.modeConfirmation = "private-preview";
+  assert.doesNotThrow(() => assertReleasePolicy(x));
+  for (const mutate of [
+    (y) => (y.modeConfirmation = "public"),
+    (y) => (y.releaseMode = "other"),
+    (y) => (y.run.head_branch = "dev"),
+    (y) => (y.environment.can_admins_bypass = true),
+    (y) => (y.actor = "other"),
+  ]) {
+    const y = structuredClone(x);
+    mutate(y);
+    assert.throws(() => assertReleasePolicy(y));
+  }
+});
 test("solo approval is explicit and cannot be silently treated as independent review", () => {
   for (const mutate of [
     (x) => (x.actor = "other"),

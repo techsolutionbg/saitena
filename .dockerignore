@@ -14,6 +14,8 @@ qa-output
 docs/**
 !docs/binary-review-manifest.json
 !docs/release-approval.json
+!docs/private-preview-assets.json
+!docs/private-preview-approval.json
 public/brand/saitena-logo-master.png
 public/images/portfolio-hero-v1.webp
 .vscode

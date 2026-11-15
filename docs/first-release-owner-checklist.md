@@ -45,5 +45,5 @@
 
 ## Git и review
 
-Repository: https://github.com/techsolutionbg/saitena (Private), branch codex/first-production-candidate. PR само за преглед, без auto-merge/deploy.
-153 бинарни файла са изключени от новото дърво, но са запазени локално и остават в старата Git история. Не се пренаписва история без отделно одобрение. Елементи с непотвърдени права остават само в private review; production release target отказва build.
+Repository: https://github.com/techsolutionbg/saitena (Public), branch codex/first-production-candidate. PR само за преглед, без auto-merge/deploy. Актуална инфраструктурна готовност: [first-production-next-actions.md](first-production-next-actions.md).
+153 бинарни файла са изключени от новото дърво, но са запазени локално и остават в публичната стара Git история. Не се пренаписва история без отделно одобрение. Непотвърдените права продължават да блокират production release build; публичната Git видимост не е одобрение за използване на активите.

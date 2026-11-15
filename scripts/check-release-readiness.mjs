@@ -1,6 +1,9 @@
 import { releaseBlockers } from "./release-readiness.mjs";
-const blockers = releaseBlockers();
+const mode = process.env.SAITENA_RELEASE_MODE ?? "public";
+const blockers = releaseBlockers(process.cwd(), mode);
 if (blockers.length) {
-  console.error("PUBLIC RELEASE BLOCKED:\n" + blockers.join("\n"));
+  console.error(
+    `${mode.toUpperCase()} RELEASE BLOCKED:\n` + blockers.join("\n"),
+  );
   process.exitCode = 1;
 }

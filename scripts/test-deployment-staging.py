@@ -80,7 +80,7 @@ results = []
 for index, version in enumerate(["good", "post-failure", "rollback-failure"], start=1):
     original = caddy.read_bytes()
     sha, image = revisions[version]
-    request = {"release":f"v1.0.{index}", "sha":sha, "image":image}
+    request = {"release":f"v1.0.{index}", "sha":sha, "image":image, "mode":"public"}
     config["state_dir"] = str(directory / version)
     runtime = LocalRuntime(config, None if version == "good" else "rollback" if version == "rollback-failure" else "post")
     try:

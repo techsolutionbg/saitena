@@ -48,3 +48,8 @@ jobs:
           node scripts/check-https-contact.mjs
       - name: Deployment failure and rollback rehearsal
         run: python3 scripts/test-deployment-staging.py
+      - name: Private Preview build and privacy checks
+        run: |
+          docker build --target candidate --build-arg NEXT_PUBLIC_RELEASE_MODE=private-preview -f .deployment/Dockerfile -t saitena-website-public:preview-check .
+          node scripts/test-private-preview.mjs
+          node scripts/test-preview-deployment.mjs

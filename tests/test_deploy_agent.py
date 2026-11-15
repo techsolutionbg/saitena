@@ -40,7 +40,7 @@ class DeploymentTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.config = {"image_repository":"ghcr.io/techsolutionbg/saitena/public", "state_dir":self.temp.name}
-        self.request = {"release":"v1.0.0", "sha":"a"*40, "image":self.config["image_repository"]+"@sha256:"+"b"*64}
+        self.request = {"release":"v1.0.0", "sha":"a"*40, "image":self.config["image_repository"]+"@sha256:"+"b"*64, "mode":"public"}
     def phase(self): return json.loads((Path(self.temp.name)/"v1.0.0.json").read_text())["phase"]
     def test_success_and_idempotent_redeploy(self):
         runtime = FakeRuntime()
@@ -87,6 +87,56 @@ class DeploymentTests(unittest.TestCase):
         runtime.public_checks=changed
         with self.assertRaisesRegex(RuntimeError,"manual_recovery_required"): agent.transact(self.request,self.config,runtime)
         self.assertEqual(runtime.content,b"operator-change")
+
+    def test_preview_mode_cannot_use_public_server_configuration(self):
+        request = dict(self.request, mode="private-preview")
+        with self.assertRaisesRegex(RuntimeError, "server_release_mode_mismatch"):
+            agent.transact(request, self.config, FakeRuntime())
+
+    def test_preview_recovery_cannot_restore_an_old_public_release(self):
+        runtime=FakeRuntime()
+        agent.transact(self.request,self.config,runtime)
+        runtime.c={"release_mode":"private-preview"}
+        applies=runtime.applies
+        with self.assertRaisesRegex(RuntimeError,"recovery_release_mode_mismatch"):
+            agent.recover(Path(self.temp.name)/"v1.0.0.json",runtime)
+        self.assertEqual(runtime.applies,applies)
+
+    def test_preview_rejects_public_image_before_container_start(self):
+        env=Path(self.temp.name)/"preview.env"
+        env.write_text("CONTACT_MAIL_MODE=disabled\n");env.chmod(0o600)
+        runtime=agent.Runtime(dict(self.config,runtime_env=str(env)))
+        calls=[]
+        def command(*args):
+            calls.append(args)
+            if args[:3]==("docker","image","inspect"):
+                return self.request["sha"] if "revision" in args[-1] else "public"
+            return ""
+        runtime.command=command
+        with self.assertRaisesRegex(RuntimeError,"image_mode_mismatch"):
+            runtime.stage(dict(self.request,mode="private-preview"),"never-started")
+        self.assertFalse(any(c[:2]==("docker","run") for c in calls))
+
+    def test_preview_requires_approved_access_exact_ips_and_guarded_rollback(self):
+        config = dict(self.config, release_mode="private-preview", site_address="saitena.com",
+                      preview_access={"approved":False,"origin_token":"f"*64,"owner_ips":["203.0.113.7"],"cloudflare_cidrs":["192.0.2.0/24"]})
+        runtime = agent.Runtime(config)
+        original = b"# BEGIN SAITENA PUBLIC\nold public routing\n# END SAITENA PUBLIC\n# api/admin/clients untouched\n"
+        with self.assertRaisesRegex(RuntimeError,"preview_access_not_approved"):
+            runtime.candidate_route(original,"candidate")
+        config["preview_access"]["approved"]=True
+        for bad in [[], ["0.0.0.0/0"], ["203.0.113.7 or true"]]:
+            config["preview_access"]["owner_ips"]=bad
+            with self.assertRaises(RuntimeError): runtime.candidate_route(original,"candidate")
+        config["preview_access"]["owner_ips"]=["203.0.113.7"]
+        candidate=runtime.candidate_route(original,"candidate")
+        self.assertTrue(candidate.endswith(b"# api/admin/clients untouched\n"))
+        self.assertIn(b"bind 127.0.0.1",candidate)
+        self.assertIn(b"header_up -X-Saitena-Preview-Key",candidate)
+        with self.assertRaisesRegex(RuntimeError,"guarded_preview_bootstrap_required"):
+            runtime.preview_preflight(original,"candidate")
+        runtime.preview_external_checks=lambda: None
+        runtime.preview_preflight(candidate,"next-candidate")
 
 
 if __name__ == "__main__": unittest.main()

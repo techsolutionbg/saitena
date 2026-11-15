@@ -7,7 +7,9 @@ RUN mkdir -p docs && node -e "const fs=require('fs'),crypto=require('crypto');fs
 RUN node -e "require('fs').writeFileSync('docs/release-approval.json',JSON.stringify({company_data_approved:true,legal_copy_approved:true,contact_details_approved:true,deployment_plan_approved:true}))"
 RUN node scripts/check-release-readiness.mjs && cp docs/binary-review-manifest.json release-assets.json
 ARG REVISION
+ARG RELEASE_MODE=public
 LABEL org.opencontainers.image.revision=$REVISION
-ENV VERSION=$REVISION
+LABEL io.saitena.release-mode=$RELEASE_MODE
+ENV VERSION=$REVISION RELEASE_MODE=$RELEASE_MODE
 EXPOSE 3000
 CMD ["node", "server.cjs"]

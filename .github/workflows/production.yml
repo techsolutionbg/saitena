@@ -8,6 +8,15 @@ on:
       confirm_release_tag:
         description: Owner confirmation — type the exact same release tag again
         required: true
+      release_mode:
+        description: Restricted Private Preview or final public release
+        type: choice
+        options: [public, private-preview]
+        default: public
+        required: true
+      confirm_release_mode:
+        description: Type the selected release_mode exactly
+        required: true
 permissions:
   contents: read
 concurrency:
@@ -16,7 +25,7 @@ concurrency:
 jobs:
   authorize:
     permissions: {contents: read, actions: read, deployments: read}
-    if: vars.SAITENA_PRODUCTION_ENABLED == 'true' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && ((inputs.release_mode == 'public' && vars.SAITENA_PRODUCTION_ENABLED == 'true') || (inputs.release_mode == 'private-preview' && vars.SAITENA_PRIVATE_PREVIEW_ENABLED == 'true'))
     runs-on: ubuntu-24.04
     outputs:
       sha: ${{ steps.policy.outputs.sha }}
@@ -31,6 +40,8 @@ jobs:
           GH_TOKEN: ${{ secrets.SAITENA_RELEASE_POLICY_TOKEN || github.token }}
           RELEASE_TAG: ${{ inputs.release_tag }}
           RELEASE_CONFIRMATION: ${{ inputs.confirm_release_tag }}
+          RELEASE_MODE: ${{ inputs.release_mode }}
+          RELEASE_MODE_CONFIRMATION: ${{ inputs.confirm_release_mode }}
         run: node scripts/authorize-release.mjs
   build:
     timeout-minutes: 30
@@ -47,22 +58,26 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: 24}
       - run: node scripts/check-release-readiness.mjs
+        env:
+          SAITENA_RELEASE_MODE: ${{ inputs.release_mode }}
       - name: Build and publish exact release image
         id: image
         env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ needs.authorize.outputs.sha }}
           ACTOR: ${{ github.actor }}
+          MODE: ${{ inputs.release_mode }}
         run: |
           printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
           trap 'docker logout ghcr.io >/dev/null 2>&1' EXIT
           IMAGE=ghcr.io/techsolutionbg/saitena/public
-          docker build --target release --label "org.opencontainers.image.revision=$SHA" -f .deployment/Dockerfile -t "$IMAGE:$SHA" .
-          docker push "$IMAGE:$SHA"
-          DIGEST=$(docker image inspect "$IMAGE:$SHA" --format '{{index .RepoDigests 0}}')
+          [[ "$MODE" == public || "$MODE" == private-preview ]]
+          docker build --target release --build-arg "NEXT_PUBLIC_RELEASE_MODE=$MODE" --label "org.opencontainers.image.revision=$SHA" -f .deployment/Dockerfile -t "$IMAGE:$SHA-$MODE" .
+          docker push "$IMAGE:$SHA-$MODE"
+          DIGEST=$(docker image inspect "$IMAGE:$SHA-$MODE" --format '{{index .RepoDigests 0}}')
           [[ "$DIGEST" =~ ^ghcr.io/techsolutionbg/saitena/public@sha256:[a-f0-9]{64}$ ]]
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
-          printf 'Reviewed commit: `%s`\n\nImmutable image: `%s`\n' "$SHA" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
+          printf 'Mode: `%s`\n\nReviewed commit: `%s`\n\nImmutable image: `%s`\n' "$MODE" "$SHA" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
   deploy:
     timeout-minutes: 10
     needs: [authorize, build]
@@ -79,6 +94,7 @@ jobs:
           SHA: ${{ needs.authorize.outputs.sha }}
           IMAGE: ${{ needs.build.outputs.digest }}
           RELEASE: ${{ inputs.release_tag }}
+          MODE: ${{ inputs.release_mode }}
         run: |
           set -euo pipefail
           [[ "$DEPLOY_HOST" =~ ^[a-zA-Z0-9.-]+$ ]]
@@ -88,5 +104,5 @@ jobs:
           trap 'rm -f "$KEY" "$HOSTS"' EXIT
           printf '%s\n' "$DEPLOY_KEY" > "$KEY"
           printf '%s\n' "$KNOWN_HOSTS" > "$HOSTS"
-          node -e 'console.log(JSON.stringify({release:process.env.RELEASE,sha:process.env.SHA,image:process.env.IMAGE}))' |
+          node -e 'console.log(JSON.stringify({release:process.env.RELEASE,sha:process.env.SHA,image:process.env.IMAGE,mode:process.env.MODE}))' |
             ssh -T -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=yes -o "UserKnownHostsFile=$HOSTS" -i "$KEY" "saitena-deploy@$DEPLOY_HOST" deploy

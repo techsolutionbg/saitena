@@ -1,5 +1,6 @@
 import { validateContactMessage } from "@/lib/contact-message";
 import { sendContactMail } from "@/lib/contact-mail";
+import { isPrivatePreview } from "@/lib/release-mode";
 
 export const runtime = "nodejs";
 const MAX_BODY_BYTES = 20_000;
@@ -19,6 +20,8 @@ export async function POST(request: Request) {
     request.headers.get("sec-fetch-site") === "cross-site"
   )
     return response("Невалиден източник на заявката.", 403);
+  if (isPrivatePreview)
+    return response("Изпращането е изключено в Private Preview.", 403);
   if (request.headers.get("content-type")?.split(";")[0] !== "application/json")
     return response("Неподдържан формат на данните.", 415);
 

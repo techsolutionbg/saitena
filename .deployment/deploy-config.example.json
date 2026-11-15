@@ -1,5 +1,6 @@
 {
   "enabled": false,
+  "release_mode": "public",
   "image_repository": "ghcr.io/techsolutionbg/saitena/public",
   "public_url": "https://saitena.com/",
   "caddy_file": "/REQUIRES-APPROVED-LIVE-MOUNT-PATH/Caddyfile",

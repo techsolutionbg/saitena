@@ -13,6 +13,7 @@ import { textSizeBootstrap } from "@/lib/text-size";
 import { AppearanceControls } from "@/components/appearance/appearance-controls";
 import { startPlan } from "@/lib/plans";
 import { FloatingCall } from "@/components/contact/floating-call";
+import { isPrivatePreview, previewDetails } from "@/lib/release-mode";
 import "./globals.css";
 import "./artwork.css";
 
@@ -24,8 +25,10 @@ export const metadata: Metadata = {
   },
   description: `Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за ${startPlan.price} €/месец без първоначална такса.`,
   robots: {
-    index: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
-    follow: process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
+    index:
+      !isPrivatePreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
+    follow:
+      !isPrivatePreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
   },
   icons: { icon: [{ url: "/brand/saitena-mark.svg", type: "image/svg+xml" }] },
 };
@@ -50,6 +53,14 @@ export default function RootLayout({
           Към съдържанието
         </a>
         <div className="site">
+          {isPrivatePreview && (
+            <aside className="wrap editor-note" aria-label="Private Preview">
+              <strong>Private Preview — тестово съдържание.</strong>{" "}
+              {previewDetails.company}. Цените и описанията са демонстрационни,
+              не са търговска оферта. Няма активни поръчки, регистрация или
+              изпращане на съобщения. Юридическите страници не са публикувани.
+            </aside>
+          )}
           <Header />
           <main id="main">{children}</main>
           <Footer />
@@ -57,7 +68,7 @@ export default function RootLayout({
         <div className="floating-theme">
           <AppearanceControls />
         </div>
-        <FloatingCall />
+        {!isPrivatePreview && <FloatingCall />}
       </body>
     </html>
   );

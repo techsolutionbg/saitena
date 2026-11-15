@@ -27,7 +27,7 @@ Important exposure: screenshot archives and operational/infrastructure metadata 
 ## Publishing status and precise unblock list
 
 - main and all existing services remain unchanged. Only public Saitena repository workflow/policy/tests/docs are edited.
-- production environment read still returns404; required owner environment approval is NOT yet configured/verified.
+- Environment production is now configured and verified with required owner approval, self-approval allowed, admin bypass disabled and protected branches only. It contains no credentials or enablement; see [current readiness report](first-production-next-actions.md).
 - no production enablement variable or deployment credential names were returned by the read-only repository inspection. Do not create them automatically.
 - Keep docs/release-approval.json false until owner supplies/approves company, legal, contact and deployment-plan decisions, plus all asset rights and actual SMTP/runtime settings.
 - Need approved least-privilege identity/helper installation, reachable approved SSH path, verified host key and real registry authentication/pull acceptance. These were NOT proven by local registry fixture mapping.

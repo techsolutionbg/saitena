@@ -10,10 +10,17 @@ export function assertReleasePolicy({
   actor,
   triggeringActor,
   confirmation,
+  releaseMode = "public",
+  modeConfirmation,
 }) {
   const reject = (message) => {
     throw new Error(message);
   };
+  if (
+    !["public", "private-preview"].includes(releaseMode) ||
+    modeConfirmation !== releaseMode
+  )
+    reject("Explicit release mode confirmation is required");
   if (
     approvalPolicy?.mode !== "solo-maintainer" ||
     !approvalPolicy.maintainers?.includes(actor) ||
@@ -80,6 +87,7 @@ export function assertReleasePolicy({
     "Run node scripts/check-production-candidate.mjs",
     "Isolated HTTPS and SMTP integration",
     "Deployment failure and rollback rehearsal",
+    "Private Preview build and privacy checks",
   ]) {
     if (
       !jobs[0].steps.some((s) => s.name === name && s.conclusion === "success")

@@ -26,6 +26,7 @@ import { BlogCatalog } from "@/components/blog/blog-catalog";
 import { blogPosts } from "@/lib/blog-posts";
 import { parseBlogFilters, type BlogQuery } from "@/lib/blog-catalog";
 import contactStyles from "@/components/contact/contact-page.module.css";
+import { isPrivatePreview, previewDetails } from "@/lib/release-mode";
 
 export function ContentPage({
   path,
@@ -180,6 +181,18 @@ export function ContentPage({
       </>
     );
   if (path === "contact") {
+    if (isPrivatePreview)
+      return (
+        <section className="wrap prose">
+          <h1>Контакти — тестови данни</h1>
+          <p>{previewDetails.company}</p>
+          <p>{previewDetails.email}</p>
+          <p>{previewDetails.phone}</p>
+          <p>{previewDetails.address}</p>
+          <p>Не са заявени реални ЕИК, регистрация или данъчен статут.</p>
+          <p>Формата и външната карта са изключени за Private Preview.</p>
+        </section>
+      );
     return (
       <div className={contactStyles.page}>
         <section className={contactStyles.hero} aria-labelledby="contact-title">
@@ -309,16 +322,18 @@ export function ContentPage({
               </Link>
             ))}
           </div>
-          <div>
-            <h2>Правна информация</h2>
-            {Object.entries(routeTitles)
-              .filter(([key]) => key.startsWith("legal/"))
-              .map(([key, title]) => (
-                <Link href={`/${key}`} key={key}>
-                  {title}
-                </Link>
-              ))}
-          </div>
+          {!isPrivatePreview && (
+            <div>
+              <h2>Правна информация</h2>
+              {Object.entries(routeTitles)
+                .filter(([key]) => key.startsWith("legal/"))
+                .map(([key, title]) => (
+                  <Link href={`/${key}`} key={key}>
+                    {title}
+                  </Link>
+                ))}
+            </div>
+          )}
         </section>
       </>
     );

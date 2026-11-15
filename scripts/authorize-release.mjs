@@ -41,5 +41,7 @@ assertReleasePolicy({
   actor: process.env.GITHUB_ACTOR,
   triggeringActor: process.env.GITHUB_TRIGGERING_ACTOR,
   confirmation: process.env.RELEASE_CONFIRMATION,
+  releaseMode: process.env.RELEASE_MODE,
+  modeConfirmation: process.env.RELEASE_MODE_CONFIRMATION,
 });
 appendFileSync(process.env.GITHUB_OUTPUT, `sha=${sha}\nci_run=${run.id}\n`);

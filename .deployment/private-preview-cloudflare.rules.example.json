@@ -1,0 +1,41 @@
+{
+  "note": "Disabled rule fragments only; merge into existing phase rulesets after owner approval. Never replace an entire existing ruleset.",
+  "rules": [
+    {
+      "phase": "http_request_firewall_custom",
+      "rule": {
+        "description": "Private Preview: block non-home addresses on public hosts only",
+        "enabled": false,
+        "action": "block",
+        "expression": "(http.host in {\"saitena.com\" \"www.saitena.com\"} and not ip.src in {203.0.113.7})"
+      }
+    },
+    {
+      "phase": "http_request_late_transform",
+      "rule": {
+        "description": "Private Preview: overwrite origin authentication header",
+        "enabled": false,
+        "action": "rewrite",
+        "expression": "(http.host in {\"saitena.com\" \"www.saitena.com\"})",
+        "action_parameters": {
+          "headers": {
+            "x-saitena-preview-key": {
+              "operation": "set",
+              "value": "OWNER_GENERATES_64_HEX_SECRET_OUTSIDE_GIT"
+            }
+          }
+        }
+      }
+    },
+    {
+      "phase": "http_request_cache_settings",
+      "rule": {
+        "description": "Private Preview: bypass edge cache on public hosts only",
+        "enabled": false,
+        "action": "set_cache_settings",
+        "expression": "(http.host in {\"saitena.com\" \"www.saitena.com\"})",
+        "action_parameters": { "cache": false }
+      }
+    }
+  ]
+}

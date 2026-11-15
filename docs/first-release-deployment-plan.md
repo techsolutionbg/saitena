@@ -1,5 +1,7 @@
 # First release: review candidate and activation plan
 
+Current status after Issue #2/656f425: [first-production-next-actions.md](first-production-next-actions.md). Repository is now Public; older Private/private-review descriptions below are historical and do not protect assets in Git history. Production is still disabled.
+
 ## Latest state (15 November 2026)
 
 This document supersedes the earlier "no commit/push" preparation status. The owner authorized a branch and PR; candidate commit 083ac29 was pushed ONLY to codex/first-production-candidate in the existing PRIVATE techsolutionbg/saitena repository. Draft PR: https://github.com/techsolutionbg/saitena/pull/1. No merge or production activation. CI: https://github.com/techsolutionbg/saitena/actions/runs/43679603083 (check live status rather than assuming success).
