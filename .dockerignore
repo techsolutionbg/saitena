@@ -17,6 +17,7 @@ docs/**
 !docs/private-preview-assets.json
 !docs/private-preview-approval.json
 !docs/public-demo-approval.json
+!docs/public-demo-assets.json
 public/brand/saitena-logo-master.png
 public/images/portfolio-hero-v1.webp
 .vscode

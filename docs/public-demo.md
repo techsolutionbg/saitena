@@ -1,18 +1,20 @@
-# Public demonstration profile
+# Public candidate with the unchanged local presentation
 
-`NEXT_PUBLIC_RELEASE_MODE=public-demo` builds the reviewed demonstration content for an eventual owner-approved all-IP release. It does not open network access or grant deployment permission.
+`NEXT_PUBLIC_RELEASE_MODE=public-demo` uses the normal local presentation and original asset URLs. It does not use closed-preview SVG substitutes or test contact content. Components, CSS, layout and 30/50/70 EUR prices are unchanged. Existing incomplete controls are retained at the owner's explicit request. This profile alone does not open network access.
 
-The application shares the preview privacy controls: authentication and indexing cannot be enabled, legal routes and aliases return 404, contact submission returns 403, no real mail is sent, robots disallows crawling and responses use noindex/nofollow and private no-store. Company/contact details and prices remain marked as examples in context. There is no visible preview banner or logo label.
+Technical protections are separate from presentation: authentication and indexing cannot be enabled, legal routes/aliases return 404, contact submission returns 403, robots disallows crawling and responses use noindex/nofollow and private no-store. A visible form/profile control does not activate mail or authentication. Unknown/unpublished asset URLs return 404 before streamed rendering. There is no visible preview banner or logo label.
 
-This profile is separate from `private-preview`, which still requires an approved restricted access plan. The full `public` release still requires confirmed company, legal and contact data, public asset rights and a deployment approval. A demo approval never satisfies those full release conditions.
+`scripts/prepare-public-demo.mjs` copies exact original bytes from `docs/public-demo-assets.json` at their original URLs. It does not rewrite UI source. Paths, case, duplicates and SHA256 are checked. Archives and the unused unknown-origin FAQ background are not copied. The closed private-preview preparation remains separate.
 
 ## Approval and asset rights
 
-`scripts/check-release-readiness.mjs` with `SAITENA_RELEASE_MODE=public-demo` reads `docs/public-demo-approval.json`. It requires the owner to approve the public demonstration, public display of test data, public SVG display rights, the Cloudflare-only origin plan and the deployment plan. All tracked approvals initially remain false.
+The original candidate contains 23 assets. The owner conditionally authorized 16 project-specific generated illustrations and three original logos; no contrary rights evidence was located. Four supplied home-background variants remain `not-confirmed`. Availability inside a local review image is not publication permission. See [the original rights audit](public-original-assets.md).
 
-The original SVG source manifest retains its private-preview provenance. Public demonstration requires an additional owner grant containing exactly every manifest asset's path and SHA256 in `approved_assets`. Missing, additional or changed hashes fail the gate, as do changed source bytes, unreviewed files and missing assets. The private-only grant alone is insufficient. A root-only release receipt may supply consent to a private review copy only after explicit approval of the exact image, content, asset hashes and access plan.
+The readiness checker requires explicit content, asset-rights, origin-plan and exact deployment approvals, the complete asset hash grant and each asset's public permission. The four home variants block publication until their source/license is established. Access approval and successful CI cannot override missing rights. Full-public company/legal/contact gates remain unchanged. A root-only receipt may supply explicit consent to a private review copy only after the exact image/content/access plan is confirmed.
 
 CI builds and probes the candidate without publishing it. The existing automated production workflow does not gain a new deployment mode or enablement from this change; initial public demonstration requires the separately reviewed manual release plan. No new pipeline, production secret or infrastructure is created.
+
+Next.js Image is tested with the original raster files inside a read-only container. `/app/.next/cache` is a bounded writable tmpfs owned by uid/gid1000, and `/tmp` is temporary. No persistent volume is needed.
 
 ## Access transition after approval
 

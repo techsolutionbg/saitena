@@ -158,20 +158,20 @@ test("public demo requires separate public content, access and exact SVG permiss
     for (const dir of [
       "docs",
       "preview-assets",
-      "public",
+      "public/brand",
       "src/components/pages",
     ])
       mkdirSync(join(root, dir), { recursive: true });
     const svg = '<svg xmlns="http://www.w3.org/2000/svg"/>';
     const asset = {
-      path: "public/preview/art.svg",
-      source: "preview-assets/art.svg",
-      publicationRights: "approved-private-preview",
+      path: "public/brand/art.svg",
+      source: "public/brand/art.svg",
+      publicationRights: "approved-public-demo",
       sha256: createHash("sha256").update(svg).digest("hex"),
     };
     const write = (name, value) =>
       writeFileSync(join(root, "docs", name), JSON.stringify(value));
-    write("private-preview-assets.json", [asset]);
+    write("public-demo-assets.json", [asset]);
     write("binary-review-manifest.json", []);
     write("release-approval.json", {});
     write("private-preview-approval.json", {
@@ -191,8 +191,8 @@ test("public demo requires separate public content, access and exact SVG permiss
     );
     const keys = [
       "public_demo_approved",
-      "test_data_public_display_approved",
-      "svg_public_display_rights_approved",
+      "content_public_display_approved",
+      "assets_public_display_rights_approved",
       "cloudflare_only_origin_plan_approved",
       "deployment_plan_approved",
     ];
@@ -236,12 +236,12 @@ test("public demo requires separate public content, access and exact SVG permiss
     asset.sha256 = createHash("sha256")
       .update(svg + "changed")
       .digest("hex");
-    write("private-preview-assets.json", [asset]);
+    write("public-demo-assets.json", [asset]);
     assert.match(
       releaseBlockers(root, "public-demo").join(),
       /exact asset hashes/,
     );
-    writeFileSync(join(root, "preview-assets/unreviewed.svg"), svg);
+    writeFileSync(join(root, "public/unreviewed.svg"), svg);
     assert.match(
       releaseBlockers(root, "public-demo").join(),
       /Unreviewed public file/,

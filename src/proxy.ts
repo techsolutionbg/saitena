@@ -1,8 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { isPreview } from "@/lib/release-mode";
+import {
+  hasPreviewProtections,
+  isPreview,
+  releaseMode,
+} from "@/lib/release-mode";
+import originalAssets from "../docs/public-demo-assets.json";
+
+const originalAssetPaths = new Set(
+  originalAssets.map((asset) => `/${asset.path.slice(7)}`),
+);
 
 export function proxy(request: NextRequest) {
-  if (!isPreview) return NextResponse.next();
+  if (!hasPreviewProtections) return NextResponse.next();
   let path: string;
   try {
     path = decodeURIComponent(request.nextUrl.pathname);
@@ -13,7 +22,10 @@ export function proxy(request: NextRequest) {
   // Also covers legacy aliases and concept routes; no draft legal copy is rendered.
   if (
     /(?:^|\/)(?:legal|pravni)(?:\/|$)/.test(path) ||
-    /^\/(?:images|brand)(?:\/|$)/.test(path)
+    (isPreview && /^\/(?:images|brand)(?:\/|$)/.test(path)) ||
+    (releaseMode === "public-demo" &&
+      /^\/(?:images|brand|preview)(?:\/|$)/i.test(path) &&
+      !originalAssetPaths.has(path))
   )
     return new NextResponse("Not found", {
       status: 404,

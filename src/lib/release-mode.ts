@@ -1,6 +1,9 @@
 /** Build-time content profile; network access is approved separately. */
 export const releaseMode = process.env.NEXT_PUBLIC_RELEASE_MODE ?? "public";
-export const isPreview =
+// Only the closed preview uses substitute artwork and test contact content.
+// The public candidate keeps the local site's normal presentation unchanged.
+export const isPreview = releaseMode === "private-preview";
+export const hasPreviewProtections =
   releaseMode === "private-preview" || releaseMode === "public-demo";
 
 export const previewDetails = {

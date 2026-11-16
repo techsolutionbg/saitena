@@ -1,0 +1,255 @@
+[
+  {
+    "path": "public/images/blog-hero-studio-v1.webp",
+    "sha256": "9cc1b10ecc09680abf58b626dd1b890c4bccd7c1a2171ef5feb362d4397e725d",
+    "bytes": 182746,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/blog-hero.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/home-hero-dark-mobile.webp",
+    "sha256": "2db3e948b2e39f3671edb74472ad42d544f8ed252836fa50494409a3e4993573",
+    "bytes": 9032,
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "ownerApproval": null
+  },
+  {
+    "path": "public/images/home-hero-dark.webp",
+    "sha256": "b16e7d82f8150c565308df597dab5a2c1bd8aac6c693f4e7af0c4bf0455059fb",
+    "bytes": 16722,
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "ownerApproval": null
+  },
+  {
+    "path": "public/images/home-hero-light-mobile.webp",
+    "sha256": "c950210a3713b89b7cfbb8a240bc59e44ae2f9e306208bc9920b719a9a5a6cf3",
+    "bytes": 15746,
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "ownerApproval": null
+  },
+  {
+    "path": "public/images/home-hero-light.webp",
+    "sha256": "9a6d82cf68ad6f1b369c3f1e441ad681e695c7073c58a4e2b9bff25cfa9c0b39",
+    "bytes": 41784,
+    "publicationRights": "not-confirmed",
+    "provenance": {
+      "evidence": "docs/home-hero.md",
+      "origin": "user-supplied background; original rights unverified"
+    },
+    "ownerApproval": null
+  },
+  {
+    "path": "public/images/portfolio-cta-developer-v1.webp",
+    "sha256": "2bb58f069f36bb424d473d9668096840e32403cd85e133e8bf642030fa1a0ca5",
+    "bytes": 104630,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/portfolio-cta.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/portfolio-hero-work-v1.webp",
+    "sha256": "f47a2d544413bab7266f6ed2c344dc637d8455ae2bc2cf2b8a8982f8f3bdf8bc",
+    "bytes": 185718,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/portfolio-hero-redesign.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/prices-hero-v1.webp",
+    "sha256": "25539e70e02ec4815a347a2ecae8a4bcea8d7e322ed9afb9fd0593e9299bfb40",
+    "bytes": 129496,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/prices-hero.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/process-development-v1.webp",
+    "sha256": "e8c40f4143819d8283733c5ca549c2e634d89417070eecf154367797a184cd70",
+    "bytes": 17514,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/process-launch-v1.webp",
+    "sha256": "330275fed9076b85e54314ec1a202436df8e3c1c7c9d5af6f126b80929f8fcb8",
+    "bytes": 10624,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/process-offer-v1.webp",
+    "sha256": "fee39ba5e469fa6bea7996036f54ee960aae672ac5ffa0fa11261b5c5253e9aa",
+    "bytes": 16400,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/process-planning-v1.webp",
+    "sha256": "366fba31e2123985fe507e45f86306ff067e03404b2f4bcbab2476f0e81f0fa2",
+    "bytes": 14246,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/work-process.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-contact-v1.webp",
+    "sha256": "a95822419a8dbec2e08ce14bb609266a58830116eb0ae7e6c05bf3b4a7d51e08",
+    "bytes": 171744,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-cta.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-growth-v1.webp",
+    "sha256": "5f4e88628b42a688aa2b467ec06254081094dee728a85e054670c90853a668ff",
+    "bytes": 13688,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-hosting-v1.webp",
+    "sha256": "77a6cb83647d4736921b59d26b454b21aadf4832fe7db4d9a52a60191644f1f0",
+    "bytes": 14224,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-security-v1.webp",
+    "sha256": "761ccd8e6b14de87afeba1b8bd9fd968b4082581c0b055cff081c19f44e6e07e",
+    "bytes": 13162,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-seo-v1.webp",
+    "sha256": "9cc1f07122cc39fa3bc7771cf5250e9e03684fbcc30496731f2d931bd2b6943f",
+    "bytes": 17340,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-studio-v1.webp",
+    "sha256": "a49d39cae9121674ce29c390efd5e2709f66dd337d9f9176bc6df63bade1cd71",
+    "bytes": 103220,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-hero.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-support-v1.webp",
+    "sha256": "b75c018a67f3e3029761f515b68e5c85674d51f54b2b29225fd87bbced23a8d0",
+    "bytes": 18332,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/images/services-website-v1.webp",
+    "sha256": "787cb021bbddc626036409a84f6f0fb5ffa43e8fa6c29fff5fffbd279e0588db",
+    "bytes": 17144,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/services-catalog.md",
+      "origin": "project-generated; user reference"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/brand/saitena-logo-light.svg",
+    "sha256": "23514c23bc5395f4ba8eb202fbaeb22220ed5b60863ba47c8cad2a17f0bcb264",
+    "bytes": 669707,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/brand-assets.md",
+      "origin": "user-provided logo references; imagegen derivative embedded PNG"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/brand/saitena-logo-dark.svg",
+    "sha256": "6a5cc7afc8755902261069cce0e7f1aaf919a91ad6ef97799067f3d053e3e201",
+    "bytes": 670209,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/brand-assets.md",
+      "origin": "user-provided logo references; imagegen derivative embedded PNG"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  },
+  {
+    "path": "public/brand/saitena-mark.svg",
+    "sha256": "8c7a12890c07a9736135de09e892e172150258984cbf23612ae4cdb82f9867dc",
+    "bytes": 669705,
+    "publicationRights": "approved-public-demo",
+    "provenance": {
+      "evidence": "docs/brand-assets.md",
+      "origin": "user-provided logo references; imagegen derivative embedded PNG"
+    },
+    "ownerApproval": "Owner authorized project-specific generated illustrations and original logos, conditional on no identified foreign rights; generation records audited. No contrary rights evidence located."
+  }
+]

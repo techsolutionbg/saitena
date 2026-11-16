@@ -1,10 +1,87 @@
 {
   "owner": "techsolutionbg",
   "public_demo_approved": false,
-  "test_data_public_display_approved": false,
-  "svg_public_display_rights_approved": false,
   "cloudflare_only_origin_plan_approved": false,
   "deployment_plan_approved": false,
-  "approved_assets": [],
-  "approval_scope": "Pending owner approval for all-IP public demonstration, test content and exact original SVG hashes. No production action authorized by this file."
+  "approved_assets": [
+    {
+      "path": "public/images/blog-hero-studio-v1.webp",
+      "sha256": "9cc1b10ecc09680abf58b626dd1b890c4bccd7c1a2171ef5feb362d4397e725d"
+    },
+    {
+      "path": "public/images/portfolio-cta-developer-v1.webp",
+      "sha256": "2bb58f069f36bb424d473d9668096840e32403cd85e133e8bf642030fa1a0ca5"
+    },
+    {
+      "path": "public/images/portfolio-hero-work-v1.webp",
+      "sha256": "f47a2d544413bab7266f6ed2c344dc637d8455ae2bc2cf2b8a8982f8f3bdf8bc"
+    },
+    {
+      "path": "public/images/prices-hero-v1.webp",
+      "sha256": "25539e70e02ec4815a347a2ecae8a4bcea8d7e322ed9afb9fd0593e9299bfb40"
+    },
+    {
+      "path": "public/images/process-development-v1.webp",
+      "sha256": "e8c40f4143819d8283733c5ca549c2e634d89417070eecf154367797a184cd70"
+    },
+    {
+      "path": "public/images/process-launch-v1.webp",
+      "sha256": "330275fed9076b85e54314ec1a202436df8e3c1c7c9d5af6f126b80929f8fcb8"
+    },
+    {
+      "path": "public/images/process-offer-v1.webp",
+      "sha256": "fee39ba5e469fa6bea7996036f54ee960aae672ac5ffa0fa11261b5c5253e9aa"
+    },
+    {
+      "path": "public/images/process-planning-v1.webp",
+      "sha256": "366fba31e2123985fe507e45f86306ff067e03404b2f4bcbab2476f0e81f0fa2"
+    },
+    {
+      "path": "public/images/services-contact-v1.webp",
+      "sha256": "a95822419a8dbec2e08ce14bb609266a58830116eb0ae7e6c05bf3b4a7d51e08"
+    },
+    {
+      "path": "public/images/services-growth-v1.webp",
+      "sha256": "5f4e88628b42a688aa2b467ec06254081094dee728a85e054670c90853a668ff"
+    },
+    {
+      "path": "public/images/services-hosting-v1.webp",
+      "sha256": "77a6cb83647d4736921b59d26b454b21aadf4832fe7db4d9a52a60191644f1f0"
+    },
+    {
+      "path": "public/images/services-security-v1.webp",
+      "sha256": "761ccd8e6b14de87afeba1b8bd9fd968b4082581c0b055cff081c19f44e6e07e"
+    },
+    {
+      "path": "public/images/services-seo-v1.webp",
+      "sha256": "9cc1f07122cc39fa3bc7771cf5250e9e03684fbcc30496731f2d931bd2b6943f"
+    },
+    {
+      "path": "public/images/services-studio-v1.webp",
+      "sha256": "a49d39cae9121674ce29c390efd5e2709f66dd337d9f9176bc6df63bade1cd71"
+    },
+    {
+      "path": "public/images/services-support-v1.webp",
+      "sha256": "b75c018a67f3e3029761f515b68e5c85674d51f54b2b29225fd87bbced23a8d0"
+    },
+    {
+      "path": "public/images/services-website-v1.webp",
+      "sha256": "787cb021bbddc626036409a84f6f0fb5ffa43e8fa6c29fff5fffbd279e0588db"
+    },
+    {
+      "path": "public/brand/saitena-logo-light.svg",
+      "sha256": "23514c23bc5395f4ba8eb202fbaeb22220ed5b60863ba47c8cad2a17f0bcb264"
+    },
+    {
+      "path": "public/brand/saitena-logo-dark.svg",
+      "sha256": "6a5cc7afc8755902261069cce0e7f1aaf919a91ad6ef97799067f3d053e3e201"
+    },
+    {
+      "path": "public/brand/saitena-mark.svg",
+      "sha256": "8c7a12890c07a9736135de09e892e172150258984cbf23612ae4cdb82f9867dc"
+    }
+  ],
+  "approval_scope": "Owner authorized all-IP access and 16 project-specific illustrations plus three original logos conditionally; public launch of this exact new version remains pending. Four supplied home backgrounds have no located commercial license evidence. Preserve the local interface and 30/50/70 EUR plans unchanged.",
+  "content_public_display_approved": false,
+  "assets_public_display_rights_approved": false
 }

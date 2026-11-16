@@ -11,9 +11,11 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
     readFileSync(
       join(
         root,
-        preview
-          ? "docs/private-preview-assets.json"
-          : "docs/binary-review-manifest.json",
+        demo
+          ? "docs/public-demo-assets.json"
+          : preview
+            ? "docs/private-preview-assets.json"
+            : "docs/binary-review-manifest.json",
       ),
       "utf8",
     ),
@@ -27,6 +29,17 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
       .filter((a) => a.decision === "exclude-local-archive")
       .map((a) => a.path),
   );
+  if (demo) {
+    const localAssets = JSON.parse(
+      readFileSync(join(root, "docs/binary-review-manifest.json"), "utf8"),
+    );
+    for (const asset of localAssets)
+      if (
+        asset.path.startsWith("public/") &&
+        !assets.some((included) => included.path === asset.path)
+      )
+        excluded.add(asset.path); // Known local-only assets are not copied to the public candidate.
+  }
   const blockers = [];
   try {
     const approval = JSON.parse(
@@ -47,8 +60,8 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
     for (const key of demo
       ? [
           "public_demo_approved",
-          "test_data_public_display_approved",
-          "svg_public_display_rights_approved",
+          "content_public_display_approved",
+          "assets_public_display_rights_approved",
           "cloudflare_only_origin_plan_approved",
           "deployment_plan_approved",
         ]
@@ -68,9 +81,7 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
         blockers.push(`Owner approval pending: ${key}`);
     }
     if (demo) {
-      // Private-only asset permission does not authorize public demonstration.
-      // Require a second, exact hash-bound owner grant; never set the private
-      // access approval to true for a site which accepts all visitors.
+      // Access approval cannot authorize unknown artwork or changed asset bytes.
       const signatures = (list) =>
         list.map((a) => `${a.path}:${a.sha256}`).sort();
       if (
@@ -78,7 +89,7 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
         JSON.stringify(signatures(approval.approved_assets)) !==
           JSON.stringify(signatures(assets))
       )
-        blockers.push("Public SVG permission missing for exact asset hashes");
+        blockers.push("Public asset permission missing for exact asset hashes");
     }
   } catch {
     blockers.push("Owner release approval record missing");
@@ -86,12 +97,20 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
   for (const asset of assets) {
     if (
       asset.publicationRights !==
-      (preview ? "approved-private-preview" : "approved")
+      (demo
+        ? "approved-public-demo"
+        : preview
+          ? "approved-private-preview"
+          : "approved")
     )
       blockers.push(`Rights pending: ${asset.path}`);
     try {
       const hash = createHash("sha256")
-        .update(readFileSync(join(root, preview ? asset.source : asset.path)))
+        .update(
+          readFileSync(
+            join(root, preview && !demo ? asset.source : asset.path),
+          ),
+        )
         .digest("hex");
       if (hash !== asset.sha256) blockers.push(`Changed asset: ${asset.path}`);
     } catch {
@@ -106,13 +125,13 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
         const name = relative(root, path).replaceAll("\\", "/");
         if (
           !excluded.has(name) &&
-          !assets.some((a) => (preview ? a.source : a.path) === name)
+          !assets.some((a) => (preview && !demo ? a.source : a.path) === name)
         )
           blockers.push(`Unreviewed public file: ${name}`);
       }
     }
   }
-  visit(join(root, preview ? "preview-assets" : "public"));
+  visit(join(root, preview && !demo ? "preview-assets" : "public"));
   if (
     !preview &&
     /СТРУКТУРЕН МАКЕТ|предстои потвърждение|не действащ правен документ/u.test(
