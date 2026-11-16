@@ -183,14 +183,14 @@ export function ContentPage({
   if (path === "contact") {
     if (isPrivatePreview)
       return (
-        <section className="wrap prose">
+        <section id="contact-form" className="wrap prose">
           <h1>Контакти — тестови данни</h1>
           <p>{previewDetails.company}</p>
           <p>{previewDetails.email}</p>
           <p>{previewDetails.phone}</p>
           <p>{previewDetails.address}</p>
           <p>Не са заявени реални ЕИК, регистрация или данъчен статут.</p>
-          <p>Формата и външната карта са изключени за Private Preview.</p>
+          <p>Изпращането на съобщения и картата са недостъпни.</p>
         </section>
       );
     return (

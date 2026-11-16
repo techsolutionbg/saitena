@@ -71,7 +71,10 @@ for (const host of ["saitena.com", "www.saitena.com"]) {
         `${host}${path}`,
       );
       assert.match(r.headers["x-robots-tag"] ?? "", /noindex/);
-      if (path === "/") assert.match(r.body, /Private Preview/);
+      if (path === "/") {
+        assert.match(r.body, /data-release-mode="private-preview"/);
+        assert(!/Private Preview|PRIVATE PREVIEW/.test(r.body));
+      }
       if (path === "/api/health")
         assert.equal(JSON.parse(r.body).releaseMode, "private-preview");
       if (path === "/robots.txt") assert(r.body.includes("Disallow: /"));

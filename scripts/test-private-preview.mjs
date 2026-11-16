@@ -31,8 +31,14 @@ try {
     const health=await(await fetch(base+'/api/health')).json();assert.equal(health.releaseMode,'private-preview');
     for(const path of ['/', '/services','/prices','/about','/portfolio','/blog','/faq','/contact','/sitemap']){
       const r=await fetch(base+path);assert.equal(r.status,200,path);assert.match(r.headers.get('x-robots-tag')??'',/noindex/);
-      const body=await r.text();assert.match(body,/Private Preview/);assert(!body.includes('href="/legal/'),path);assert(!body.includes('src="//preview/'));
+      assert.match(r.headers.get('x-robots-tag')??'',/nofollow/);assert.equal(r.headers.get('cache-control'),'private, no-store');
+      const body=await r.text();assert.match(body,/data-release-mode="private-preview"/);assert(!/Private Preview|PRIVATE PREVIEW/.test(body),path);assert(!body.includes('href="/legal/'),path);assert(!body.includes('src="//preview/'));
       if(path==='/contact'){assert.match(body,/preview@example.invalid/);assert(!body.includes('<form'));assert(!body.includes('tile.openstreetmap'));}
+      if(path==='/prices')assert.match(body,/Демонстрационни цени и планове/);
+      for(const image of body.matchAll(/<img[^>]+src="([^"]+)"/g)){
+        const src=decodeURIComponent(image[1]);
+        assert(!src.includes('/images/')&&!src.includes('/brand/'),path+': original image reference');
+      }
     }
     for(const path of ['/legal/privacy','/legal/cookies','/legal/terms','/legal/subscription-terms','/legal/privacy/','/legal/privacy?_rsc=probe']){
       const r=await fetch(base+path);assert.equal(r.status,404,path);assert(!(await r.text()).includes('СТРУКТУРЕН МАКЕТ'));
@@ -43,7 +49,7 @@ try {
     assert((await(await fetch(base+'/robots.txt')).text()).includes('Disallow: /'));
     assert(!(await(await fetch(base+'/sitemap.xml')).text()).includes('<loc>'));
     const assets=JSON.parse(${JSON.stringify(readFileSync("docs/private-preview-assets.json", "utf8"))});
-    for(const a of assets)assert.equal((await fetch(base+'/'+a.path.slice(7))).status,200,a.path);
+    for(const a of assets){const r=await fetch(base+'/'+a.path.slice(7));assert.equal(r.status,200,a.path);const svg=await r.text();assert(!/private preview/i.test(svg),a.path);assert.equal(require('node:crypto').createHash('sha256').update(svg).digest('hex'),a.sha256,a.path);}
     for(const p of ['/images/home-hero-light.webp','/brand/saitena-logo-light.svg'])assert.equal((await fetch(base+p)).status,404,p);
     const fs=require('node:fs');assert.deepEqual(fs.readdirSync('/app/public'),['preview']);assert.equal(fs.readdirSync('/app/public/preview').length,assets.length);
     console.log(JSON.stringify({passed:true,pages:9,legalAndAliasDenials:8,authRedirects:5,disabledMailOrigins:2,previewAssets:assets.length,originalAssetsAbsent:true}));

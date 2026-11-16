@@ -25,7 +25,7 @@ export function PortfolioHero() {
               <span className={styles.icon}>
                 <Icon name="monitor" />
               </span>
-              Реални проекти
+              Примерни проекти
             </li>
             <li>
               <span className={styles.icon}>

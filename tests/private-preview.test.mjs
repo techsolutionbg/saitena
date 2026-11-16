@@ -6,7 +6,10 @@ import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { previewWaf } from "../scripts/preview-waf.mjs";
 import { releaseBlockers } from "../scripts/release-readiness.mjs";
-import { preparePrivatePreview } from "../scripts/prepare-private-preview.mjs";
+import {
+  preparePrivatePreview,
+  replacePreviewAssetReferences,
+} from "../scripts/prepare-private-preview.mjs";
 
 test("WAF draft blocks other IPs on exactly the two public hosts, without a global Allow bypass", () => {
   const rule = previewWaf(["203.0.113.7", "2001:db8::7"]);
@@ -119,4 +122,34 @@ test("preview never grants company/legal public approval or bypasses asset integ
 
 test("preview preparation refuses to mutate a real working checkout", () => {
   assert.throws(() => preparePrivatePreview(process.cwd()), /disposable/);
+});
+
+test("preview keeps structured illustration slots and removes text-overlapping CSS artwork", () => {
+  const assets = [["/images/hero.webp", "/preview/illustration.svg"]];
+  assert.equal(
+    replacePreviewAssetReferences(
+      '<Image src="/images/hero.webp" />',
+      assets,
+      false,
+    ),
+    '<Image src="/preview/illustration.svg" />',
+  );
+  for (const url of [
+    'url("/images/hero.webp")',
+    "url('/images/hero.webp')",
+    "url(/images/hero.webp)",
+  ]) {
+    assert.equal(
+      replacePreviewAssetReferences(
+        `background: linear-gradient(white, blue), ${url};`,
+        assets,
+        true,
+      ),
+      "background: linear-gradient(white, blue), none;",
+    );
+  }
+  assert.equal(
+    replacePreviewAssetReferences("color: var(--ink);", assets, true),
+    "color: var(--ink);",
+  );
 });

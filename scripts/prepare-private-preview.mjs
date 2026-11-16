@@ -10,6 +10,21 @@ import {
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 
+/** Keep illustrations in image slots; gradients remain behind readable text. */
+export function replacePreviewAssetReferences(content, replacements, isCss) {
+  for (const [before, after] of replacements) {
+    if (isCss) {
+      for (const url of [
+        `url("${before}")`,
+        `url('${before}')`,
+        `url(${before})`,
+      ])
+        content = content.replaceAll(url, "none");
+    } else content = content.replaceAll(before, after);
+  }
+  return content;
+}
+
 /** Mutates only the disposable Docker build context, never the source checkout. */
 export function preparePrivatePreview(root) {
   if (root !== "/app" || process.env.SAITENA_DISPOSABLE_BUILD !== "true")
@@ -54,9 +69,12 @@ export function preparePrivatePreview(root) {
       if (entry.isDirectory()) visit(file);
       else if (/\.(?:tsx?|css)$/.test(entry.name)) {
         let content = readFileSync(file, "utf8");
-        for (const [before, after] of replacements)
-          content = content.replaceAll(before, after);
-        if (/\/(?:images|brand)\/[\w.-]+\.(?:webp|png|svg)/.test(content))
+        content = replacePreviewAssetReferences(
+          content,
+          replacements,
+          entry.name.endsWith(".css"),
+        );
+        if (/\/(?:images|brand)\//.test(content))
           throw new Error("Unmapped original asset in preview source");
         writeFileSync(file, content);
       }
@@ -64,7 +82,9 @@ export function preparePrivatePreview(root) {
   }
   visit(join(root, "src"));
   // OverlayFS cannot rename a lower-layer directory across layers (EXDEV).
-  cpSync(join(root, "public"), join(root, "unpublished-public"), { recursive: true });
+  cpSync(join(root, "public"), join(root, "unpublished-public"), {
+    recursive: true,
+  });
   rmSync(join(root, "public"), { recursive: true });
   mkdirSync(join(root, "public/preview"), { recursive: true });
   for (const asset of manifest)

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Arrow } from "@/components/ui/icons";
 import styles from "./home-hero.module.css";
 import { HeroWaves } from "./hero-waves";
+import { isPrivatePreview } from "@/lib/release-mode";
 
 export function HomeHero() {
   return (
@@ -18,8 +19,10 @@ export function HomeHero() {
           Създаваме красиви, бързи и адаптивни сайтове, които представят бизнеса
           Ви по най-добрия начин на всяко устройство. Осигуряваме хостинг,
           сигурност, техническа поддръжка и базова SEO и GEO оптимизация. Цената
-          се определя от избрания план и се заплаща на месец. Имате въпроси?
-          Можете да ни пишете чрез контактната форма.
+          се определя от избрания план и се заплаща на месец.{" "}
+          {isPrivatePreview
+            ? "Контактните данни са демонстрационни; изпращането на съобщения е изключено."
+            : "Имате въпроси? Можете да ни пишете чрез контактната форма."}
         </p>
         <div className={styles.actions}>
           <Link href="/contact" className="button">

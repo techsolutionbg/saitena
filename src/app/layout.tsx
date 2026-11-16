@@ -13,7 +13,7 @@ import { textSizeBootstrap } from "@/lib/text-size";
 import { AppearanceControls } from "@/components/appearance/appearance-controls";
 import { startPlan } from "@/lib/plans";
 import { FloatingCall } from "@/components/contact/floating-call";
-import { isPrivatePreview, previewDetails } from "@/lib/release-mode";
+import { isPrivatePreview } from "@/lib/release-mode";
 import "./globals.css";
 import "./artwork.css";
 
@@ -38,6 +38,7 @@ export default function RootLayout({
   return (
     <html
       lang="bg"
+      data-release-mode={isPrivatePreview ? "private-preview" : "public"}
       data-theme="light"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
@@ -53,14 +54,6 @@ export default function RootLayout({
           Към съдържанието
         </a>
         <div className="site">
-          {isPrivatePreview && (
-            <aside className="wrap editor-note" aria-label="Private Preview">
-              <strong>Private Preview — тестово съдържание.</strong>{" "}
-              {previewDetails.company}. Цените и описанията са демонстрационни,
-              не са търговска оферта. Няма активни поръчки, регистрация или
-              изпращане на съобщения. Юридическите страници не са публикувани.
-            </aside>
-          )}
           <Header />
           <main id="main">{children}</main>
           <Footer />

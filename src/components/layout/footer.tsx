@@ -45,12 +45,14 @@ export function Footer() {
         </div>
         <div>
           <h2>Полезно</h2>
-          {usefulNavigation.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <Icon name={item.icon} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {usefulNavigation
+            .filter((item) => !isPrivatePreview || item.href !== "/sitemap")
+            .map((item) => (
+              <Link key={item.href} href={item.href}>
+                <Icon name={item.icon} />
+                <span>{item.label}</span>
+              </Link>
+            ))}
         </div>
         <div className="footer-contacts">
           <h2>Свържете се с нас</h2>

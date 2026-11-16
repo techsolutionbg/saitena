@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   )
     return response("Невалиден източник на заявката.", 403);
   if (isPrivatePreview)
-    return response("Изпращането е изключено в Private Preview.", 403);
+    return response("Изпращането на съобщения е изключено.", 403);
   if (request.headers.get("content-type")?.split(";")[0] !== "application/json")
     return response("Неподдържан формат на данните.", 415);
 
