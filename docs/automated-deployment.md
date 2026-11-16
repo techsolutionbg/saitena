@@ -77,7 +77,9 @@ helper to **deny-only**, and the existing OIDC identity to **workflow_dispatch**
 - If default `GITHUB_TOKEN` cannot read branch/environment protections, provide
   `SAITENA_RELEASE_POLICY_TOKEN` through GitHub's protected secrets UI. Use a
   selected-repository fine-grained credential with read-only Administration,
-  Actions, Contents and Environments metadata permissions supported by GitHub.
+  Actions, Contents and Pull requests permissions (read). Environment metadata
+  uses Actions read permission. The credential is a repository Actions secret
+  because authorization runs before the production environment is entered.
   It must have no repository write, SSH, package-write or server authority. The
   read-only CI capability report identifies this requirement; it is not a gate
   bypass. Authorization still fails closed on inaccessible APIs.

@@ -14,6 +14,7 @@ export function getPublic(host, path) {
         headers: {
           "User-Agent": "SaitenaReadOnlyPreflight/1.0",
           "Accept-Encoding": "identity",
+          Accept: "*/*",
         },
       },
       (response) => {
@@ -49,7 +50,7 @@ export async function verifyPublicSite(expected, get = getPublic) {
     Object.keys(expected).length < 23 ||
     Object.entries(expected).some(
       ([path, digest]) =>
-        !/^\/(?!\/)[a-zA-Z0-9/_.,-]*$/.test(path) ||
+        !/^\/(?!\/)[a-zA-Z0-9/_.,?%=&-]*$/.test(path) ||
         !/^[a-f0-9]{64}$/.test(digest),
     )
   )
@@ -90,10 +91,11 @@ export async function verifyPublicSite(expected, get = getPublic) {
     if ((await get("saitena.com", path)).status !== 404)
       throw Error("Restricted page exposed");
   }
+  const robots = await get("saitena.com", "/robots.txt");
   if (
-    !(await get("saitena.com", "/robots.txt")).bytes
-      .toString()
-      .includes("Disallow: /")
+    robots.status !== 200 ||
+    !robots.headers["cf-ray"] ||
+    !robots.bytes.toString().includes("Disallow: /")
   )
     throw Error("Robots protection missing");
   return { checked: jobs.length, independentRunnerIpv4: true };

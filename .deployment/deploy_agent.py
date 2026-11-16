@@ -342,7 +342,7 @@ http://127.0.0.1:9080 {{
 
     def candidate_checks(self, name):
         if self.c.get("release_mode") == "public-demo":
-            script = r"""const fs=require('fs'),crypto=require('crypto');(async()=>{const base='http://127.0.0.1:3000',out={};for(const p of ['/', '/services','/prices','/portfolio','/about','/contact','/blog','/faq',...JSON.parse(fs.readFileSync('/app/release-assets.json')).map(a=>'/'+a.path.slice(7))]){const r=await fetch(base+p),b=Buffer.from(await r.arrayBuffer());if(r.status!==200||!b.length)throw Error('route');out[p]=crypto.createHash('sha256').update(b).digest('hex');if(r.headers.get('content-type')?.includes('text/html'))for(const m of b.toString().matchAll(/(?:src|href)="(\/_next\/static\/[^"?]+)(?:\?[^" ]*)?"/g)){if(out[m[1]])continue;const r=await fetch(base+m[1]);if(r.status!==200)throw Error('resource');out[m[1]]=crypto.createHash('sha256').update(Buffer.from(await r.arrayBuffer())).digest('hex')}}if((await(await fetch(base+'/api/health')).json()).releaseMode!=='public-demo')throw Error('mode');for(const p of ['/legal/privacy','/legal/terms'])if((await fetch(base+p)).status!==404)throw Error('legal');if((await fetch(base+'/api/contact',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:'{}'})).status!==403)throw Error('mail');console.log(JSON.stringify(out))})().catch(()=>process.exitCode=1)"""
+            script = r"""const fs=require('fs'),crypto=require('crypto');(async()=>{const base='http://127.0.0.1:3000',out={};for(const p of ['/', '/services','/prices','/portfolio','/about','/contact','/blog','/faq',...JSON.parse(fs.readFileSync('/app/release-assets.json')).map(a=>'/'+a.path.slice(7))]){const r=await fetch(base+p),b=Buffer.from(await r.arrayBuffer());if(r.status!==200||!b.length)throw Error('route');out[p]=crypto.createHash('sha256').update(b).digest('hex');if(r.headers.get('content-type')?.includes('text/html'))for(const m of b.toString().matchAll(/(?:src|href)="(\/_next\/(?:static\/[^"?]+|image\?[^" ]+))"/g)){const path=m[1].replaceAll('&amp;','&');if(out[path])continue;const r=await fetch(base+path,{headers:{Accept:'*/*'}});if(r.status!==200)throw Error('resource');out[path]=crypto.createHash('sha256').update(Buffer.from(await r.arrayBuffer())).digest('hex')}}if((await(await fetch(base+'/api/health')).json()).releaseMode!=='public-demo')throw Error('mode');for(const p of ['/legal/privacy','/legal/terms'])if((await fetch(base+p)).status!==404)throw Error('legal');if((await fetch(base+'/api/contact',{method:'POST',headers:{Origin:base,'Content-Type':'application/json'},body:'{}'})).status!==403)throw Error('mail');console.log(JSON.stringify(out))})().catch(()=>process.exitCode=1)"""
             return json.loads(self.command("docker", "exec", name, "node", "-e", script))
         # No registration or SMTP submission. Validate assets, pages and a safe rejected form.
         script = """const fs=require('fs');(async()=>{for(const p of ['/', '/services','/prices','/contact','/api/health','/robots.txt','/sitemap.xml']){const r=await fetch('http://127.0.0.1:3000'+p);if(!r.ok)throw Error('route');const b=await r.text();if(!b.length)throw Error('empty')}const m=JSON.parse(fs.readFileSync('/app/release-assets.json'));for(const a of m.filter(x=>x.path.startsWith('public/')&&x.decision!=='exclude-local-archive')){if(!(await fetch('http://127.0.0.1:3000/'+a.path.slice(7))).ok)throw Error('asset')}const r=await fetch('http://127.0.0.1:3000/api/contact',{method:'POST',headers:{Origin:'https://invalid.example','Content-Type':'application/json'},body:'{}'});if(r.status!==403)throw Error('origin');const b=await(await fetch('http://127.0.0.1:3000/')).text();console.log(require('crypto').createHash('sha256').update(b).digest('hex'))})().catch(()=>process.exitCode=1)"""
@@ -557,17 +557,14 @@ def guarded_recover(journal, runtime):
         recover(journal, runtime)
     except Exception:
         original = base64.b64decode(entry["original"])
+        entry["phase"] = "manual_recovery_required"
         if runtime.route() in [original, runtime.candidate_route(original, entry["container"])]:
             try:
                 runtime.fail_closed(original)
                 entry["fallback_sha256"] = hashlib.sha256(runtime.route()).hexdigest()
                 entry["phase"] = "fail_closed_manual_recovery_required"
-                save(journal, entry)
-                raise RuntimeError(entry["phase"])
-            except RuntimeError as error:
-                if str(error) == "fail_closed_manual_recovery_required":
-                    raise
-        entry["phase"] = "manual_recovery_required"
+            except Exception:
+                pass
         save(journal, entry)
         raise RuntimeError(entry["phase"])
 

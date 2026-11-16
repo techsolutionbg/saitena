@@ -15,6 +15,7 @@ const expected = Object.fromEntries(
   [
     "/",
     "/faq",
+    "/_next/image?url=%2Fimages%2F1.webp&w=640&q=75",
     ...Array.from({ length: 23 }, (_, i) => `/images/${i}.webp`),
   ].map((path) => [path, sha(body)]),
 );
@@ -37,7 +38,7 @@ const get = async (host, path) => ({
   ),
 });
 test("independent content verification refuses changed bytes, failed assets and missing protections", async () => {
-  assert.equal((await verifyPublicSite(expected, get)).checked, 26);
+  assert.equal((await verifyPublicSite(expected, get)).checked, 27);
   for (const mutate of [
     (r) => (r.status = 503),
     (r) => (r.bytes = Buffer.from("wrong image")),
@@ -54,6 +55,13 @@ test("independent content verification refuses changed bytes, failed assets and 
     );
   }
   await assert.rejects(verifyPublicSite({ "/": sha(body) }, get));
+  await assert.rejects(
+    verifyPublicSite(expected, async (...args) => {
+      const result = await get(...args);
+      if (args[1] === "/robots.txt") result.status = 503;
+      return result;
+    }),
+  );
 });
 test("only the exact known FAQ email transformation is permitted", () => {
   const original = FAQ_EMAIL + STREAM_ANCHOR + "original trailing content";
