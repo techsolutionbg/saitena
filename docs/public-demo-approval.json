@@ -9,6 +9,22 @@
       "sha256": "9cc1b10ecc09680abf58b626dd1b890c4bccd7c1a2171ef5feb362d4397e725d"
     },
     {
+      "path": "public/images/home-hero-dark-mobile.webp",
+      "sha256": "2db3e948b2e39f3671edb74472ad42d544f8ed252836fa50494409a3e4993573"
+    },
+    {
+      "path": "public/images/home-hero-dark.webp",
+      "sha256": "b16e7d82f8150c565308df597dab5a2c1bd8aac6c693f4e7af0c4bf0455059fb"
+    },
+    {
+      "path": "public/images/home-hero-light-mobile.webp",
+      "sha256": "c950210a3713b89b7cfbb8a240bc59e44ae2f9e306208bc9920b719a9a5a6cf3"
+    },
+    {
+      "path": "public/images/home-hero-light.webp",
+      "sha256": "9a6d82cf68ad6f1b369c3f1e441ad681e695c7073c58a4e2b9bff25cfa9c0b39"
+    },
+    {
       "path": "public/images/portfolio-cta-developer-v1.webp",
       "sha256": "2bb58f069f36bb424d473d9668096840e32403cd85e133e8bf642030fa1a0ca5"
     },
@@ -81,7 +97,8 @@
       "sha256": "8c7a12890c07a9736135de09e892e172150258984cbf23612ae4cdb82f9867dc"
     }
   ],
-  "approval_scope": "Owner authorized all-IP access and 16 project-specific illustrations plus three original logos conditionally; public launch of this exact new version remains pending. Four supplied home backgrounds have no located commercial license evidence. Preserve the local interface and 30/50/70 EUR plans unchanged.",
-  "content_public_display_approved": false,
-  "assets_public_display_rights_approved": false
+  "approval_scope": "Explicit owner authorization dated 2026-11-16 for all current site content and original runtime assets on saitena.com and www.saitena.com; exact hashes and content baseline f8c96b1cff96a475ba491ce6364ec9e122fc6736. Preserve the local design. This is not the separate final permission for the exact traffic switch.",
+  "content_public_display_approved": true,
+  "assets_public_display_rights_approved": true,
+  "owner_approval_record": "docs/owner-content-approval-2026-11-16.md"
 }
