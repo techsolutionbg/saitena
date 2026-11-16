@@ -163,7 +163,14 @@ export function HomeStory() {
               <h2 id={`${section.id}-title`}>{section.title}</h2>
               <p className={styles.introduction}>{section.introduction}</p>
               {section.paragraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+                <p key={paragraph}>
+                  {section.id === "design-for-business" &&
+                  paragraph === section.paragraphs[0] ? (
+                    <strong>{paragraph}</strong>
+                  ) : (
+                    paragraph
+                  )}
+                </p>
               ))}
               <Link
                 href={section.link.href}

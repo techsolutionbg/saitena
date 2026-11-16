@@ -97,8 +97,22 @@
       "sha256": "8c7a12890c07a9736135de09e892e172150258984cbf23612ae4cdb82f9867dc"
     }
   ],
-  "approval_scope": "Explicit owner authorization dated 2026-11-16 for all current site content and original runtime assets on saitena.com and www.saitena.com; exact hashes and content baseline f8c96b1cff96a475ba491ce6364ec9e122fc6736. Preserve the local design. This is not the separate final permission for the exact traffic switch.",
+  "approval_scope": "Owner approval dated 2026-11-16: retain previously authorized assets/content and publish the reviewed development notice plus the bold first design-for-business paragraph, after checks and backup, preserving origin guards and other services with rollback on failure. Exact UI file hashes are recorded below. Final launch flags are supplied only by a one-time exact-candidate server receipt.",
   "content_public_display_approved": true,
   "assets_public_display_rights_approved": true,
-  "owner_approval_record": "docs/owner-content-approval-2026-11-16.md"
+  "owner_approval_record": "docs/owner-content-approval-2026-11-16.md",
+  "approved_content_changes": [
+    {
+      "path": "src/components/layout/header.tsx",
+      "sha256": "7519b9539d9b89c4d818457d144f1886b5ff52407c2db75122195263a8724e2f"
+    },
+    {
+      "path": "src/app/globals.css",
+      "sha256": "d8d84ec0594e58845a46f24722e3f95a354cf2db61400ecc575c8a53c9f3accc"
+    },
+    {
+      "path": "src/components/home/home-story.tsx",
+      "sha256": "69912f27afc1af933fe442f5c8209fdb0fe95666587b00f1883a9d5f3294bc91"
+    }
+  ]
 }

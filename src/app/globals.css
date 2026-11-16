@@ -336,6 +336,30 @@ body:has(.auth-page) > a[aria-label^="Обадете се на Saitena"] {
   height: 32px;
 }
 /* Shared header and native modal mobile sidebar. */
+.development-notice {
+  background: var(--action);
+  color: var(--on-action);
+}
+.development-notice-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding-block: 0.625rem;
+  font-size: var(--font-small);
+  font-weight: var(--weight-small);
+  line-height: 1.5;
+  text-align: center;
+}
+.development-notice-inner svg {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+}
+.development-notice-inner span {
+  min-width: 0;
+  text-wrap: balance;
+}
 .site-header {
   position: sticky;
   top: 0;

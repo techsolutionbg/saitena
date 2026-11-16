@@ -85,6 +85,18 @@ export function Header({ user }: { user?: HeaderUser | null }) {
       ref={headerRef}
       className={`site-header${hidden && !open ? " is-hidden" : ""}`}
     >
+      <div
+        className="development-notice"
+        role="note"
+        aria-label="Информация за сайта"
+      >
+        <div className="wrap development-notice-inner">
+          <Icon name="codeMonitor" />
+          <span>
+            Сайтът е в процес на разработка. Благодарим Ви за търпението!
+          </span>
+        </div>
+      </div>
       <div className="header-inner wrap">
         <Brand withTagline />
         <nav className="desktop-nav" aria-label="Главно меню">
