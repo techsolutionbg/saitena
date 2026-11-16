@@ -1,8 +1,8 @@
 {
   "owner": "techsolutionbg",
-  "public_demo_approved": false,
-  "cloudflare_only_origin_plan_approved": false,
-  "deployment_plan_approved": false,
+  "public_demo_approved": true,
+  "cloudflare_only_origin_plan_approved": true,
+  "deployment_plan_approved": true,
   "approved_assets": [
     {
       "path": "public/images/blog-hero-studio-v1.webp",
@@ -97,7 +97,7 @@
       "sha256": "8c7a12890c07a9736135de09e892e172150258984cbf23612ae4cdb82f9867dc"
     }
   ],
-  "approval_scope": "Owner approval dated 2026-11-16: retain previously authorized assets/content and publish the reviewed development notice plus the bold first design-for-business paragraph, after checks and backup, preserving origin guards and other services with rollback on failure. Exact UI file hashes are recorded below. Final launch flags are supplied only by a one-time exact-candidate server receipt.",
+  "approval_scope": "Owner approval dated 2026-11-16: retain previously authorized assets/content and publish the reviewed development notice plus the bold first design-for-business paragraph, after checks and backup, preserving origin guards and other services with rollback on failure. Exact UI file hashes are recorded below. Final launch flags are supplied only by a one-time exact-candidate server receipt. Owner subsequently requested protected-main CI → GitHub production owner approval → automated updates with backup and rollback. This approves the public-demo delivery process, not new asset rights, registration, SMTP, indexing or an unrestricted production release.",
   "content_public_display_approved": true,
   "assets_public_display_rights_approved": true,
   "owner_approval_record": "docs/owner-content-approval-2026-11-16.md",
@@ -114,5 +114,6 @@
       "path": "src/components/home/home-story.tsx",
       "sha256": "69912f27afc1af933fe442f5c8209fdb0fe95666587b00f1883a9d5f3294bc91"
     }
-  ]
+  ],
+  "automation_approval_record": "docs/automated-deployment.md"
 }

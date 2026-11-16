@@ -12,12 +12,14 @@ export function assertReleasePolicy({
   confirmation,
   releaseMode = "public",
   modeConfirmation,
+  source = "release",
+  mainSha,
 }) {
   const reject = (message) => {
     throw new Error(message);
   };
   if (
-    !["public", "private-preview"].includes(releaseMode) ||
+    !["public", "private-preview", "public-demo"].includes(releaseMode) ||
     modeConfirmation !== releaseMode
   )
     reject("Explicit release mode confirmation is required");
@@ -25,8 +27,11 @@ export function assertReleasePolicy({
     approvalPolicy?.mode !== "solo-maintainer" ||
     !approvalPolicy.maintainers?.includes(actor) ||
     !approvalPolicy.maintainers.includes(triggeringActor) ||
-    confirmation !== tag ||
-    !approvalPolicy.maintainers.includes(release.author?.login)
+    (source === "release" &&
+      (confirmation !== tag ||
+        !approvalPolicy.maintainers.includes(release?.author?.login))) ||
+    (source === "main" && (confirmation !== sha || mainSha !== sha)) ||
+    !["release", "main"].includes(source)
   )
     reject("Explicit solo-maintainer release authorization is required");
   const contexts = [
@@ -50,11 +55,12 @@ export function assertReleasePolicy({
   )
     reject("Actual solo main protection with mandatory CI and PR is required");
   if (
-    !/^v\d+\.\d+\.\d+$/.test(tag) ||
-    release.tag_name !== tag ||
-    release.draft ||
-    release.prerelease ||
-    !release.published_at
+    source === "release" &&
+    (!/^v\d+\.\d+\.\d+$/.test(tag) ||
+      release.tag_name !== tag ||
+      release.draft ||
+      release.prerelease ||
+      !release.published_at)
   )
     reject("A published stable release is required");
   if (!/^[a-f0-9]{40}$/.test(sha)) reject("Invalid commit SHA");
@@ -95,6 +101,28 @@ export function assertReleasePolicy({
     )
       reject(`Required check missing: ${name}`);
   }
+  if (source === "main" && releaseMode !== "public-demo")
+    reject(
+      "Automatic deployment may only update the approved public-demo site",
+    );
+  if (
+    source === "main" &&
+    !jobs[0].steps.some(
+      (s) =>
+        s.name === "Public demo origin guard and rollback rehearsal" &&
+        s.conclusion === "success",
+    )
+  )
+    reject("Public demo guard and rollback rehearsal is required");
+  if (
+    releaseMode === "public-demo" &&
+    !jobs[0].steps.some(
+      (s) =>
+        s.name === "Public demo build and privacy checks (no publication)" &&
+        s.conclusion === "success",
+    )
+  )
+    reject("Public demo CI is required");
   const rule = environment.protection_rules?.find(
     (r) => r.type === "required_reviewers",
   );

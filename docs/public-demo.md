@@ -1,5 +1,10 @@
 # Public candidate with the unchanged local presentation
 
+**Current status:** the owner explicitly approved the runtime assets/content and
+the website is public. [Automatic updates](automated-deployment.md) supersedes
+the historical pending-rights/manual-release status below. Exact asset hash and
+rights checks remain mandatory; new assets do not inherit approval automatically.
+
 `NEXT_PUBLIC_RELEASE_MODE=public-demo` uses the normal local presentation and original asset URLs. It does not use closed-preview SVG substitutes or test contact content. Components, CSS, layout and 30/50/70 EUR prices are unchanged. Existing incomplete controls are retained at the owner's explicit request. This profile alone does not open network access.
 
 Technical protections are separate from presentation: authentication and indexing cannot be enabled, legal routes/aliases return 404, contact submission returns 403, robots disallows crawling and responses use noindex/nofollow and private no-store. A visible form/profile control does not activate mail or authentication. Unknown/unpublished asset URLs return 404 before streamed rendering. There is no visible preview banner or logo label.

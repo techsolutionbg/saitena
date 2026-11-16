@@ -204,7 +204,7 @@ class DeploymentTests(unittest.TestCase):
             self.assertEqual(request.get_header("User-agent"),agent.PROBE_USER_AGENT)
             raise HTTPError(request.full_url,502,"fixture failure",{},None)
         with patch.object(agent.urllib.request,"urlopen",side_effect=reject):
-            with self.assertRaises(HTTPError):
+            with self.assertRaisesRegex(RuntimeError, "protected_service_changed"):
                 agent.Runtime({"protected_urls":["https://clients.example.test/"]}).protected_checks()
 
     def test_fail_closed_preserves_other_virtual_hosts(self):
@@ -235,6 +235,115 @@ class DeploymentTests(unittest.TestCase):
         runtime.c=config
         agent.recover(Path(self.temp.name)/"v1.0.0.json",runtime)
         self.assertEqual(runtime.content,b"old-route")
+
+
+class DemoRuntime(FakeRuntime):
+    def __init__(self, config, fail=None):
+        super().__init__(fail)
+        self.c=config
+        self.watchdog_armed=False
+        self.backed_up=False
+    def origin_checks(self): pass
+    def validate_upstream_change(self, original, candidate, name, journal): pass
+    def backup(self, original, journal):
+        journal.with_suffix('.backup').mkdir(mode=0o700)
+        self.backed_up=True
+    def native(self, content): return {"route":content.decode()}
+    def load_backup_guard(self, journal): pass
+    def arm_watchdog(self, journal): self.watchdog_armed=True
+    def stage(self, request, name):
+        if not self.backed_up: raise RuntimeError('backup_required')
+        super().stage(request,name)
+    def apply(self, content):
+        if content==b'new-route' and not self.watchdog_armed: raise RuntimeError('watchdog_required')
+        super().apply(content)
+    def fail_closed_route(self, original): return b'deny-all'
+    def fail_closed(self, original): self.content=b'deny-all'
+
+
+class PublicDemoTests(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
+        self.config={'state_dir':self.temp.name,'release_mode':'public-demo','image_repository':'ghcr.io/techsolutionbg/saitena/public'}
+        self.request={'release':'main-'+'a'*40,'sha':'a'*40,'image':self.config['image_repository']+'@sha256:'+'b'*64,'mode':'public-demo'}
+        self.journal=Path(self.temp.name)/(self.request['release']+'.json')
+    def test_backup_and_watchdog_precede_switch_and_external_acceptance_is_required(self):
+        runtime=DemoRuntime(self.config)
+        result=agent.transact(self.request,self.config,runtime)
+        self.assertEqual(result['status'],'awaiting_acceptance')
+        self.assertEqual(json.loads(self.journal.read_bytes())['phase'],'awaiting_acceptance')
+        self.assertTrue(runtime.backed_up and runtime.watchdog_armed)
+        self.assertEqual(agent.finish_request('accept',self.request,self.config,runtime)['status'],'deployed')
+        self.assertEqual(json.loads(self.journal.read_bytes())['phase'],'complete')
+    def test_external_failure_restores_guarded_previous_site(self):
+        runtime=DemoRuntime(self.config)
+        agent.transact(self.request,self.config,runtime)
+        self.assertEqual(agent.finish_request('rollback',self.request,self.config,runtime)['status'],'rolled_back')
+        self.assertEqual(runtime.content,b'old-route')
+    def test_watchdog_recovers_when_runner_disappears(self):
+        runtime=DemoRuntime(self.config)
+        agent.transact(self.request,self.config,runtime)
+        entry=json.loads(self.journal.read_bytes());entry['deadline']=0;agent.save(self.journal,entry)
+        with self.assertRaisesRegex(RuntimeError,'release_not_awaiting_acceptance'):
+            agent.finish_request('accept',self.request,self.config,runtime)
+        agent.watchdog(self.journal,runtime)
+        self.assertEqual(runtime.content,b'old-route')
+        self.assertEqual(json.loads(self.journal.read_bytes())['phase'],'rolled_back')
+    def test_failed_postswitch_verification_rolls_back_without_acceptance(self):
+        runtime=DemoRuntime(self.config,'public')
+        with self.assertRaisesRegex(RuntimeError,'rolled_back'): agent.transact(self.request,self.config,runtime)
+        self.assertEqual(runtime.content,b'old-route')
+    def test_failed_recovery_fails_closed_and_blocks_next_release(self):
+        runtime=DemoRuntime(self.config,'rollback')
+        with self.assertRaisesRegex(RuntimeError,'fail_closed_manual_recovery_required'): agent.transact(self.request,self.config,runtime)
+        self.assertEqual(runtime.content,b'deny-all')
+        with self.assertRaisesRegex(RuntimeError,'unfinished_release_requires_recovery'):
+            agent.transact(dict(self.request,release='main-'+'c'*40,sha='c'*40),self.config,runtime)
+    def test_stale_or_changed_acceptance_cannot_publish(self):
+        runtime=DemoRuntime(self.config)
+        agent.transact(self.request,self.config,runtime)
+        with self.assertRaisesRegex(RuntimeError,'release_identity_conflict'):
+            agent.finish_request('accept',dict(self.request,image=self.config['image_repository']+'@sha256:'+'c'*64),self.config,runtime)
+        runtime.content=b'operator-edit'
+        with self.assertRaisesRegex(RuntimeError,'routing_changed_before_acceptance'):
+            agent.finish_request('accept',self.request,self.config,runtime)
+        with self.assertRaisesRegex(RuntimeError,'manual_recovery_required'):
+            agent.finish_request('rollback',self.request,self.config,runtime)
+        self.assertEqual(runtime.content,b'operator-edit')
+    def test_template_lock_preserves_guard_and_all_other_routes(self):
+        import hashlib
+        start='PUBLIC {\n';end='ADMIN {\n'
+        original=b'API { respond ok }\nPUBLIC {\n import /config/caddy/saitena-preview-key.caddy\n reverse_proxy saitena-website-old:3000\n}\nADMIN {\n respond ok\n}\n'
+        template=original.replace(b'saitena-website-old',b'APPROVED_UPSTREAM')
+        runtime=agent.Runtime(dict(self.config,public_block_start=start,public_block_end=end,route_template_sha256=hashlib.sha256(template).hexdigest()))
+        candidate=runtime.candidate_route(original,'saitena-website-new')
+        self.assertEqual(candidate,original.replace(b'saitena-website-old',b'saitena-website-new'))
+        for changed in [original.replace(b'respond ok',b'respond changed'),original.replace(b'import /config/caddy/saitena-preview-key.caddy',b'# removed import')]:
+            with self.assertRaises(RuntimeError): runtime.candidate_route(changed,'saitena-website-new')
+        fallback=runtime.fail_closed_route(original)
+        self.assertTrue(fallback.startswith(b'API { respond ok }\n'))
+        self.assertTrue(fallback.endswith(b'ADMIN {\n respond ok\n}\n'))
+    def test_short_lived_registry_token_is_not_journaled_or_kept(self):
+        runtime=agent.Runtime({})
+        token='fixture-only-'*8
+        runtime.registry_credential={'username':'techsolutionbg','token':token}
+        commands=[]
+        runtime.command_bytes=lambda *a,**kw: commands.append((a,kw)) or b''
+        runtime.command=lambda *a: commands.append((a,{})) or ''
+        runtime.registry_pull(self.request['image'])
+        self.assertIsNone(runtime.registry_credential)
+        self.assertTrue(all(token not in str(args) for args,kw in commands))
+        self.assertEqual(commands[0][1]['input'],token.encode())
+    def test_only_exact_documented_clients_failure_can_be_excepted(self):
+        from urllib.error import HTTPError
+        url='https://clients.saitena.com/'
+        runtime=agent.Runtime({'protected_urls':[url],'preexisting_failures':{url:502}})
+        with patch.object(agent,'http_open',side_effect=HTTPError(url,502,'fixture',{},None)):
+            runtime.protected_checks()
+        with patch.object(agent,'http_open',side_effect=HTTPError(url,503,'fixture',{},None)):
+            with self.assertRaisesRegex(RuntimeError,'protected_service_changed'): runtime.protected_checks()
+        with self.assertRaisesRegex(RuntimeError,'unsupported_health_exception'):
+            agent.Runtime({'protected_urls':['https://api.saitena.com/'],'preexisting_failures':{'https://api.saitena.com/':502}}).protected_checks()
 
 
 if __name__ == "__main__": unittest.main()

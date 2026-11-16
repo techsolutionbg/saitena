@@ -147,3 +147,45 @@ test("PR artifacts, wrong SHA, missing tests, draft releases and unprotected env
     assert.throws(() => assertReleasePolicy(x));
   }
 });
+
+test("automatic updates require the current protected main SHA and complete public-demo CI", () => {
+  const x = fixture();
+  Object.assign(x, {
+    source: "main",
+    mainSha: sha,
+    confirmation: sha,
+    releaseMode: "public-demo",
+    modeConfirmation: "public-demo",
+  });
+  delete x.tag;
+  delete x.release;
+  x.jobs[0].steps.push({
+    name: "Public demo build and privacy checks (no publication)",
+    status: "completed",
+    conclusion: "success",
+  });
+  x.jobs[0].steps.push({
+    name: "Public demo origin guard and rollback rehearsal",
+    status: "completed",
+    conclusion: "success",
+  });
+  assert.doesNotThrow(() => assertReleasePolicy(x));
+  for (const mutate of [
+    (y) => (y.mainSha = "b".repeat(40)),
+    (y) => (y.source = "unknown"),
+    (y) => (y.run.event = "pull_request"),
+    (y) => (y.run.conclusion = "failure"),
+    (y) => y.jobs[0].steps.pop(),
+    (y) => (y.environment.can_admins_bypass = true),
+    (y) => (y.environment.protection_rules = []),
+    (y) => (y.actor = "other"),
+    (y) => {
+      y.releaseMode = y.modeConfirmation = "public";
+    },
+    (y) => (y.branchProtection.enforce_admins.enabled = false),
+  ]) {
+    const y = structuredClone(x);
+    mutate(y);
+    assert.throws(() => assertReleasePolicy(y));
+  }
+});

@@ -9,7 +9,7 @@ http.createServer((req,res)=>{
     res.setHeader('X-Robots-Tag','index, follow');
     res.end('Original cache-header fixture');return;
   }
-  if(process.env.RELEASE_MODE==='private-preview'){
+  if(['private-preview','public-demo'].includes(process.env.RELEASE_MODE)){
     res.setHeader('X-Robots-Tag','noindex, nofollow');
     if(req.url.startsWith('/legal/')){res.writeHead(404);res.end('Not found');return;}
     if(req.method==='POST'){res.writeHead(403);res.end('Disabled');return;}

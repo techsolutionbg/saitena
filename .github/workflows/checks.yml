@@ -7,6 +7,8 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
+  deployments: read
 concurrency:
   group: saitena-checks-${{ github.ref }}
   cancel-in-progress: true
@@ -21,6 +23,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Deployment policy API capability report (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/report-deployment-api.mjs
       - run: npm ci --no-audit --no-fund
       - run: npm ci --prefix tools/lint --no-audit --no-fund
       - run: npm run lint
@@ -58,5 +64,9 @@ jobs:
           SAITENA_PREVIEW_TEST_MODE: public-demo
           SAITENA_PREVIEW_TEST_IMAGE: saitena-website-public:demo-check
         run: |
-          docker build --target candidate --build-arg NEXT_PUBLIC_RELEASE_MODE=public-demo -f .deployment/Dockerfile -t saitena-website-public:demo-check .
+          docker build --target release --build-arg NEXT_PUBLIC_RELEASE_MODE=public-demo -f .deployment/Dockerfile -t saitena-website-public:demo-check .
           node scripts/test-private-preview.mjs
+      - name: Public demo origin guard and rollback rehearsal
+        env:
+          SAITENA_DEPLOY_TEST_MODE: public-demo
+        run: node scripts/test-preview-deployment.mjs

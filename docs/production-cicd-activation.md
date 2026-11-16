@@ -1,5 +1,9 @@
 # Controlled production CI/CD — activation guide
 
+**Current automation:** [Owner-approved automatic updates](automated-deployment.md)
+supersedes the manual stable-tag workflow and historical activation status below.
+It retains the existing pipeline, production environment and origin guard.
+
 Current combined C–E preparation: [Private Preview transport/bootstrap/release](private-preview-cde.md). This supersedes historical inline-secret and pre-guard findings below. Current accepted A/B protect the old page; no new-site release or deployment enablement has occurred.
 
 Private Preview is a separate, still-disabled mode: see [preview plan and readiness](private-preview-readiness.md). It retains main/owner/digest gates, requires its own approvals, and uses guarded origin/internal identity probes plus external denial; do not apply the public-health assumptions below to preview or remove its access guard during rollback.
