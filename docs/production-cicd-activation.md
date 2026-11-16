@@ -1,5 +1,7 @@
 # Controlled production CI/CD — activation guide
 
+Current combined C–E preparation: [Private Preview transport/bootstrap/release](private-preview-cde.md). This supersedes historical inline-secret and pre-guard findings below. Current accepted A/B protect the old page; no new-site release or deployment enablement has occurred.
+
 Private Preview is a separate, still-disabled mode: see [preview plan and readiness](private-preview-readiness.md). It retains main/owner/digest gates, requires its own approvals, and uses guarded origin/internal identity probes plus external denial; do not apply the public-health assumptions below to preview or remove its access guard during rollback.
 
 > Current solo-owner policy: see [Issue #2 policy](issue-2-solo-maintainer.md). Earlier independent-review requirements and Private-repository plan findings below are historical; the repository is now Public. No second GitHub user is required for normal PR approval. Actual mandatory CI/protection and explicit owner environment release confirmation remain required.

@@ -63,10 +63,9 @@ class LocalRuntime(agent.Runtime):
         super().__init__(config)
         self.failure = failure
     def command(self, *args):
-        if args[:2] == ("docker", "pull"):
-            if args[2] not in images: raise RuntimeError("unreviewed_fixture")
-            return "local fixture"
         return super().command(*(images.get(arg, arg) for arg in args))
+    def registry_pull(self,image):
+        if image not in images: raise RuntimeError("unreviewed_fixture")
     def apply(self, content):
         if self.failure == "rollback" and content == original:
             raise RuntimeError("simulated_reload_permission_failure")

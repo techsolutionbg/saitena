@@ -76,16 +76,27 @@ jobs:
           docker push "$IMAGE:$SHA-$MODE"
           DIGEST=$(docker image inspect "$IMAGE:$SHA-$MODE" --format '{{index .RepoDigests 0}}')
           [[ "$DIGEST" =~ ^ghcr.io/techsolutionbg/saitena/public@sha256:[a-f0-9]{64}$ ]]
+          test "$(gh api /users/techsolutionbg/packages/container/saitena%2Fpublic --jq .visibility)" = private
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
           printf 'Mode: `%s`\n\nReviewed commit: `%s`\n\nImmutable image: `%s`\n' "$MODE" "$SHA" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
   deploy:
     timeout-minutes: 10
     needs: [authorize, build]
+    permissions: {contents: read, id-token: write}
     environment: production
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
+      - name: Join restricted deployment tailnet
+        uses: tailscale/github-action@064b10558093f38325e838ddea35486bdc6b1d5c # audited v4
+        with:
+          oauth-client-id: ${{ vars.SAITENA_TAILSCALE_CLIENT_ID }}
+          audience: ${{ vars.SAITENA_TAILSCALE_AUDIENCE }}
+          tags: tag:ci-saitena-preview
+          version: 1.104.6
+          use-cache: 'false'
+          log-mode: quiet
       - name: Restricted deployment request
         env:
           DEPLOY_KEY: ${{ secrets.SAITENA_DEPLOY_KEY }}

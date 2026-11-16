@@ -1,6 +1,9 @@
 const http = require('http');
 const version = process.env.VERSION;
 http.createServer((req,res)=>{
+  if(req.url==='/preview-header-present'){
+    res.end(req.headers['x-saitena-preview-key']?'present':'absent');return;
+  }
   if(req.url==='/conflicting-cache-headers'){
     res.setHeader('Cache-Control','public, max-age=31536000');
     res.setHeader('X-Robots-Tag','index, follow');

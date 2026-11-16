@@ -13,11 +13,27 @@ import os
 from pathlib import Path
 import re
 import signal
+import stat
 import subprocess
 import sys
 import time
 import urllib.request
 import urllib.error
+
+PREVIEW_IMPORT = "/config/caddy/saitena-preview-key.caddy"
+REGISTRY_CONFIG = "/etc/saitena-deploy/registry"
+PROBE_USER_AGENT = "Mozilla/5.0 (compatible; SaitenaHealth/1.0)"
+
+
+def private_path(path, directory=False):
+    info = Path(path).lstat()
+    expected_type = stat.S_ISDIR if directory else stat.S_ISREG
+    if info.st_uid != 0 or info.st_mode & 0o077 or not expected_type(info.st_mode):
+        raise RuntimeError("unsafe_private_path_permissions")
+
+
+def http_open(url):
+    return urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": PROBE_USER_AGENT}), timeout=15)
 
 
 def validate_request(request, repository):
@@ -52,9 +68,9 @@ class Runtime:
     def command(self, *args):
         return self.command_bytes(*args).decode().strip()
 
-    def command_bytes(self, *args):
+    def command_bytes(self, *args, input=None):
         # Never forward subprocess stderr or SMTP environment values to CI logs.
-        result = subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=180, check=False)
+        result = subprocess.run(args, input=input, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=180, check=False)
         if result.returncode:
             raise RuntimeError("operation_failed")
         return result.stdout
@@ -64,7 +80,7 @@ class Runtime:
 
     def preview_access(self):
         access = self.c.get("preview_access", {})
-        if access.get("approved") is not True or not re.fullmatch(r"[a-f0-9]{64}", access.get("origin_token", "")):
+        if access.get("approved") is not True or access.get("secret_import") != PREVIEW_IMPORT or "origin_token" in access:
             raise RuntimeError("preview_access_not_approved")
         owners = access.get("owner_ips", [])
         peers = access.get("cloudflare_cidrs", [])
@@ -87,7 +103,6 @@ class Runtime:
         hosts = "saitena.com, www.saitena.com" if address == "saitena.com" else address
         owners = " ".join(access["owner_ips"])
         peers = " ".join(access["cloudflare_cidrs"])
-        token = access["origin_token"]
         canonical = "  redir @www https://saitena.com{uri} 302\n" if address == "saitena.com" else ""
         return f'''# SAITENA PRIVATE PREVIEW
 {hosts} {{
@@ -95,16 +110,25 @@ class Runtime:
  header >Cache-Control "private, no-store"
  @denied not {{
   remote_ip {peers}
-  header X-Saitena-Preview-Key {token}
+  import {PREVIEW_IMPORT}
   header CF-Connecting-IP {owners}
  }}
  @worker header CF-Worker *
  @www host www.saitena.com
  route {{
-  respond @denied "Forbidden" 403
-  respond @worker "Forbidden" 403
+  handle @denied {{
+   request_header -X-Saitena-Preview-Key
+   respond "Forbidden" 403
+  }}
+  handle @worker {{
+   request_header -X-Saitena-Preview-Key
+   respond "Forbidden" 403
+  }}
+  handle {{
+  request_header -X-Saitena-Preview-Key
 {canonical}  reverse_proxy {name}:3000 {{
    header_up -X-Saitena-Preview-Key
+  }}
   }}
  }}
 }}
@@ -116,6 +140,8 @@ http://127.0.0.1:9080 {{
 '''.encode()
 
     def candidate_route(self, original, name):
+        if not re.fullmatch(r"[a-zA-Z0-9_-]+", name):
+            raise RuntimeError("invalid_container_name")
         begin, end = b"# BEGIN SAITENA PUBLIC\n", b"# END SAITENA PUBLIC"
         if original.count(begin) != 1 or original.count(end) != 1:
             raise RuntimeError("approved_routing_bootstrap_required")
@@ -130,7 +156,12 @@ http://127.0.0.1:9080 {{
         # Everything outside this separately approved block is preserved exactly.
         return prefix + begin + block + end + suffix
 
+    def validate(self, content):
+        # Resolve imports inside the real container before touching the mounted file.
+        self.command_bytes("docker", "exec", "-i", self.c["caddy_container"], "caddy", "validate", "--config", "-", "--adapter", "caddyfile", input=content)
+
     def apply(self, content):
+        self.validate(content)
         # Write same inode: existing production uses a single-file bind mount.
         # Durable journal is saved before this call and contains complete original.
         with open(self.c["caddy_file"], "r+b") as stream:
@@ -140,6 +171,11 @@ http://127.0.0.1:9080 {{
             os.fsync(stream.fileno())
         self.command("docker", "exec", self.c["caddy_container"], "caddy", "validate", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile")
         self.command("docker", "exec", self.c["caddy_container"], "caddy", "reload", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile")
+
+    def registry_pull(self, image):
+        private_path(REGISTRY_CONFIG, directory=True)
+        private_path(Path(REGISTRY_CONFIG) / "config.json")
+        self.command("docker", "--config", REGISTRY_CONFIG, "pull", image)
 
     def stage(self, request, name):
         env_file = Path(self.c["runtime_env"])
@@ -155,7 +191,7 @@ http://127.0.0.1:9080 {{
                     raise RuntimeError("runtime_settings_missing")
             if values.get("CONTACT_MAIL_MODE") != "smtp":
                 raise RuntimeError("production_smtp_required")
-        self.command("docker", "pull", request["image"])
+        self.registry_pull(request["image"])
         revision = self.command("docker", "image", "inspect", request["image"], "--format", '{{index .Config.Labels "org.opencontainers.image.revision"}}')
         if revision != request["sha"]:
             raise RuntimeError("image_revision_mismatch")
@@ -182,14 +218,14 @@ http://127.0.0.1:9080 {{
 
     def protected_checks(self):
         for url in self.c["protected_urls"]:
-            with urllib.request.urlopen(url, timeout=15) as response:
+            with http_open(url) as response:
                 if response.status != 200:
                     raise RuntimeError("protected_service_failed")
 
     def public_digest(self):
         if self.c.get("release_mode", "public") == "private-preview":
             return hashlib.sha256(self.preview_probe("/")).hexdigest()
-        with urllib.request.urlopen(self.c["public_url"], timeout=15) as response:
+        with http_open(self.c["public_url"]) as response:
             body = response.read()
             if response.status != 200 or not body:
                 raise RuntimeError("public_page_failed")
@@ -204,7 +240,8 @@ http://127.0.0.1:9080 {{
         for base in [self.c["public_url"], "https://www.saitena.com/"]:
             for path in ["", "api/health", "robots.txt"]:
                 try:
-                    urllib.request.urlopen(base.rstrip("/") + "/" + path, timeout=15)
+                    with http_open(base.rstrip("/") + "/" + path):
+                        pass
                 except urllib.error.HTTPError as error:
                     if error.code == 403 and error.headers.get("CF-Ray"):
                         continue
@@ -239,13 +276,33 @@ http://127.0.0.1:9080 {{
             self.preview_external_checks()
             self.protected_checks()
             return
-        with urllib.request.urlopen(self.c["public_url"].rstrip("/") + "/api/health", timeout=15) as response:
+        with http_open(self.c["public_url"].rstrip("/") + "/api/health") as response:
             value = json.load(response)
             if response.status != 200 or value.get("service") != "saitena" or value.get("status") != "ok":
                 raise RuntimeError("public_health_failed")
         if expected is not None and self.public_digest() != expected:
             raise RuntimeError("public_page_mismatch")
         self.protected_checks()
+
+
+    def fail_closed_route(self, original):
+        # Preserve other vhosts byte for byte even if restoring the old upstream fails.
+        begin, end = b"# BEGIN SAITENA PUBLIC\n", b"# END SAITENA PUBLIC"
+        prefix, rest = original.split(begin)
+        _, suffix = rest.split(end)
+        address = self.c.get("site_address", "saitena.com")
+        hosts = "saitena.com, www.saitena.com" if address == "saitena.com" else address
+        deny = (hosts + ''' {
+ header >X-Robots-Tag "noindex, nofollow, noarchive"
+ header >Cache-Control "private, no-store"
+ request_header -X-Saitena-Preview-Key
+ respond "Forbidden" 403
+}
+''').encode()
+        return prefix + begin + deny + end + suffix
+
+    def fail_closed(self, original):
+        self.apply(self.fail_closed_route(original))
 
 
 def transact(request, config, runtime):
@@ -256,7 +313,7 @@ def transact(request, config, runtime):
     state.mkdir(mode=0o700, parents=True, exist_ok=True)
     journal = state / (request["release"] + ".json")
     for pending in state.glob("v*.json"):
-        if json.loads(pending.read_text())["phase"] in ["switching", "manual_recovery_required", "staging"]:
+        if json.loads(pending.read_text())["phase"] in ["switching", "manual_recovery_required", "fail_closed_manual_recovery_required", "staging"]:
             raise RuntimeError("unfinished_release_requires_recovery")
     if journal.exists():
         previous = json.loads(journal.read_text())
@@ -272,6 +329,8 @@ def transact(request, config, runtime):
     candidate = runtime.candidate_route(original, name)
     if request["mode"] == "private-preview":
         runtime.preview_preflight(original, name)
+        runtime.validate(runtime.fail_closed_route(original))
+    runtime.validate(candidate)
     entry = {"request": request, "phase": "staging", "container": name, "original": base64.b64encode(original).decode(), "candidate_sha256": hashlib.sha256(candidate).hexdigest(), "baseline_digest": runtime.public_digest()}
     save(journal, entry)
     switched = False
@@ -298,6 +357,13 @@ def transact(request, config, runtime):
                 entry["phase"] = "rolled_back"
             except Exception:
                 entry["phase"] = "manual_recovery_required"
+                if request["mode"] == "private-preview" and runtime.route() in [candidate, original]:
+                    try:
+                        runtime.fail_closed(original)
+                        entry["fallback_sha256"] = hashlib.sha256(runtime.route()).hexdigest()
+                        entry["phase"] = "fail_closed_manual_recovery_required"
+                    except Exception:
+                        pass
         else:
             entry["phase"] = "failed_before_switch"
         save(journal, entry)
@@ -311,7 +377,7 @@ def recover(journal, runtime):
         raise RuntimeError("recovery_release_mode_mismatch")
     original = base64.b64decode(entry["original"])
     current = runtime.route()
-    if current != original and hashlib.sha256(current).hexdigest() != entry["candidate_sha256"]:
+    if current != original and hashlib.sha256(current).hexdigest() not in [entry["candidate_sha256"], entry.get("fallback_sha256")]:
         raise RuntimeError("routing_changed_since_release_manual_review_required")
     runtime.apply(original)
     runtime.rollback_checks(entry["baseline_digest"])
@@ -328,11 +394,12 @@ def main():
     if os.geteuid() != 0:
         raise RuntimeError("restricted_root_helper_required")
     path = Path("/etc/saitena-deploy/config.json")
-    if path.stat().st_uid != 0 or path.stat().st_mode & 0o022:
-        raise RuntimeError("unsafe_config_permissions")
+    private_path(path)
     config = json.loads(path.read_text())
     if config.get("enabled") is not True or config["public_url"] != "https://saitena.com/" or config.get("site_address", "saitena.com") != "saitena.com" or len(config.get("protected_urls", [])) < 4:
         raise RuntimeError("deployment_not_activated")
+    if config.get("release_mode") == "private-preview":
+        private_path(config["preview_access"]["secret_host_file"])
     Path(config["state_dir"]).mkdir(mode=0o700, parents=True, exist_ok=True)
     for protected in [Path(config["runtime_env"]), Path(config["state_dir"])]:
         if protected.stat().st_uid != 0 or protected.stat().st_mode & 0o077:

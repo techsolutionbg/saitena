@@ -6,6 +6,7 @@ const names = [
   "Run npm run lint",
   "Run npm run typecheck",
   "Run node --test tests/*.test.mjs",
+  "Run python3 -m unittest discover -s tests -p 'test_deploy_agent.py' -v",
   "Run node scripts/audit-git-candidate.mjs",
   "Run npm run build",
   "Run node scripts/check-production-candidate.mjs",

@@ -1,5 +1,7 @@
 # Private Preview — план и отчет за готовността
 
+Актуална подготовка на C–E: [combined transport/bootstrap/release](private-preview-cde.md). A/B са приети и пазят старата страница; историческите „неактивен guard“ констатации по-долу не описват текущото production състояние. Новият сайт и deployment остават неактивни; точните live evidence са в ignored owner пакета.
+
 Дата: 15 ноември 2026 г. Основа: `656f425`, Draft PR #1. Сайтът НЕ е публикуван в Private Preview. Собственикът одобри тестовото съдържание и четирите SVG само за Private Preview и разреши commit/push в текущия branch и CI; merge и deployment остават забранени. Production API, Caddy, DNS, Cloudflare, SSH права и работещите услуги не са променяни.
 
 ## Режими и съдържание

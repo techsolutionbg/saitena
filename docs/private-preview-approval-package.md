@@ -1,5 +1,7 @@
 # Private Preview — инфраструктурен пакет за отделно одобрение
 
+Актуалният C–E пакет е [private-preview-cde.md](private-preview-cde.md). A/B впоследствие са одобрени, изпълнени и приети за старата страница. Историческите „няма guard/Cloudflare approval“ твърдения по-долу са от първоначалната подготовка; нов SSH/network/bootstrap/release не е активиран.
+
 Този пакет е предложение, не разрешение за изпълнение. Собственикът одобри само тестовото съдържание и четирите оригинални SVG за Private Preview, както и commit/push/CI в текущия branch. Няма разрешение за merge, deployment, Cloudflare, Caddy, SSH, firewall или production config промени. Точният commit и реалният CI резултат се посочват в [Draft PR #1](https://github.com/techsolutionbg/saitena/pull/1), за да няма саморефериращ commit с неговия собствен SHA.
 
 ## 1. Cloudflare — три строго ограничени правила
