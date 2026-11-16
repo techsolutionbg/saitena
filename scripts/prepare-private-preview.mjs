@@ -91,7 +91,9 @@ export function preparePrivatePreview(root) {
     copyFileSync(join(root, asset.source), join(root, asset.path));
   writeFileSync(
     join(root, "private-preview-prepared.json"),
-    JSON.stringify({ mode: "private-preview" }),
+    JSON.stringify({
+      mode: process.env.SAITENA_RELEASE_MODE ?? "private-preview",
+    }),
   );
 }
 

@@ -7,7 +7,7 @@ import {
 } from "@/lib/navigation";
 import { Icon } from "@/components/ui/icons";
 import { Brand } from "@/components/layout/brand";
-import { isPrivatePreview, previewDetails } from "@/lib/release-mode";
+import { isPreview, previewDetails } from "@/lib/release-mode";
 
 const usefulNavigation: NavigationItem[] = [
   { href: "/faq", label: "Често задавани въпроси", icon: "help" },
@@ -46,7 +46,7 @@ export function Footer() {
         <div>
           <h2>Полезно</h2>
           {usefulNavigation
-            .filter((item) => !isPrivatePreview || item.href !== "/sitemap")
+            .filter((item) => !isPreview || item.href !== "/sitemap")
             .map((item) => (
               <Link key={item.href} href={item.href}>
                 <Icon name={item.icon} />
@@ -56,14 +56,14 @@ export function Footer() {
         </div>
         <div className="footer-contacts">
           <h2>Свържете се с нас</h2>
-          {isPrivatePreview && (
+          {isPreview && (
             <p>
               {previewDetails.email}
               <br />
               {previewDetails.phone}
             </p>
           )}
-          {!isPrivatePreview &&
+          {!isPreview &&
             contacts.map((contact) =>
               contact.href ? (
                 <a
@@ -101,7 +101,7 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <nav aria-label="Правни страници">
-          {!isPrivatePreview &&
+          {!isPreview &&
             legalNavigation.map((item) => (
               <Link key={item.href} href={item.href}>
                 <Icon name={item.icon} />

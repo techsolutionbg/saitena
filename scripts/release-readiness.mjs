@@ -3,9 +3,10 @@ import { createHash } from "node:crypto";
 import { join, relative } from "node:path";
 
 export function releaseBlockers(root = process.cwd(), mode = "public") {
-  if (!["public", "private-preview"].includes(mode))
+  if (!["public", "private-preview", "public-demo"].includes(mode))
     return ["Unknown release mode"];
-  const preview = mode === "private-preview";
+  const preview = mode !== "public";
+  const demo = mode === "public-demo";
   const manifest = JSON.parse(
     readFileSync(
       join(
@@ -32,29 +33,52 @@ export function releaseBlockers(root = process.cwd(), mode = "public") {
       readFileSync(
         join(
           root,
-          preview
-            ? "docs/private-preview-approval.json"
-            : "docs/release-approval.json",
+          demo
+            ? "docs/public-demo-approval.json"
+            : preview
+              ? "docs/private-preview-approval.json"
+              : "docs/release-approval.json",
         ),
         "utf8",
       ),
     );
     if (preview && approval.owner !== "techsolutionbg")
       blockers.push("Preview owner mismatch");
-    for (const key of preview
+    for (const key of demo
       ? [
-          "preview_approved",
-          "test_data_approved",
-          "restricted_access_plan_approved",
-        ]
-      : [
-          "company_data_approved",
-          "legal_copy_approved",
-          "contact_details_approved",
+          "public_demo_approved",
+          "test_data_public_display_approved",
+          "svg_public_display_rights_approved",
+          "cloudflare_only_origin_plan_approved",
           "deployment_plan_approved",
-        ]) {
+        ]
+      : preview
+        ? [
+            "preview_approved",
+            "test_data_approved",
+            "restricted_access_plan_approved",
+          ]
+        : [
+            "company_data_approved",
+            "legal_copy_approved",
+            "contact_details_approved",
+            "deployment_plan_approved",
+          ]) {
       if (approval[key] !== true)
         blockers.push(`Owner approval pending: ${key}`);
+    }
+    if (demo) {
+      // Private-only asset permission does not authorize public demonstration.
+      // Require a second, exact hash-bound owner grant; never set the private
+      // access approval to true for a site which accepts all visitors.
+      const signatures = (list) =>
+        list.map((a) => `${a.path}:${a.sha256}`).sort();
+      if (
+        !Array.isArray(approval.approved_assets) ||
+        JSON.stringify(signatures(approval.approved_assets)) !==
+          JSON.stringify(signatures(assets))
+      )
+        blockers.push("Public SVG permission missing for exact asset hashes");
     }
   } catch {
     blockers.push("Owner release approval record missing");

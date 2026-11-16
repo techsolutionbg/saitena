@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
-import { isPrivatePreview } from "@/lib/release-mode";
+import { isPreview } from "@/lib/release-mode";
 export default function robots(): MetadataRoute.Robots {
-  return !isPrivatePreview &&
-    process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true"
+  return !isPreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true"
     ? {
         rules: {
           userAgent: "*",

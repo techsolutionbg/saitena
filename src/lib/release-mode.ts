@@ -1,6 +1,7 @@
-/** A build-time value: a runtime variable cannot turn a preview into a public build. */
-export const isPrivatePreview =
-  process.env.NEXT_PUBLIC_RELEASE_MODE === "private-preview";
+/** Build-time content profile; network access is approved separately. */
+export const releaseMode = process.env.NEXT_PUBLIC_RELEASE_MODE ?? "public";
+export const isPreview =
+  releaseMode === "private-preview" || releaseMode === "public-demo";
 
 export const previewDetails = {
   company: "Saitena — тестови фирмени данни",

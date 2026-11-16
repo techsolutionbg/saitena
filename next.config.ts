@@ -1,13 +1,15 @@
 import type { NextConfig } from "next";
 
-const privatePreview =
-  process.env.NEXT_PUBLIC_RELEASE_MODE === "private-preview";
+const releaseMode = process.env.NEXT_PUBLIC_RELEASE_MODE ?? "public";
+if (!["public", "private-preview", "public-demo"].includes(releaseMode))
+  throw new Error("Unknown release mode");
+const preview = releaseMode !== "public";
 if (
-  privatePreview &&
+  preview &&
   (process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true" ||
     process.env.NEXT_PUBLIC_AUTH_ENABLED === "true")
 )
-  throw new Error("Private Preview requires auth and indexing disabled");
+  throw new Error("Preview builds require auth and indexing disabled");
 
 const config: NextConfig = {
   poweredByHeader: false,
@@ -62,14 +64,14 @@ const config: NextConfig = {
   },
   // This isolated preview has no connection to the frozen hosting platform.
   async headers() {
-    if (!privatePreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true")
+    if (!preview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true")
       return [];
     return [
       {
         source: "/:path*",
         headers: [
           { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
-          ...(privatePreview
+          ...(preview
             ? [{ key: "Cache-Control", value: "private, no-store" }]
             : []),
         ],

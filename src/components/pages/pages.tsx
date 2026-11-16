@@ -26,7 +26,7 @@ import { BlogCatalog } from "@/components/blog/blog-catalog";
 import { blogPosts } from "@/lib/blog-posts";
 import { parseBlogFilters, type BlogQuery } from "@/lib/blog-catalog";
 import contactStyles from "@/components/contact/contact-page.module.css";
-import { isPrivatePreview, previewDetails } from "@/lib/release-mode";
+import { isPreview, previewDetails } from "@/lib/release-mode";
 
 export function ContentPage({
   path,
@@ -181,7 +181,7 @@ export function ContentPage({
       </>
     );
   if (path === "contact") {
-    if (isPrivatePreview)
+    if (isPreview)
       return (
         <section id="contact-form" className="wrap prose">
           <h1>Контакти — тестови данни</h1>
@@ -322,7 +322,7 @@ export function ContentPage({
               </Link>
             ))}
           </div>
-          {!isPrivatePreview && (
+          {!isPreview && (
             <div>
               <h2>Правна информация</h2>
               {Object.entries(routeTitles)

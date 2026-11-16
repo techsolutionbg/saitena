@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { isPrivatePreview } from "@/lib/release-mode";
+import { isPreview } from "@/lib/release-mode";
 
 export function proxy(request: NextRequest) {
-  if (!isPrivatePreview) return NextResponse.next();
+  if (!isPreview) return NextResponse.next();
   let path: string;
   try {
     path = decodeURIComponent(request.nextUrl.pathname);

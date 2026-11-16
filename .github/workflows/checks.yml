@@ -53,3 +53,10 @@ jobs:
           docker build --target candidate --build-arg NEXT_PUBLIC_RELEASE_MODE=private-preview -f .deployment/Dockerfile -t saitena-website-public:preview-check .
           node scripts/test-private-preview.mjs
           node scripts/test-preview-deployment.mjs
+      - name: Public demo build and privacy checks (no publication)
+        env:
+          SAITENA_PREVIEW_TEST_MODE: public-demo
+          SAITENA_PREVIEW_TEST_IMAGE: saitena-website-public:demo-check
+        run: |
+          docker build --target candidate --build-arg NEXT_PUBLIC_RELEASE_MODE=public-demo -f .deployment/Dockerfile -t saitena-website-public:demo-check .
+          node scripts/test-private-preview.mjs

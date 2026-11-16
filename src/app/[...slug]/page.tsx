@@ -6,7 +6,7 @@ import { faqMetadata } from "@/lib/faq-content";
 import { plansMetadata } from "@/lib/plans";
 import { portfolioMetadata } from "@/lib/portfolio-content";
 import type { BlogQuery } from "@/lib/blog-catalog";
-import { isPrivatePreview } from "@/lib/release-mode";
+import { isPreview } from "@/lib/release-mode";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -15,13 +15,13 @@ type Props = {
 export const dynamicParams = false;
 export function generateStaticParams() {
   return allPages
-    .filter((path) => path && !(isPrivatePreview && path.startsWith("legal/")))
+    .filter((path) => path && !(isPreview && path.startsWith("legal/")))
     .map((path) => ({ slug: path.split("/") }));
 }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const path = slug.join("/");
-  if (isPrivatePreview && path.startsWith("legal/")) notFound();
+  if (isPreview && path.startsWith("legal/")) notFound();
   if (path === "portfolio") {
     return {
       title: { absolute: portfolioMetadata.title },
@@ -59,7 +59,7 @@ export default async function PublicPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const path = slug.join("/");
   if (!allPages.includes(path)) notFound();
-  if (isPrivatePreview && path.startsWith("legal/")) notFound();
+  if (isPreview && path.startsWith("legal/")) notFound();
   const query = path === "contact" || path === "blog" ? await searchParams : {};
   return (
     <ContentPage
