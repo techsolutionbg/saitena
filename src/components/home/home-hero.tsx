@@ -1,10 +1,23 @@
 import Link from "next/link";
+import { preload } from "react-dom";
 import { Arrow } from "@/components/ui/icons";
 import styles from "./home-hero.module.css";
 import { HeroWaves } from "./hero-waves";
 import { isPreview } from "@/lib/release-mode";
 
 export function HomeHero() {
+  // Discover the existing responsive CSS artwork before its stylesheet arrives.
+  // Viewport media prevents downloading the desktop image on a phone.
+  preload("/images/home-hero-light-mobile.webp", {
+    as: "image",
+    fetchPriority: "high",
+    media: "(max-width: 768px)",
+  });
+  preload("/images/home-hero-light.webp", {
+    as: "image",
+    fetchPriority: "high",
+    media: "(min-width: 768.01px)",
+  });
   return (
     <section className={styles.hero} aria-labelledby="home-title">
       <HeroWaves />

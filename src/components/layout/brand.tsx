@@ -21,17 +21,27 @@ export function Brand({
     >
       <span className="brand-logo" aria-hidden="true">
         <Image
-          unoptimized
+          unoptimized={isPreview}
           className="brand-logo-light"
-          src="/brand/saitena-logo-light.svg"
+          src={
+            isPreview
+              ? "/brand/saitena-logo-light.svg"
+              : "/media/logo-light.png"
+          }
+          sizes="210px"
+          quality={90}
           alt=""
           width={isPreview ? 500 : 1957}
           height={isPreview ? 150 : 525}
         />
         <Image
-          unoptimized
+          unoptimized={isPreview}
           className="brand-logo-dark"
-          src="/brand/saitena-logo-dark.svg"
+          src={
+            isPreview ? "/brand/saitena-logo-dark.svg" : "/media/logo-dark.png"
+          }
+          sizes="210px"
+          quality={90}
           alt=""
           width={isPreview ? 500 : 1957}
           height={isPreview ? 150 : 525}
