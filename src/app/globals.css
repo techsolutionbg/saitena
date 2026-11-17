@@ -1219,6 +1219,7 @@ main .project-card-title {
   background: var(--bg);
   color: var(--ink);
   font: inherit;
+  letter-spacing: normal;
   text-align: left;
   transition:
     background 0.2s ease,
@@ -1239,10 +1240,26 @@ main .project-card-title {
   outline-offset: -5px;
   background: var(--surface);
 }
-.faq-item.is-open .faq-trigger {
+.faq-summary {
+  list-style: none;
+}
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+.faq-summary:focus-visible {
+  outline: none;
+}
+.faq-summary:focus-visible .faq-trigger {
+  position: relative;
+  z-index: 1;
+  outline: 3px solid var(--focus);
+  outline-offset: -5px;
   background: var(--surface);
 }
-.faq-item.is-open .faq-trigger:hover {
+.faq-item[open] .faq-trigger {
+  background: var(--surface);
+}
+.faq-item[open] .faq-trigger:hover {
   background: var(--surface-alt);
 }
 .faq-trigger > svg:first-child {
@@ -1254,7 +1271,7 @@ main .project-card-title {
   margin-top: 2px;
   transition: transform 0.32s ease;
 }
-.faq-item.is-open .faq-chevron {
+.faq-item[open] .faq-chevron {
   transform: rotate(90deg);
 }
 .faq-answer {
@@ -1267,7 +1284,7 @@ main .project-card-title {
     opacity 0.25s ease,
     visibility 0.32s;
 }
-.faq-item.is-open .faq-answer {
+.faq-item[open] .faq-answer {
   grid-template-rows: 1fr;
   opacity: 1;
   visibility: visible;

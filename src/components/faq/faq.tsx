@@ -13,6 +13,7 @@ type FAQProps = {
   onOpenChange?: (id: string | null) => void;
 };
 
+/** Native disclosure remains usable before hydration and when JavaScript is disabled. */
 function FAQEntry({
   item,
   open,
@@ -29,30 +30,32 @@ function FAQEntry({
   const panelId = `${instanceId}-answer`;
 
   return (
-    <div className={`faq-item${open ? " is-open" : ""}`}>
-      <h3 className="faq-question">
-        <button
-          className="faq-trigger"
-          type="button"
-          id={triggerId}
-          aria-expanded={open}
-          aria-controls={panelId}
-          onClick={onToggle}
-          onFocus={(event) => {
-            if (event.currentTarget.matches(":focus-visible")) onOpen();
-          }}
-        >
-          <Icon name="help" />
-          <span>{item.question}</span>
-          <Icon name="chevron" className="faq-chevron" />
-        </button>
-      </h3>
+    <details className="faq-item" open={open}>
+      <summary
+        className="faq-summary"
+        id={triggerId}
+        aria-controls={panelId}
+        onClick={(event) => {
+          event.preventDefault();
+          onToggle();
+        }}
+        onFocus={(event) => {
+          if (event.currentTarget.matches(":focus-visible")) onOpen();
+        }}
+      >
+        <h3 className="faq-question">
+          <span className="faq-trigger">
+            <Icon name="help" />
+            <span>{item.question}</span>
+            <Icon name="chevron" className="faq-chevron" />
+          </span>
+        </h3>
+      </summary>
       <div
         className="faq-answer"
         id={panelId}
         role="region"
         aria-labelledby={triggerId}
-        aria-hidden={!open}
       >
         <div className="faq-answer-content">
           <div className="faq-answer-copy">
@@ -65,7 +68,7 @@ function FAQEntry({
           </div>
         </div>
       </div>
-    </div>
+    </details>
   );
 }
 

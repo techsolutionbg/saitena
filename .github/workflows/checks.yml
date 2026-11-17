@@ -47,6 +47,19 @@ jobs:
           NEXT_PUBLIC_INDEXING_ENABLED: "false"
           NEXT_PUBLIC_RELEASE_MODE: public
       - run: docker build --target candidate -f .deployment/Dockerfile -t saitena-public:check .
+      - name: Public HTML without JavaScript and footer CLS (no indexing)
+        env:
+          NEXT_PUBLIC_AUTH_ENABLED: "false"
+          NEXT_PUBLIC_INDEXING_ENABLED: "false"
+          NEXT_PUBLIC_RELEASE_MODE: public
+          BROWSER_CHANNEL: bundled
+        run: |
+          npm install --prefix "$RUNNER_TEMP/saitena-seo-browser" --no-save --no-package-lock playwright@1.64.1
+          node "$RUNNER_TEMP/saitena-seo-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          export PLAYWRIGHT_MODULE="$RUNNER_TEMP/saitena-seo-browser/node_modules/playwright/index.mjs"
+          node scripts/test-seo-browser.mjs
+      - name: Dormant SEO Caddy profiles (isolated fixtures only)
+        run: node scripts/test-seo-caddy.mjs
       - name: Isolated HTTPS and SMTP integration
         env:
           SAITENA_STAGING_IMAGE: saitena-public:check

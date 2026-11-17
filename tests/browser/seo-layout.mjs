@@ -8,7 +8,10 @@ const { chromium } = await import(
 const base = process.env.BASE_URL ?? "http://127.0.0.1:13118";
 const output = resolve(process.env.OUTPUT_DIR ?? "qa-output/seo/browser");
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ channel: "chrome", headless: true });
+const browser = await chromium.launch({
+  ...(process.env.BROWSER_CHANNEL === "bundled" ? {} : { channel: "chrome" }),
+  headless: true,
+});
 const paths = [
   "/",
   "/services",
@@ -140,6 +143,10 @@ try {
     });
   }
   await noJS.close();
+  for (const result of noJSResults) {
+    assert.equal(result.h1Visible, true, result.path);
+    assert(!result.mainText.includes("Зареждаме страницата"), result.path);
+  }
   await writeFile(
     resolve(output, "results.json"),
     JSON.stringify({ results, enlargedTextChecks: 4, noJSResults }, null, 2),

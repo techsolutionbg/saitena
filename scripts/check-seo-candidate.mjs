@@ -80,6 +80,14 @@ try {
     const r = await get(path);
     assert.equal(r.status, 200, path);
     const html = await r.text();
+    assert(
+      !/id="S:\d+"/.test(html),
+      `${path}: hidden streamed content segment`,
+    );
+    assert(
+      !html.includes("Зареждаме страницата…"),
+      `${path}: loading placeholder`,
+    );
     const canonical =
       path === "/" ? "https://saitena.com" : `https://saitena.com${path}`;
     assert.equal(

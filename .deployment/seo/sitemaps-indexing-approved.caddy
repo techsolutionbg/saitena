@@ -1,0 +1,9 @@
+# DORMANT REVIEW ONLY. Requires a separate owner-approved indexing release.
+# Import with the SAME reviewed website upstream as the existing public handler.
+# Must remain inside the authorized origin handle, after canonical-www.caddy.
+@saitena_seo_sitemaps path /sitemap /sitemap/ /sitemap.xml /sitemap.xml/
+handle @saitena_seo_sitemaps {
+    reverse_proxy {args[0]} {
+        header_up -X-Saitena-Preview-Key
+    }
+}

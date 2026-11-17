@@ -1,5 +1,12 @@
 # Streamed loading fallback and footer CLS — 17 November 2026
 
+> Follow-up: the SEO rendering continuation removes the automatic loading
+> boundaries so public content is visible without JavaScript. The final design
+> and absence of footer shifts are covered by `tests/browser/public-rendering.mjs`
+> (including delayed transport). This document records the earlier fallback fix
+> and its historical measurements; use [the current report](seo-rendering-2026-11-17.md)
+> for the implementation and browser commands that supersede the example below.
+
 Baseline: deployed main `54909bc8d12a7c1e235c1950b68ffbc80943ecf0` (PR #3).
 Correction branch: `codex/fix-footer-cls`. Production has not been updated by this work.
 

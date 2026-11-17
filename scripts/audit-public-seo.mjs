@@ -46,7 +46,10 @@ const aliases = [
   "/blog/kak-da-podgotvite-sadarzhanie",
 ];
 const http = await request.newContext({ userAgent: "bingbot", timeout: 30000 });
-const browser = await chromium.launch({ channel: "chrome", headless: true });
+const browser = await chromium.launch({
+  ...(process.env.BROWSER_CHANNEL === "bundled" ? {} : { channel: "chrome" }),
+  headless: true,
+});
 const parser = await browser.newPage();
 const pages = [];
 try {
