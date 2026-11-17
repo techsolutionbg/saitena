@@ -6,6 +6,7 @@ import {
 } from "@/lib/release-mode";
 import originalAssets from "../docs/public-demo-assets.json";
 import previewAssets from "../docs/private-preview-assets.json";
+import reviewedAssets from "../docs/binary-review-manifest.json";
 import { allPages } from "@/lib/content";
 
 const publicPagePaths = new Set(
@@ -17,6 +18,15 @@ const originalAssetPaths = new Set(
 );
 const previewAssetPaths = new Set(
   previewAssets.map((asset) => `/${asset.path.slice(7)}`),
+);
+const reviewedAssetPaths = new Set(
+  reviewedAssets
+    .filter(
+      (asset) =>
+        asset.path.startsWith("public/") &&
+        asset.decision !== "exclude-local-archive",
+    )
+    .map((asset) => `/${asset.path.slice(7)}`),
 );
 const derivedAssetPaths = new Set([
   "/media/logo-light.png",
@@ -48,6 +58,7 @@ export function proxy(request: NextRequest) {
     ) &&
     !["/_not-found", "/robots.txt", "/sitemap.xml"].includes(path) &&
     !originalAssetPaths.has(path) &&
+    !reviewedAssetPaths.has(path) &&
     !previewAssetPaths.has(path)
   ) {
     return NextResponse.rewrite(new URL("/_not-found", request.url), {
