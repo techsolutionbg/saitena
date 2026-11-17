@@ -460,6 +460,23 @@ http://127.0.0.1:9080 {{
     def fail_closed(self, original):
         self.apply(self.fail_closed_route(original))
 
+    def fail_closed_active(self, original):
+        # A concurrent source edit must never be overwritten. If the active
+        # config still belongs to this release, close only its public vhost
+        # using the prevalidated fallback through stdin; retain disk for review.
+        fallback = self.fail_closed_route(original)
+        self.validate(fallback)
+        expected = self.native(fallback)
+        if expected != self.allowed_native[2]:
+            raise RuntimeError("fallback_configuration_changed")
+        active = json.loads(self.command_bytes("docker", "exec", self.c["caddy_container"], "wget", "-qO-", "http://127.0.0.1:2019/config/"))
+        if active not in self.allowed_native:
+            raise RuntimeError("unknown_active_caddy_refused")
+        self.command_bytes("docker", "exec", "-i", self.c["caddy_container"], "caddy", "reload", "--config", "-", "--adapter", "caddyfile", input=fallback)
+        active = json.loads(self.command_bytes("docker", "exec", self.c["caddy_container"], "wget", "-qO-", "http://127.0.0.1:2019/config/"))
+        if active != expected:
+            raise RuntimeError("fail_closed_reload_mismatch")
+
 
 def transact(request, config, runtime):
     validate_request(request, config["image_repository"])
@@ -563,6 +580,13 @@ def guarded_recover(journal, runtime):
                 runtime.fail_closed(original)
                 entry["fallback_sha256"] = hashlib.sha256(runtime.route()).hexdigest()
                 entry["phase"] = "fail_closed_manual_recovery_required"
+            except Exception:
+                pass
+        if entry["phase"] == "manual_recovery_required":
+            try:
+                runtime.fail_closed_active(original)
+                entry["phase"] = "fail_closed_manual_recovery_required"
+                entry["disk_repair_required"] = True
             except Exception:
                 pass
         save(journal, entry)

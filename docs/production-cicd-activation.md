@@ -4,6 +4,13 @@
 supersedes the manual stable-tag workflow and historical activation status below.
 It retains the existing pipeline, production environment and origin guard.
 
+**2026-11-17 review:** the automation is provisioned and enabled, with a protected
+owner-reviewed `production` environment and restricted server helper. The first
+real Actions release still requires the owner's final PR merge authorization,
+successful push/main CI and Environment approval. The site currently runs a
+manually accepted public-demo release. Activation statements and manual stable-tag
+instructions below are historical; use the linked automatic-update guide.
+
 Current combined C–E preparation: [Private Preview transport/bootstrap/release](private-preview-cde.md). This supersedes historical inline-secret and pre-guard findings below. Current accepted A/B protect the old page; no new-site release or deployment enablement has occurred.
 
 Private Preview is a separate, still-disabled mode: see [preview plan and readiness](private-preview-readiness.md). It retains main/owner/digest gates, requires its own approvals, and uses guarded origin/internal identity probes plus external denial; do not apply the public-health assumptions below to preview or remove its access guard during rollback.

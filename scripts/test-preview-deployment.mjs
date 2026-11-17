@@ -11,7 +11,7 @@ if (!["private-preview", "public-demo"].includes(mode))
   throw Error("Unknown fixture mode");
 const versions =
   mode === "public-demo"
-    ? ["old", "new", "bad", "timeout", "fallback"]
+    ? ["old", "new", "bad", "timeout", "fallback", "drift"]
     : ["old", "new"];
 const revision = (version) =>
   createHash("sha256")

@@ -334,6 +334,36 @@ class PublicDemoTests(unittest.TestCase):
         self.assertIsNone(runtime.registry_credential)
         self.assertTrue(all(token not in str(args) for args,kw in commands))
         self.assertEqual(commands[0][1]['input'],token.encode())
+
+    def test_concurrent_source_edit_is_retained_while_known_active_site_fails_closed(self):
+        runtime=DemoRuntime(self.config)
+        agent.transact(self.request,self.config,runtime)
+        runtime.content=b'operator-edit'
+        calls=[]
+        runtime.fail_closed_active=lambda original: calls.append(original)
+        with self.assertRaisesRegex(RuntimeError,'fail_closed_manual_recovery_required'):
+            agent.finish_request('rollback',self.request,self.config,runtime)
+        self.assertEqual(runtime.content,b'operator-edit')
+        self.assertEqual(calls,[b'old-route'])
+        self.assertTrue(json.loads(self.journal.read_bytes())['disk_repair_required'])
+
+    def test_active_fallback_refuses_unknown_active_or_changed_fallback(self):
+        runtime=agent.Runtime({'caddy_container':'fixture'})
+        runtime.allowed_native=[{'route':'old'},{'route':'candidate'},{'route':'fallback'}]
+        runtime.fail_closed_route=lambda original: b'fallback'
+        runtime.validate=lambda content: None
+        runtime.native=lambda content: {'route':content.decode()}
+        calls=[]
+        def command(*args,**kwargs):
+            calls.append(args)
+            return b'{"route":"operator"}'
+        runtime.command_bytes=command
+        with self.assertRaisesRegex(RuntimeError,'unknown_active_caddy_refused'):
+            runtime.fail_closed_active(b'old')
+        self.assertFalse(any('reload' in call for call in calls))
+        runtime.native=lambda content: {'route':'changed'}
+        with self.assertRaisesRegex(RuntimeError,'fallback_configuration_changed'):
+            runtime.fail_closed_active(b'old')
     def test_only_exact_documented_clients_failure_can_be_excepted(self):
         from urllib.error import HTTPError
         url='https://clients.saitena.com/'

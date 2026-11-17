@@ -20,7 +20,7 @@ def docker(*args): return subprocess.check_output(['docker',*args],text=True,std
 prefix=os.environ['FIXTURE_PREFIX'];root=Path(os.environ['FIXTURE_VOLUME_ROOT'])
 volume=prefix+'-state';caddy=prefix+'-caddy';old=prefix+'-old'
 images={};revisions={}
-for version in ['old','new','bad','timeout','fallback']:
+for version in ['old','new','bad','timeout','fallback','drift']:
     image=prefix+':'+version;digest=docker('image','inspect',image,'--format','{{.Id}}')
     ref='ghcr.io/techsolutionbg/saitena/public@'+digest
     sha=hashlib.sha256((prefix+version).encode()).hexdigest()[:40]
@@ -122,5 +122,24 @@ for version in ['new','bad','timeout','fallback']:
     assert docker('inspect',old,'--format','{{.State.Running}}')=='true'
     assert (journal.with_suffix('.backup')/'secret-import.caddy').stat().st_mode&0o777==0o600
     results.append(version)
+config['state_dir']=str(root/'concurrent-source');Path(config['state_dir']).mkdir(mode=0o700)
+runtime=FixtureRuntime(config);runtime.armed=False
+sha,image=revisions['drift'];request={'release':'main-'+sha,'sha':sha,'image':image,'mode':'public-demo'}
+journal=Path(config['state_dir'])/(request['release']+'.json')
+assert agent.transact(request,config,runtime)['status']=='awaiting_acceptance'
+edited=route.read_bytes()+b'\n# concurrent operator edit: preserve for review\n'
+route.write_bytes(edited)
+try: agent.finish_request('rollback',request,config,runtime)
+except RuntimeError as error: assert str(error)=='fail_closed_manual_recovery_required',str(error)
+else: raise AssertionError('concurrent source must require manual repair')
+assert route.read_bytes()==edited
+assert json.loads(journal.read_bytes())['disk_repair_required'] is True
+try: get(authorized=True)
+except urllib.error.HTTPError as error: assert error.code==403
+else: raise AssertionError('unaccepted candidate remained public')
+runtime.protected_checks()
+route.write_bytes(original)  # Explicit fixture-only operator repair, never automated in production.
+runtime.apply(original);runtime.rollback_checks(json.loads(journal.read_bytes())['baseline_digest'])
+results.append('concurrent-source-active-403')
 print(json.dumps({'passed':True,'real_caddy_scenarios':results,'other_route_preserved':True,'source_inode_preserved':True,
  'guard_and_forged_headers_tested':True,'root_only_full_backup':True,'registry_and_cf':'isolated-fixtures-only','detached_watchdog_startup':'not-tested-by-fixture'}))

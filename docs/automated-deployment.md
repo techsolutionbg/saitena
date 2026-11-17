@@ -3,7 +3,7 @@
 This replaces the manual stable-tag trigger in the existing `production.yml`;
 it does not add another pipeline. The public site continues in `public-demo`
 mode with authentication, email submission, legal pages and indexing disabled.
-The UI and approved original assets are unchanged.
+The approved original assets and the site's existing access protections are retained.
 
 The owner requested this process on 16 November 2026:
 
@@ -50,9 +50,21 @@ The owner requested this process on 16 November 2026:
     240-second server watchdog armed, which restores the previous guarded source.
     The previous container remains available. Failed restoration uses only the
     prevalidated public/www HTTP 403 fallback. Unknown concurrent operator edits
-    are not overwritten; the journal records that manual recovery is required.
+    are not overwritten. If the active configuration still matches this release,
+    load the saved public/www-only 403 fallback through stdin without changing the
+    edited source file. Unknown active configurations are also left untouched.
+    The journal blocks further releases and records manual disk repair when needed.
 
 ## One-time activation, not performed by merging code
+
+Activation completed on 17 November 2026: restricted helper/config installed,
+production OIDC event changed to `workflow_run`, policy secret confirmed by name,
+and repository enablement set last. The first real Actions publish, OIDC exchange,
+registry pull and website acceptance remain unproven until the owner authorizes
+the reviewed PR merge and approves the resulting production Environment job.
+The final review adds the concurrent-source fail-closed safeguard; its new helper
+bytes need a separately approved, backed-up installation before that first run.
+The provisioning checklist below records the original activation scope.
 
 Existing production environment, host pin, deployment key and restricted SSH
 account are already provisioned. No new shell, Docker-group membership, sudoers
