@@ -29,8 +29,6 @@ export function customerAuthReleaseBlockers(
     "production_auth_approved",
     "api_candidate_approved",
     "portal_candidate_approved",
-    "legal_copy_approved",
-    "consent_policy_approved",
     "smtp_sender_approved",
     "https_staging_approved",
     "migration_backup_rollback_approved",
@@ -38,6 +36,21 @@ export function customerAuthReleaseBlockers(
     "origin_guard_plan_approved",
     "deployment_helper_approved",
   ])
+    if (approval[key] !== true)
+      blockers.push(`Customer Auth approval pending: ${key}`);
+  const registration = env.NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED;
+  if (
+    !["true", "false"].includes(registration) ||
+    approval.registration_enabled !== (registration === "true")
+  )
+    blockers.push(
+      "Customer Auth registration_enabled must match the explicit build flag",
+    );
+  const required =
+    registration === "true"
+      ? ["legal_copy_approved", "consent_policy_approved"]
+      : ["login_only_approved"];
+  for (const key of required)
     if (approval[key] !== true)
       blockers.push(`Customer Auth approval pending: ${key}`);
   for (const key of [
@@ -60,6 +73,7 @@ export function customerAuthReleaseBlockers(
     if (env[key] !== value)
       blockers.push(`Customer Auth release requires ${key}=${value}`);
   if (
+    registration === "true" &&
     /СТРУКТУРЕН МАКЕТ|предстои потвърждение|не действащ правен документ/u.test(
       readFileSync(join(root, "src/components/pages/pages.tsx"), "utf8"),
     )

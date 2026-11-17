@@ -2,6 +2,8 @@
   "schema": 1,
   "owner": "techsolutionbg",
   "mode": "customer-auth",
+  "registration_enabled": false,
+  "login_only_approved": false,
   "production_auth_approved": false,
   "api_candidate_approved": false,
   "portal_candidate_approved": false,

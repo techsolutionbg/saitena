@@ -18,6 +18,7 @@ jobs:
     outputs:
       sha: ${{ steps.policy.outputs.sha }}
       release: ${{ steps.policy.outputs.release }}
+      mode: ${{ steps.policy.outputs.mode }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }
@@ -41,26 +42,41 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with: { node-version: 24 }
-      - run: node scripts/check-release-readiness.mjs
+      - if: needs.authorize.outputs.mode == 'public-demo'
+        run: node scripts/check-release-readiness.mjs
         env: { SAITENA_RELEASE_MODE: public-demo }
+      - if: needs.authorize.outputs.mode == 'customer-auth'
+        run: node scripts/customer-auth-release.mjs
+        env:
+          NEXT_PUBLIC_RELEASE_MODE: customer-auth
+          NEXT_PUBLIC_AUTH_ENABLED: "true"
+          NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED: "true"
+          NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED: "false"
+          NEXT_PUBLIC_INDEXING_ENABLED: "false"
+          NEXT_PUBLIC_API_URL: https://api.saitena.com
+          NEXT_PUBLIC_CLIENT_AREA_URL: https://portal.saitena.com
+          CONTACT_MAIL_MODE: disabled
       - name: Build and publish exact release image
         id: image
         env:
           GH_TOKEN: ${{ github.token }}
           SHA: ${{ needs.authorize.outputs.sha }}
           ACTOR: ${{ github.actor }}
+          MODE: ${{ needs.authorize.outputs.mode }}
         run: |
           set -euo pipefail
           printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
           trap 'docker logout ghcr.io >/dev/null 2>&1' EXIT
           IMAGE=ghcr.io/techsolutionbg/saitena/public
-          docker build --target release --build-arg NEXT_PUBLIC_RELEASE_MODE=public-demo --label "org.opencontainers.image.revision=$SHA" --label "org.opencontainers.image.source=https://github.com/techsolutionbg/saitena" -f .deployment/Dockerfile -t "$IMAGE:$SHA-public-demo" .
-          docker push "$IMAGE:$SHA-public-demo"
-          DIGEST=$(docker image inspect "$IMAGE:$SHA-public-demo" --format '{{index .RepoDigests 0}}')
+          case "$MODE" in public-demo) AUTH=false ;; customer-auth) AUTH=true ;; *) exit 1 ;; esac
+          docker build --target release --build-arg "NEXT_PUBLIC_RELEASE_MODE=$MODE" --build-arg "NEXT_PUBLIC_AUTH_ENABLED=$AUTH" --build-arg "NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED=$AUTH" --build-arg NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED=false --label "org.opencontainers.image.revision=$SHA" --label "org.opencontainers.image.source=https://github.com/techsolutionbg/saitena" -f .deployment/Dockerfile -t "$IMAGE:$SHA-$MODE" .
+          docker push "$IMAGE:$SHA-$MODE"
+          DIGEST=$(docker image inspect "$IMAGE:$SHA-$MODE" --format '{{index .RepoDigests 0}}')
           [[ "$DIGEST" =~ ^ghcr.io/techsolutionbg/saitena/public@sha256:[a-f0-9]{64}$ ]]
           test "$(gh api /users/techsolutionbg/packages/container/saitena%2Fpublic --jq .visibility)" = private
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
-          printf 'Main commit: `%s`\n\nImmutable image: `%s`\n\nApprove production to deploy this exact candidate.\n' "$SHA" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$MODE" = customer-auth ]; then PURPOSE='Approve the public image for coordinated Auth only; this run does not deploy.'; else PURPOSE='Approve production to deploy this exact candidate.'; fi
+          printf 'Main commit: `%s`\n\nImmutable image: `%s`\n\n%s\n' "$SHA" "$DIGEST" "$PURPOSE" >> "$GITHUB_STEP_SUMMARY"
   deploy:
     timeout-minutes: 15
     needs: [authorize, build]
@@ -92,6 +108,7 @@ jobs:
           git fetch --no-tags origin main
           node scripts/authorize-main-deployment.mjs
       - name: Join restricted deployment tailnet
+        if: needs.authorize.outputs.mode == 'public-demo'
         uses: tailscale/github-action@064b10558093f38325e838ddea35486bdc6b1d5c
         with:
           oauth-client-id: ${{ vars.SAITENA_TAILSCALE_CLIENT_ID }}
@@ -101,6 +118,7 @@ jobs:
           use-cache: "false"
           log-mode: quiet
       - name: Deploy, verify externally and accept or roll back
+        if: needs.authorize.outputs.mode == 'public-demo'
         env:
           DEPLOY_KEY: ${{ secrets.SAITENA_DEPLOY_KEY }}
           KNOWN_HOSTS: ${{ secrets.SAITENA_DEPLOY_KNOWN_HOSTS }}
@@ -111,3 +129,9 @@ jobs:
           REGISTRY_TOKEN: ${{ github.token }}
           REGISTRY_USER: ${{ github.actor }}
         run: node scripts/deploy-approved-main.mjs
+      - name: Record coordinated Auth approval only (no deployment)
+        if: needs.authorize.outputs.mode == 'customer-auth'
+        env:
+          SHA: ${{ needs.authorize.outputs.sha }}
+          IMAGE: ${{ needs.build.outputs.digest }}
+        run: node scripts/record-auth-release-approval.mjs

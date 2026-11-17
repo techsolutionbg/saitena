@@ -1,6 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { appendFileSync, readFileSync } from "node:fs";
 import { assertReleasePolicy } from "./release-policy.mjs";
+import { deploymentProfile } from "./deployment-profile.mjs";
 
 const repo = "techsolutionbg/saitena";
 const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"));
@@ -36,6 +37,7 @@ if (
   )
 )
   throw Error("Exact commit must be merged through a main pull request");
+const profile = deploymentProfile();
 assertReleasePolicy({
   source: "main",
   sha,
@@ -51,12 +53,13 @@ assertReleasePolicy({
   actor: process.env.GITHUB_ACTOR,
   triggeringActor: process.env.GITHUB_TRIGGERING_ACTOR,
   confirmation: sha,
-  releaseMode: "public-demo",
-  modeConfirmation: "public-demo",
+  releaseMode: profile.mode,
+  modeConfirmation: profile.mode,
+  authApprovalOnly: profile.authApprovalOnly,
 });
 appendFileSync(
   process.env.GITHUB_OUTPUT,
-  `sha=${sha}\nci_run=${id}\nrelease=main-${sha}\n`,
+  `sha=${sha}\nci_run=${id}\nrelease=main-${sha}\nmode=${profile.mode}\n`,
 );
 if (process.env.GITHUB_STEP_SUMMARY)
   appendFileSync(

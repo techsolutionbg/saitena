@@ -52,6 +52,17 @@ const config: NextConfig = {
             permanent: false,
           }))
         : [];
+    if (
+      process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true" &&
+      process.env.NEXT_PUBLIC_AUTH_ENABLED === "true" &&
+      process.env.NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED !== "true"
+    ) {
+      authRedirects.push({
+        source: "/register",
+        destination: "/login",
+        permanent: false,
+      });
+    }
     const routes = [
       ["uslugi", "services"],
       ["planove", "prices"],
@@ -95,7 +106,7 @@ const config: NextConfig = {
           ...(!indexingEnabled
             ? [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }]
             : []),
-          ...(preview
+          ...(preview || releaseMode === "customer-auth"
             ? [{ key: "Cache-Control", value: "private, no-store" }]
             : []),
         ],

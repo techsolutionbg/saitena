@@ -1,27 +1,32 @@
-# Opt-in customer authentication integration
+# Customer Auth frontend and coordinated release preparation
 
-Local implementation only. `NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED=true` switches the
-public forms to `/api/v1/customer/auth/*`, host-only Laravel sessions and a JSON
-CSRF bootstrap kept in memory. Development refuses production API addresses;
-the explicit `.test` exception exists only for the isolated HTTPS fixture.
+Auth remains opt-in. Existing public-demo delivery stays the default and keeps
+authentication disabled. A customer-auth release needs a separate exact owner
+approval record; the actual record is still pending. No active deployment or
+registration is enabled by this change.
 
-Login goes to the configured trusted portal dashboard without a token in the URL.
-Registration and recovery responses are generic. Existing public Auth pages are
-preserved; header login is shown only in the opt-in integration, while unfinished
-cart remains hidden. No images/design/performance modules are changed by Auth.
+The frontend uses credentialed API-host-only sessions and a memory-only JSON CSRF
+token. No customer session/CSRF token goes to localStorage or a domain-wide JS cookie.
+Registration reads the server's approved document policy and submits the versions
+shown alongside explicit acceptance. It cannot supply authoritative document hashes.
+Missing/stale/unapproved policy refuses registration. Development refuses production
+API URLs; isolated integration uses HTTPS .test hosts and synthetic documents/mail.
 
-Public-demo and private-preview builds reject the new flag, and the current Docker
-release stage explicitly requires it false. Enabling Auth needs a separately
-reviewed release profile; neither these source changes nor local production builds
-authorize production registration or legal/mail activation. Existing noindex, CSP
-Report-Only, image CSP, origin guard and controlled Environment deployment remain.
+First activation is login-only: the registration flag is explicitly false, /register
+redirects to /login, legal drafts remain404 and real contact sending/indexing remain
+disabled. Enabling registration needs a separate legal/consent approval and matching
+frontend/API flags. The site's design, public content, assets and existing origin
+protections are retained.
 
-The parent hosting-platform implementation is documented in
-`docs/customer-auth-integration.md` there. It uses the same Laravel users provider,
-a customer-only guard/cookie, unchanged staff/MFA boundary and no new Auth service.
-The parent local repository currently has no remote; API/portal publication scope
-must be agreed before claiming a complete GitHub release candidate.
+The EXISTING release workflow gains an approval-only customer-auth branch. It still
+requires protected public main, an exact successful main CI and the existing personal
+production Environment approval. That branch builds only public source and emits
+an immutable public image reference with published=false; it does not join Tailscale
+or obtain/use the SSH key. Private source/credentials and API/portal privileges stay
+outside this public repository. No additional workflow/pipeline/account is created.
 
-Local URLs are public127.0.0.1:3010, portal:3011, API:8011 and Mailpit:18029. Existing
-3000/3001/8001 services were preserved. Test credentials/data and keys are disposable
-and remain under ignored local output, never in this document or Git.
+Actual coordinated publication then requires a separately reviewed administrative
+transaction and manual owner receipt for all components, backup and guarded rollback.
+An approval-only workflow job is not evidence of production deployment. The existing
+restricted website helper continues to reject customer-auth; normal public-demo
+automatic updates retain their current behavior and owner gate.

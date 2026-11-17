@@ -8,6 +8,8 @@ import {
   AuthApiError,
   clientAreaUrl,
   registerAccount,
+  registrationPolicy,
+  type RegistrationPolicy,
   requestPasswordReset,
   resetPassword,
   signIn,
@@ -167,6 +169,7 @@ export function AuthExperience({ mode }: { mode: Mode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [policy, setPolicy] = useState<RegistrationPolicy | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -178,6 +181,25 @@ export function AuthExperience({ mode }: { mode: Mode }) {
     useState<VerificationState>("checking");
   const verificationStarted = useRef(false);
   const resetLinkRead = useRef(false);
+  const customerMode = process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true";
+  const registrationEnabled =
+    !customerMode ||
+    process.env.NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED === "true";
+
+  useEffect(() => {
+    if (mode !== "register" || !customerMode || !registrationEnabled) return;
+    let cancelled = false;
+    registrationPolicy()
+      .then((value) => {
+        if (!cancelled) setPolicy(value);
+      })
+      .catch((cause: unknown) => {
+        if (!cancelled) setError(errorMessage(cause, "register"));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [mode, customerMode, registrationEnabled]);
 
   useEffect(() => {
     if (mode !== "reset" || resetLinkRead.current) return;
@@ -239,7 +261,11 @@ export function AuthExperience({ mode }: { mode: Mode }) {
     setNotice("");
     try {
       if (isLogin) {
-        const destination = clientAreaUrl(process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true" ? "dashboard" : "login");
+        const destination = clientAreaUrl(
+          process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true"
+            ? "dashboard"
+            : "login",
+        );
         if (!destination) throw new AuthApiError(-2);
         await signIn(email.trim(), password);
         window.location.assign(destination);
@@ -272,6 +298,8 @@ export function AuthExperience({ mode }: { mode: Mode }) {
         setResetLink(null);
         setNotice("Паролата е сменена. Вече можете да влезете в профила си.");
       } else if (isRegister) {
+        if (!registrationEnabled || (customerMode && !policy))
+          throw new AuthApiError(503);
         if (!passwordRequirementsMet(password)) {
           setError(
             "Паролата трябва да е поне 12 знака и да съдържа малки и главни букви, цифра и символ.",
@@ -293,6 +321,15 @@ export function AuthExperience({ mode }: { mode: Mode }) {
           email: email.trim(),
           password,
           password_confirmation: confirmation,
+          ...(policy
+            ? {
+                consent: {
+                  accepted: acceptedTerms,
+                  terms_version: policy.documents.terms.version,
+                  privacy_version: policy.documents.privacy.version,
+                },
+              }
+            : {}),
         });
         setNotice(
           "Ако адресът е подходящ за регистрация, ще получите инструкции по имейл. Можете да влезете в профила си; клиентските услуги изискват потвърден имейл.",
@@ -620,7 +657,11 @@ export function AuthExperience({ mode }: { mode: Mode }) {
                 <button
                   className={styles.submit}
                   type="submit"
-                  disabled={pending}
+                  disabled={
+                    pending ||
+                    (isRegister &&
+                      (!registrationEnabled || (customerMode && !policy)))
+                  }
                 >
                   {pending
                     ? "Моля, изчакайте…"
@@ -637,9 +678,11 @@ export function AuthExperience({ mode }: { mode: Mode }) {
             )}
           <div className={styles.separator} />
           {isLogin ? (
-            <p className={styles.cardFooter}>
-              Нямате профил? <Link href="/register">Регистрация</Link>
-            </p>
+            registrationEnabled ? (
+              <p className={styles.cardFooter}>
+                Нямате профил? <Link href="/register">Регистрация</Link>
+              </p>
+            ) : null
           ) : isRegister ? (
             <p className={styles.cardFooter}>
               Вече имате профил? <Link href="/login">Вход</Link>

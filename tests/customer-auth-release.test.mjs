@@ -12,11 +12,13 @@ import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { customerAuthReleaseBlockers } from "../scripts/customer-auth-release.mjs";
 import { assertReleasePolicy } from "../scripts/release-policy.mjs";
+import { deploymentProfile } from "../scripts/deployment-profile.mjs";
 
 const env = {
   NEXT_PUBLIC_RELEASE_MODE: "customer-auth",
   NEXT_PUBLIC_AUTH_ENABLED: "true",
   NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED: "true",
+  NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED: "true",
   NEXT_PUBLIC_INDEXING_ENABLED: "false",
   NEXT_PUBLIC_API_URL: "https://api.saitena.com",
   NEXT_PUBLIC_CLIENT_AREA_URL: "https://portal.saitena.com",
@@ -88,7 +90,7 @@ test("customer Auth retains asset, legal, SMTP, exact-evidence and noindex gates
   try {
     assert.deepEqual(customerAuthReleaseBlockers(f.root, env), []);
     for (const key of Object.keys(f.approval).filter(
-      (k) => typeof f.approval[k] === "boolean",
+      (k) => typeof f.approval[k] === "boolean" && k !== "login_only_approved",
     )) {
       f.approval[key] = false;
       f.save();
@@ -117,6 +119,47 @@ test("customer Auth retains asset, legal, SMTP, exact-evidence and noindex gates
     f.cleanup();
   }
 });
+test("login-only Auth retains every common gate and never activates registration or draft legal routes", () => {
+  const f = fixture();
+  try {
+    f.approval.registration_enabled = false;
+    f.approval.legal_copy_approved = false;
+    f.approval.consent_policy_approved = false;
+    f.save();
+    writeFileSync(
+      join(f.root, "src/components/pages/pages.tsx"),
+      "СТРУКТУРЕН МАКЕТ",
+    );
+    const login = {
+      ...env,
+      NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED: "false",
+    };
+    assert.deepEqual(customerAuthReleaseBlockers(f.root, login), []);
+    f.approval.login_only_approved = false;
+    f.save();
+    assert(
+      customerAuthReleaseBlockers(f.root, login).some((x) =>
+        x.includes("login_only_approved"),
+      ),
+    );
+    f.approval.login_only_approved = true;
+    f.save();
+    assert(
+      customerAuthReleaseBlockers(f.root, env).some((x) =>
+        x.includes("registration_enabled"),
+      ),
+    );
+    f.approval.registration_enabled = true;
+    f.save();
+    assert(
+      customerAuthReleaseBlockers(f.root, env).some((x) =>
+        x.includes("legal_copy_approved"),
+      ),
+    );
+  } finally {
+    f.cleanup();
+  }
+});
 test("existing automatic release policy still rejects unapproved Auth mode", () => {
   assert.throws(
     () =>
@@ -126,4 +169,30 @@ test("existing automatic release policy still rejects unapproved Auth mode", () 
       }),
     /release mode/,
   );
+});
+
+test("actual default profile cannot activate Auth and an Auth profile needs explicit login-only approval", () => {
+  assert.deepEqual(deploymentProfile(), {
+    mode: "public-demo",
+    authApprovalOnly: false,
+  });
+  const f = fixture();
+  try {
+    writeFileSync(
+      join(f.root, "docs/deployment-profile.json"),
+      JSON.stringify({ mode: "customer-auth" }),
+    );
+    f.approval.registration_enabled = false;
+    f.approval.login_only_approved = false;
+    f.save();
+    assert.throws(() => deploymentProfile(f.root), /login_only_approved/);
+    f.approval.login_only_approved = true;
+    f.save();
+    assert.deepEqual(deploymentProfile(f.root), {
+      mode: "customer-auth",
+      authApprovalOnly: true,
+    });
+  } finally {
+    f.cleanup();
+  }
 });

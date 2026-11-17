@@ -14,15 +14,25 @@ export function assertReleasePolicy({
   modeConfirmation,
   source = "release",
   mainSha,
+  authApprovalOnly = false,
 }) {
   const reject = (message) => {
     throw new Error(message);
   };
   if (
-    !["public", "private-preview", "public-demo"].includes(releaseMode) ||
+    !["public", "private-preview", "public-demo", "customer-auth"].includes(
+      releaseMode,
+    ) ||
     modeConfirmation !== releaseMode
   )
     reject("Explicit release mode confirmation is required");
+  if (
+    releaseMode === "customer-auth" &&
+    (authApprovalOnly !== true || source !== "main")
+  )
+    reject(
+      "Explicit Auth release mode approval-only authorization is required",
+    );
   if (
     approvalPolicy?.mode !== "solo-maintainer" ||
     !approvalPolicy.maintainers?.includes(actor) ||
@@ -101,9 +111,12 @@ export function assertReleasePolicy({
     )
       reject(`Required check missing: ${name}`);
   }
-  if (source === "main" && releaseMode !== "public-demo")
+  if (
+    source === "main" &&
+    !["public-demo", "customer-auth"].includes(releaseMode)
+  )
     reject(
-      "Automatic deployment may only update the approved public-demo site",
+      "Automatic deployment may only update public-demo or approve coordinated Auth",
     );
   if (
     source === "main" &&
@@ -114,6 +127,15 @@ export function assertReleasePolicy({
     )
   )
     reject("Public demo guard and rollback rehearsal is required");
+  if (
+    releaseMode === "customer-auth" &&
+    !jobs[0].steps.some(
+      (s) =>
+        s.name === "Customer Auth frontend and consent contract checks" &&
+        s.conclusion === "success",
+    )
+  )
+    reject("Customer Auth contract checks are required");
   if (
     releaseMode === "public-demo" &&
     !jobs[0].steps.some(

@@ -19,6 +19,7 @@ docs/**
 !docs/public-demo-approval.json
 !docs/public-demo-assets.json
 !docs/customer-auth-release-approval.json
+!docs/deployment-profile.json
 platform
 apps/api
 apps/web
