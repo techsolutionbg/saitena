@@ -12,6 +12,8 @@ header {
 # before adoption; merge with an existing handler rather than adding a second one.
 handle_errors {
     header {
+        >X-Robots-Tag "noindex, nofollow, noarchive"
+        >Cache-Control "private, no-store"
         ?X-Frame-Options "DENY"
         ?X-Content-Type-Options "nosniff"
         ?Strict-Transport-Security "max-age=300"

@@ -83,6 +83,9 @@ test("review-only Caddy defaults match the application policy for normal and err
     const line = `?${key} "${value}"`;
     assert.equal(fragment.split(line).length - 1, 2, key);
   }
+  const errors = fragment.slice(fragment.indexOf("handle_errors {"));
+  assert(errors.includes('>X-Robots-Tag "noindex, nofollow, noarchive"'));
+  assert(errors.includes('>Cache-Control "private, no-store"'));
   assert(
     !/^\s*(?:reverse_proxy|request_header|tls|trusted_proxies)\b/m.test(
       fragment,

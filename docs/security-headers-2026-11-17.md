@@ -121,6 +121,9 @@ The **review-only** `.deployment/Caddyfile.security-headers.fragment` supplies
 deferred defaults in the existing public/www block, plus that block's error route.
 `?Header` preserves upstream values and adds only absent fields. The fragment does
 not set an enforcing CSP, modify any guard/import/upstream, or define another host.
+The error route explicitly reapplies the existing noindex/no-store values: a local
+upstream-failure control confirmed that Caddy does not inherit the outer deferred
+privacy headers into that separate route.
 Its error handler uses an empty body and retains the error status. Compare that
 behavior with the captured production error handling before adopting the fragment.
 
