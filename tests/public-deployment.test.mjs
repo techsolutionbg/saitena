@@ -96,3 +96,47 @@ test("only the exact known FAQ email transformation is permitted", () => {
       false,
     );
 });
+
+test("non-streamed FAQ keeps exact identity after the known Cloudflare email transform", () => {
+  const anchor = "<script>(self.__next_f=self.__next_f||[]).push([0])</script>";
+  const original = `<main>${FAQ_EMAIL}</main><footer>unchanged</footer>${anchor}original trailing content`;
+  const key = 42;
+  const encoded = Buffer.from([
+    key,
+    ...Buffer.from(FAQ_EMAIL).map((value) => value ^ key),
+  ]).toString("hex");
+  const node = `<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="${encoded}">[email&#160;protected]</a>`;
+  const transformed = original
+    .replace(FAQ_EMAIL, node)
+    .replace(anchor, DECODE_SCRIPT + anchor);
+  assert.equal(
+    htmlIdentity(Buffer.from(transformed), sha(original), "/faq").valid,
+    true,
+  );
+  for (const [text, path] of [
+    [transformed, "/"],
+    [transformed.replace("unchanged", "changed"), "/faq"],
+    [transformed.replace("original trailing", "modified trailing"), "/faq"],
+    [transformed.replace(DECODE_SCRIPT, DECODE_SCRIPT + DECODE_SCRIPT), "/faq"],
+    [
+      transformed.replace(
+        DECODE_SCRIPT + anchor,
+        DECODE_SCRIPT + "misplaced" + anchor,
+      ),
+      "/faq",
+    ],
+    [transformed.replace("email-decode.min.js", "unknown.js"), "/faq"],
+    [transformed.replace(encoded, encoded.slice(0, -2) + "00"), "/faq"],
+  ])
+    assert.equal(
+      htmlIdentity(Buffer.from(text), sha(original), path).valid,
+      false,
+    );
+  const doubleOriginal = FAQ_EMAIL + FAQ_EMAIL + anchor;
+  const doubleTransform = node + node + DECODE_SCRIPT + anchor;
+  assert.equal(
+    htmlIdentity(Buffer.from(doubleTransform), sha(doubleOriginal), "/faq")
+      .valid,
+    false,
+  );
+});

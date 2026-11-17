@@ -2,6 +2,13 @@ import { spawn } from "node:child_process";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { publicSecurityHeaders } from "../src/lib/security-headers.mjs";
+import { createHash } from "node:crypto";
+import {
+  htmlIdentity,
+  FAQ_EMAIL,
+  DECODE_SCRIPT,
+  DOCUMENT_ANCHOR,
+} from "./faq-html-identity.mjs";
 
 // Run against a previously built, auth-disabled information-only candidate.
 const server = spawn(
@@ -49,6 +56,31 @@ try {
       assert.equal(response.headers.get(key), value, `${path}: ${key}`);
     assert.match(response.headers.get("x-robots-tag") ?? "", /noindex/, path);
     const html = await response.text();
+    if (path === "/faq") {
+      assert(html.includes(DOCUMENT_ANCHOR), "Actual FAQ document bootstrap");
+      assert(html.includes(FAQ_EMAIL), "Known published FAQ email example");
+      const key = 42;
+      const encoded = Buffer.from([
+        key,
+        ...Buffer.from(FAQ_EMAIL).map((value) => value ^ key),
+      ]).toString("hex");
+      const node = `<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="${encoded}">[email&#160;protected]</a>`;
+      const transformed = html
+        .replace(FAQ_EMAIL, node)
+        .replace(DOCUMENT_ANCHOR, DECODE_SCRIPT + DOCUMENT_ANCHOR);
+      const expectedSha = createHash("sha256").update(html).digest("hex");
+      assert.equal(
+        htmlIdentity(Buffer.from(transformed), expectedSha, path).valid,
+        true,
+        "Built FAQ survives only the approved Cloudflare transform",
+      );
+      assert.equal(
+        htmlIdentity(Buffer.from(transformed + "changed"), expectedSha, path)
+          .valid,
+        false,
+        "Every remaining FAQ byte is verified",
+      );
+    }
     assert.match(html, /name="robots"[^>]+noindex/, `robots metadata: ${path}`);
     if (path === "/prices")
       assert.ok(

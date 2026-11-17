@@ -3,10 +3,12 @@ export const FAQ_EMAIL = "office@vashatafirma.bg";
 export const DECODE_SCRIPT =
   '<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>';
 export const STREAM_ANCHOR = "<script>$RB=[];$RV=function";
+export const DOCUMENT_ANCHOR =
+  "<script>(self.__next_f=self.__next_f||[]).push([0])</script>";
 const sha = (b) => createHash("sha256").update(b).digest("hex");
 
 // Proposed retry policy, not retroactive acceptance of the failed attempt.
-// Only one known FAQ email node and its exact stream-positioned Cloudflare
+// Only one known FAQ email node and its exactly positioned Cloudflare
 // script may be reversed. Every remaining byte must match the original hash.
 export function htmlIdentity(bytes, expectedSha, path) {
   const rawSha256 = sha(bytes);
@@ -40,14 +42,17 @@ export function htmlIdentity(bytes, expectedSha, path) {
       return email;
     },
   );
+  const anchors = [STREAM_ANCHOR, DOCUMENT_ANCHOR].filter((anchor) =>
+    text.includes(DECODE_SCRIPT + anchor),
+  );
   if (
     bad ||
     count !== 1 ||
     text.split(DECODE_SCRIPT).length - 1 !== 1 ||
-    !text.includes(DECODE_SCRIPT + STREAM_ANCHOR)
+    anchors.length !== 1
   )
     return { valid: false, rawSha256 };
-  text = text.replace(DECODE_SCRIPT + STREAM_ANCHOR, STREAM_ANCHOR);
+  text = text.replace(DECODE_SCRIPT + anchors[0], anchors[0]);
   const canonicalSha256 = sha(text);
   return {
     valid: canonicalSha256 === expectedSha,
