@@ -1,0 +1,23 @@
+# REVIEW ONLY. Insert inside the EXISTING saitena.com, www.saitena.com block.
+# Do not replace the block, its guard/import/upstream, or any other hostname.
+# Defaults are deferred: retain upstream policies without duplicate header fields.
+header {
+    ?X-Frame-Options "DENY"
+    ?X-Content-Type-Options "nosniff"
+    ?Strict-Transport-Security "max-age=300"
+    ?Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self' https://api.saitena.com; frame-src 'none'; worker-src 'none'; media-src 'none'; manifest-src 'self'; form-action 'self'"
+}
+# Caddy-generated errors run a separate route and need the same defaults.
+# Empty body with the original error status. Compare production error handling
+# before adoption; merge with an existing handler rather than adding a second one.
+handle_errors {
+    header {
+        >X-Robots-Tag "noindex, nofollow, noarchive"
+        >Cache-Control "private, no-store"
+        ?X-Frame-Options "DENY"
+        ?X-Content-Type-Options "nosniff"
+        ?Strict-Transport-Security "max-age=300"
+        ?Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-attr 'none'; img-src 'self' data: https://tile.openstreetmap.org; font-src 'self'; connect-src 'self' https://api.saitena.com; frame-src 'none'; worker-src 'none'; media-src 'none'; manifest-src 'self'; form-action 'self'"
+    }
+    respond "" {err.status_code}
+}

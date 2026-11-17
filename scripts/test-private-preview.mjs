@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { publicSecurityHeaders } from "../src/lib/security-headers.mjs";
 
 const docker = (...args) =>
   execFileSync("docker", args, {
@@ -48,9 +49,15 @@ try {
   created = true;
   // All HTTP probes execute inside this new container. No public port, API or mail service.
   const script = `const assert=require('node:assert/strict');(async()=>{
+    const expectedHeaders=${JSON.stringify(publicSecurityHeaders(true))};
+    const originalFetch=fetch;
+    // Next config redirects bypass headers in this framework version. Their
+    // status/location checks below remain; edge coverage needs approved Caddy defaults.
+    global.fetch=async(...args)=>{const r=await originalFetch(...args);if(r.status!==307&&r.status!==308)for(const {key,value} of expectedHeaders)assert.equal(r.headers.get(key),value,r.url+': '+key);return r;};
     const base='http://127.0.0.1:3000';let ready=false;
     for(let i=0;i<100;i++){try{ready=(await fetch(base+'/api/health')).ok}catch{}if(ready)break;await new Promise(r=>setTimeout(r,200))}assert(ready);
     const mode=${JSON.stringify(mode)};
+    const staticAssets=new Set();
     const assets=${JSON.stringify(assets)};
     const allowed=new Set(assets.map(a=>'/'+a.path.slice(7)));
     const derived={'/media/logo-light.png':'/brand/saitena-logo-light.svg','/media/logo-dark.png':'/brand/saitena-logo-dark.svg','/media/mark-64.png':'/brand/saitena-mark.svg'};
@@ -59,6 +66,7 @@ try {
       const r=await fetch(base+path);assert.equal(r.status,200,path);assert.match(r.headers.get('x-robots-tag')??'',/noindex/);
       assert.match(r.headers.get('x-robots-tag')??'',/nofollow/);assert.equal(r.headers.get('cache-control'),'private, no-store');
       const body=await r.text();assert(body.includes('data-release-mode="'+mode+'"'));assert(!/Private Preview|PRIVATE PREVIEW|Public Demo/.test(body),path);assert(!body.includes('src="//preview/'));
+      for(const match of body.matchAll(new RegExp('(?:src|href)="(/_next/static/[^" ]+)"','g')))staticAssets.add(match[1].replaceAll('&amp;','&'));
       if(mode==='private-preview'){
         assert(!body.includes('href="/legal/'),path);
         if(path==='/contact'){assert.match(body,/preview@example.invalid/);assert(!body.includes('<form'));assert(!body.includes('tile.openstreetmap'));}
@@ -71,6 +79,7 @@ try {
           const url=new URL(src,base),original=url.pathname==='/_next/image'?url.searchParams.get('url'):url.pathname;
           assert(allowed.has(original)||(Object.hasOwn(derived,original)&&allowed.has(derived[original])),path+': asset missing from original manifest');
           const loaded=await fetch(url);assert.equal(loaded.status,200,path+': '+src);assert((loaded.headers.get('content-type')??'').startsWith('image/'));
+          if(url.pathname==='/_next/image')assert.equal(loaded.headers.get('content-security-policy'),"script-src 'none'; frame-src 'none'; sandbox;");
         }
       }
     }
@@ -78,6 +87,10 @@ try {
       const r=await fetch(base+path);assert.equal(r.status,404,path);assert(!(await r.text()).includes('СТРУКТУРЕН МАКЕТ'));
     }
     for(const path of ['/pravni/poveritelnost','/concepts/clarity/pravni/poveritelnost'])assert.equal((await fetch(base+path)).status,404,path);
+    for(const asset of staticAssets)assert.equal((await fetch(base+asset)).status,200,asset);
+    assert.equal((await fetch(base+'/_next/image')).status,400);
+    assert.equal((await fetch(base+'/api/contact')).status,405);
+    assert.equal((await fetch(base+'/media/%E0%A4%A')).status,400);
     for(const path of ['/login','/register','/forgot-password','/reset-password','/verify-email']){const r=await fetch(base+path,{redirect:'manual'});assert([302,307].includes(r.status),path);}
     for(const origin of [base,'https://invalid.example']){const r=await fetch(base+'/api/contact',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{}'});assert.equal(r.status,403);}
     assert((await(await fetch(base+'/robots.txt')).text()).includes('Disallow: /'));

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { publicSecurityHeaders } from "./src/lib/security-headers.mjs";
 
 const releaseMode = process.env.NEXT_PUBLIC_RELEASE_MODE ?? "public";
 if (!["public", "private-preview", "public-demo"].includes(releaseMode))
@@ -67,13 +68,16 @@ const config: NextConfig = {
   },
   // This isolated preview has no connection to the frozen hosting platform.
   async headers() {
-    if (!preview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true")
-      return [];
+    const indexingEnabled =
+      !preview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true";
     return [
       {
         source: "/:path*",
         headers: [
-          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          ...publicSecurityHeaders(process.env.NODE_ENV === "production"),
+          ...(!indexingEnabled
+            ? [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }]
+            : []),
           ...(preview
             ? [{ key: "Cache-Control", value: "private, no-store" }]
             : []),

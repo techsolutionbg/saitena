@@ -5,6 +5,7 @@ startup are fixture boundaries. The same backup, native-diff, switch, recovery,
 acceptance and watchdog-timeout implementations operate on real containers.
 """
 import hashlib
+import base64
 import importlib.util
 import json
 import os
@@ -13,6 +14,7 @@ import subprocess
 import time
 import urllib.error
 import urllib.request
+from header_profile import paired_runtime
 
 spec=importlib.util.spec_from_file_location('agent','/runner/deploy_agent.py')
 agent=importlib.util.module_from_spec(spec);spec.loader.exec_module(agent)
@@ -49,12 +51,21 @@ original=(start+''' header >X-Robots-Tag "noindex, nofollow, noarchive"
  }
 }
 '''+end+' respond /protected ok 200\n}\n').encode()
-route.write_bytes(original)
+legacy_original = original
+legacy_template = original.replace(('reverse_proxy '+old+':3000').encode(), b'reverse_proxy APPROVED_UPSTREAM:3000')
+fragment = Path('/runner/security-headers.fragment').read_bytes()
+original = start.encode() + fragment + original[len(start):]
+route.write_bytes(legacy_original)
 template=original.replace(('reverse_proxy '+old+':3000').encode(),b'reverse_proxy APPROVED_UPSTREAM:3000')
 config={'release_mode':'public-demo','image_repository':'ghcr.io/techsolutionbg/saitena/public',
  'network':prefix,'runtime_env':str(env),'caddy_file':str(route),'caddy_container':caddy,
  'public_url':'http://'+caddy+':8080/','protected_urls':['http://'+caddy+':8081/protected'],
  'public_block_start':start,'public_block_end':end,'route_template_sha256':hashlib.sha256(template).hexdigest()}
+legacy_config = dict(config, route_template_sha256=hashlib.sha256(legacy_template).hexdigest())
+try: agent.Runtime(legacy_config).guarded_parts(original)
+except RuntimeError as error: assert str(error) == 'approved_origin_guard_or_other_routes_changed'
+else: raise AssertionError('Legacy profile must refuse the changed template')
+assert agent.Runtime(config).guarded_parts(original)
 docker('run','-d','--name',caddy,'--network',prefix,'--mount',f'type=bind,source={route},target=/etc/caddy/Caddyfile',
        '--mount',f'type=volume,source={volume},target=/config','caddy:2.10-alpine')
 def get(path='/',authorized=False,headers=None):
@@ -96,7 +107,72 @@ for _ in range(30):
     try: get(authorized=True).close();break
     except Exception:time.sleep(1)
 else: raise RuntimeError('fixture_start_failed')
-results=[]
+# The separate owner-approved header migration changes only the pinned template.
+# Rehearse both profile/source transitions and restore with the same native guards.
+profile = root/'header-profile.json'
+agent.save(profile, legacy_config)
+legacy_runtime = agent.Runtime(legacy_config)
+migration = root/'header-migration.json'
+legacy_runtime.backup(legacy_original, migration)
+fallback = legacy_runtime.fail_closed_route(legacy_original)
+for key, content in [('candidate', original), ('fallback', fallback)]:
+    legacy_runtime.validate(content)
+    agent.save(migration.with_suffix('.backup')/(key+'.json'), legacy_runtime.native(content))
+legacy_runtime.load_backup_guard(migration)
+before_profile = profile.read_bytes()
+after_profile = (json.dumps(config, sort_keys=True, separators=(',', ':'))+'\n').encode()
+hashes = {key: hashlib.sha256(value).hexdigest() for key,value in
+          [('original',legacy_original),('candidate',original),('fallback',fallback)]}
+profile_runtime = paired_runtime(agent, legacy_config, profile, before_profile, after_profile, hashes)
+profile_runtime.load_backup_guard(migration)
+assert {k for k in config if config[k] != legacy_config[k]} == {'route_template_sha256'}
+inode = route.stat().st_ino
+for target_source, target_profile in [(original,config),(legacy_original,legacy_config),(original,config)]:
+    agent.save(profile, target_profile)
+    try: agent.Runtime(target_profile).guarded_parts(route.read_bytes())
+    except RuntimeError as error: assert str(error) == 'approved_origin_guard_or_other_routes_changed'
+    else: raise AssertionError('Mismatched source/profile must fail closed for deployment')
+    # Use the real paired writer for both activation and restoration.
+    profile.write_bytes(before_profile if target_source==original else after_profile)
+    profile_runtime.apply(target_source)
+    assert agent.Runtime(json.loads(profile.read_bytes())).guarded_parts(route.read_bytes())
+    assert route.stat().st_ino == inode
+with get(authorized=True) as response:
+    assert response.headers['X-Frame-Options'] == 'DENY'
+    assert response.headers['X-Content-Type-Options'] == 'nosniff'
+    assert response.headers['Strict-Transport-Security'] == 'max-age=300'
+    assert "frame-ancestors 'none'" in response.headers['Content-Security-Policy-Report-Only']
+profile_runtime.protected_checks()
+# Unknown concurrent profile/source bytes must never be overwritten.
+profile.write_bytes(after_profile+b' ')
+try: profile_runtime.apply(legacy_original)
+except RuntimeError as error: assert str(error)=='unknown_profile_refused'
+else: raise AssertionError('Concurrent profile edit was overwritten')
+assert profile.read_bytes()==after_profile+b' ' and route.read_bytes()==original
+profile.write_bytes(after_profile)  # Explicit fixture-only operator repair.
+edited_source = original+b'\n# concurrent source edit: preserve\n'
+route.write_bytes(edited_source)
+try: profile_runtime.apply(legacy_original)
+except RuntimeError as error: assert str(error)=='unknown_source_refused'
+else: raise AssertionError('Concurrent source edit was overwritten')
+assert route.read_bytes()==edited_source and profile.read_bytes()==after_profile
+route.write_bytes(original)  # Explicit fixture-only operator repair.
+with get(authorized=True) as response:
+    baseline_digest = hashlib.sha256(response.read()).hexdigest()
+agent.save(migration, {'phase':'prepared','request':{'mode':'public-demo'},
+    'original':base64.b64encode(legacy_original).decode(),
+    'candidate_sha256':hashes['candidate'],'fallback_sha256':hashes['fallback'],
+    'baseline_digest':baseline_digest,'container':old})
+def authorized_digest():
+    with get(authorized=True) as response:return hashlib.sha256(response.read()).hexdigest()
+profile_runtime.public_digest = authorized_digest  # CF transport boundary; same live Caddy guard.
+profile_runtime.apply(fallback)
+agent.guarded_recover(migration, profile_runtime)
+assert route.read_bytes()==legacy_original and profile.read_bytes()==before_profile
+assert json.loads(migration.read_bytes())['phase']=='rolled_back'
+profile_runtime.apply(original)
+assert profile.read_bytes()==after_profile
+results=['header-profile-activation-restore-reactivation','header-profile-restore-from-known-403']
 for version in ['new','bad','timeout','fallback']:
     config['state_dir']=str(root/version);Path(config['state_dir']).mkdir(mode=0o700)
     runtime=FixtureRuntime(config);runtime.armed=False
