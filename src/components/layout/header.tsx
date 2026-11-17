@@ -123,7 +123,7 @@ export function Header({ user }: { user?: HeaderUser | null }) {
             ref={menuToggleRef}
             type="button"
             className="menu-toggle"
-            aria-label="Отвори менюто"
+            aria-label="Меню — отвори"
             aria-expanded={open}
             aria-controls="mobile-sidebar"
             onClick={() => {

@@ -16,7 +16,11 @@ export function Brand({
     <Link
       className={`brand${isPreview ? " brand-preview" : ""} ${className}`.trim()}
       href="/"
-      aria-label="Saitena — начало"
+      aria-label={
+        withTagline
+          ? "Saitena — Вашият бизнес онлайн. — начало"
+          : "Saitena — начало"
+      }
       onClick={onClick}
     >
       <span className="brand-logo" aria-hidden="true">

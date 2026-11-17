@@ -1,0 +1,4 @@
+# REVIEW ONLY. Current protected profile. Keep the existing global noindex headers.
+@saitena_seo_sitemaps path /sitemap /sitemap/ /sitemap.xml /sitemap.xml/
+header @saitena_seo_sitemaps >X-Robots-Tag "noindex, nofollow, noarchive"
+respond @saitena_seo_sitemaps "" 404

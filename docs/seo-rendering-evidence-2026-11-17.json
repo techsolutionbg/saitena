@@ -1,0 +1,632 @@
+{
+  "baselineCommit": "30b81b22f2fc1ade48cf8d06d962c1ac3637c8ab",
+  "capturedAt": "2026-11-17T07:38:09.858Z",
+  "design": [
+    {
+      "width": 375,
+      "theme": "light",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "path": "/services",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "path": "/prices",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 375,
+      "theme": "light",
+      "path": "/faq",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "path": "/services",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "path": "/prices",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "path": "/faq",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "path": "/services",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "path": "/prices",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "path": "/faq",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "path": "/services",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "path": "/prices",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "path": "/faq",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    },
+    {
+      "width": 1920,
+      "theme": "dark",
+      "path": "/",
+      "textIdentical": true,
+      "maxGeometryDeltaPx": 0
+    }
+  ],
+  "delayedTransport": [
+    {
+      "width": 375,
+      "theme": "light",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 10291.953125,
+      "loading": false
+    },
+    {
+      "width": 375,
+      "theme": "dark",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 10291.953125,
+      "loading": false
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 8567.15625,
+      "loading": false
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 8567.15625,
+      "loading": false
+    },
+    {
+      "width": 1366,
+      "theme": "light",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 7527.75,
+      "loading": false
+    },
+    {
+      "width": 1366,
+      "theme": "dark",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 7527.75,
+      "loading": false
+    },
+    {
+      "width": 1920,
+      "theme": "light",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 7556.59375,
+      "loading": false
+    },
+    {
+      "width": 1920,
+      "theme": "dark",
+      "errors": [],
+      "shifts": [],
+      "footerTop": 7556.59375,
+      "loading": false
+    }
+  ],
+  "noJS": [
+    {
+      "userAgent": "NoJS browser",
+      "path": "/",
+      "h1Visible": true,
+      "mainTextLength": 5866,
+      "canonical": "https://saitena.com",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/services",
+      "h1Visible": true,
+      "mainTextLength": 2759,
+      "canonical": "https://saitena.com/services",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": [
+        "Organization",
+        "WebSite",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service"
+      ]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/prices",
+      "h1Visible": true,
+      "mainTextLength": 6492,
+      "canonical": "https://saitena.com/prices",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/about",
+      "h1Visible": true,
+      "mainTextLength": 1034,
+      "canonical": "https://saitena.com/about",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/portfolio",
+      "h1Visible": true,
+      "mainTextLength": 1660,
+      "canonical": "https://saitena.com/portfolio",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/blog",
+      "h1Visible": true,
+      "mainTextLength": 1163,
+      "canonical": "https://saitena.com/blog",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/faq",
+      "h1Visible": true,
+      "mainTextLength": 3021,
+      "canonical": "https://saitena.com/faq",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/contact",
+      "h1Visible": true,
+      "mainTextLength": 742,
+      "canonical": "https://saitena.com/contact",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/sitemap",
+      "h1Visible": true,
+      "mainTextLength": 330,
+      "canonical": "https://saitena.com/sitemap",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/portfolio/forma-studio",
+      "h1Visible": true,
+      "mainTextLength": 1152,
+      "canonical": "https://saitena.com/portfolio/forma-studio",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/portfolio/bloom-botanics",
+      "h1Visible": true,
+      "mainTextLength": 1175,
+      "canonical": "https://saitena.com/portfolio/bloom-botanics",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/portfolio/dobreva-consult",
+      "h1Visible": true,
+      "mainTextLength": 1191,
+      "canonical": "https://saitena.com/portfolio/dobreva-consult",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/portfolio/studio-move",
+      "h1Visible": true,
+      "mainTextLength": 1128,
+      "canonical": "https://saitena.com/portfolio/studio-move",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/blog/what-is-a-website-subscription",
+      "h1Visible": true,
+      "mainTextLength": 912,
+      "canonical": "https://saitena.com/blog/what-is-a-website-subscription",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "NoJS browser",
+      "path": "/blog/how-to-prepare-website-content",
+      "h1Visible": true,
+      "mainTextLength": 831,
+      "canonical": "https://saitena.com/blog/how-to-prepare-website-content",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "Googlebot",
+      "path": "/",
+      "h1Visible": true,
+      "mainTextLength": 5866,
+      "canonical": "https://saitena.com",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "Googlebot",
+      "path": "/services",
+      "h1Visible": true,
+      "mainTextLength": 2759,
+      "canonical": "https://saitena.com/services",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": [
+        "Organization",
+        "WebSite",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service"
+      ]
+    },
+    {
+      "userAgent": "Googlebot",
+      "path": "/contact",
+      "h1Visible": true,
+      "mainTextLength": 742,
+      "canonical": "https://saitena.com/contact",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "Googlebot",
+      "path": "/blog/what-is-a-website-subscription",
+      "h1Visible": true,
+      "mainTextLength": 912,
+      "canonical": "https://saitena.com/blog/what-is-a-website-subscription",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "bingbot",
+      "path": "/",
+      "h1Visible": true,
+      "mainTextLength": 5866,
+      "canonical": "https://saitena.com",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "bingbot",
+      "path": "/services",
+      "h1Visible": true,
+      "mainTextLength": 2759,
+      "canonical": "https://saitena.com/services",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": [
+        "Organization",
+        "WebSite",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service"
+      ]
+    },
+    {
+      "userAgent": "bingbot",
+      "path": "/contact",
+      "h1Visible": true,
+      "mainTextLength": 742,
+      "canonical": "https://saitena.com/contact",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "bingbot",
+      "path": "/blog/what-is-a-website-subscription",
+      "h1Visible": true,
+      "mainTextLength": 912,
+      "canonical": "https://saitena.com/blog/what-is-a-website-subscription",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "OAI-SearchBot",
+      "path": "/",
+      "h1Visible": true,
+      "mainTextLength": 5866,
+      "canonical": "https://saitena.com",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "OAI-SearchBot",
+      "path": "/services",
+      "h1Visible": true,
+      "mainTextLength": 2759,
+      "canonical": "https://saitena.com/services",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": [
+        "Organization",
+        "WebSite",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service"
+      ]
+    },
+    {
+      "userAgent": "OAI-SearchBot",
+      "path": "/contact",
+      "h1Visible": true,
+      "mainTextLength": 742,
+      "canonical": "https://saitena.com/contact",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "OAI-SearchBot",
+      "path": "/blog/what-is-a-website-subscription",
+      "h1Visible": true,
+      "mainTextLength": 912,
+      "canonical": "https://saitena.com/blog/what-is-a-website-subscription",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "PerplexityBot",
+      "path": "/",
+      "h1Visible": true,
+      "mainTextLength": 5866,
+      "canonical": "https://saitena.com",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "PerplexityBot",
+      "path": "/services",
+      "h1Visible": true,
+      "mainTextLength": 2759,
+      "canonical": "https://saitena.com/services",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": [
+        "Organization",
+        "WebSite",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service"
+      ]
+    },
+    {
+      "userAgent": "PerplexityBot",
+      "path": "/contact",
+      "h1Visible": true,
+      "mainTextLength": 742,
+      "canonical": "https://saitena.com/contact",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "PerplexityBot",
+      "path": "/blog/what-is-a-website-subscription",
+      "h1Visible": true,
+      "mainTextLength": 912,
+      "canonical": "https://saitena.com/blog/what-is-a-website-subscription",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    },
+    {
+      "userAgent": "Claude-SearchBot",
+      "path": "/",
+      "h1Visible": true,
+      "mainTextLength": 5866,
+      "canonical": "https://saitena.com",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "Claude-SearchBot",
+      "path": "/services",
+      "h1Visible": true,
+      "mainTextLength": 2759,
+      "canonical": "https://saitena.com/services",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": [
+        "Organization",
+        "WebSite",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service",
+        "Service"
+      ]
+    },
+    {
+      "userAgent": "Claude-SearchBot",
+      "path": "/contact",
+      "h1Visible": true,
+      "mainTextLength": 742,
+      "canonical": "https://saitena.com/contact",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite"]
+    },
+    {
+      "userAgent": "Claude-SearchBot",
+      "path": "/blog/what-is-a-website-subscription",
+      "h1Visible": true,
+      "mainTextLength": 912,
+      "canonical": "https://saitena.com/blog/what-is-a-website-subscription",
+      "robots": "noindex, nofollow, noarchive",
+      "loading": false,
+      "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"]
+    }
+  ],
+  "caddy": {
+    "passed": true,
+    "checks": 36,
+    "closedProfileTested": true,
+    "indexedFixtureOnly": true,
+    "guardsPreserved": true,
+    "originKeyStripped": true,
+    "productionChanged": false
+  },
+  "notes": [
+    "Local production candidate only; no production change or indexing activation.",
+    "Browser checks use local Chrome; CI independently runs pinned Playwright Chromium.",
+    "No field CWV/INP claim."
+  ]
+}

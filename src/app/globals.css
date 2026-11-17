@@ -1024,6 +1024,12 @@ body:has(#mobile-sidebar[open]) .floating-theme {
 .project-meta p {
   margin-top: 9px;
 }
+main .project-card-title {
+  font-size: var(--font-heading);
+  line-height: var(--line-heading);
+  letter-spacing: -0.025em;
+  text-wrap: wrap;
+}
 .project-meta > span {
   border: 1px solid var(--line);
   border-radius: 30px;
@@ -1213,6 +1219,7 @@ body:has(#mobile-sidebar[open]) .floating-theme {
   background: var(--bg);
   color: var(--ink);
   font: inherit;
+  letter-spacing: normal;
   text-align: left;
   transition:
     background 0.2s ease,
@@ -1233,10 +1240,26 @@ body:has(#mobile-sidebar[open]) .floating-theme {
   outline-offset: -5px;
   background: var(--surface);
 }
-.faq-item.is-open .faq-trigger {
+.faq-summary {
+  list-style: none;
+}
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+.faq-summary:focus-visible {
+  outline: none;
+}
+.faq-summary:focus-visible .faq-trigger {
+  position: relative;
+  z-index: 1;
+  outline: 3px solid var(--focus);
+  outline-offset: -5px;
   background: var(--surface);
 }
-.faq-item.is-open .faq-trigger:hover {
+.faq-item[open] .faq-trigger {
+  background: var(--surface);
+}
+.faq-item[open] .faq-trigger:hover {
   background: var(--surface-alt);
 }
 .faq-trigger > svg:first-child {
@@ -1248,7 +1271,7 @@ body:has(#mobile-sidebar[open]) .floating-theme {
   margin-top: 2px;
   transition: transform 0.32s ease;
 }
-.faq-item.is-open .faq-chevron {
+.faq-item[open] .faq-chevron {
   transform: rotate(90deg);
 }
 .faq-answer {
@@ -1261,7 +1284,7 @@ body:has(#mobile-sidebar[open]) .floating-theme {
     opacity 0.25s ease,
     visibility 0.32s;
 }
-.faq-item.is-open .faq-answer {
+.faq-item[open] .faq-answer {
   grid-template-rows: 1fr;
   opacity: 1;
   visibility: visible;

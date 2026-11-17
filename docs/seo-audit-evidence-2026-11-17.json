@@ -1,0 +1,1140 @@
+{
+  "baselineMain": "857aa99615c0c75d7e33961001f2defe4fe5fefa",
+  "live": {
+    "capturedAt": "2026-11-17T06:48:22.094Z",
+    "pages": [
+      {
+        "path": "/",
+        "status": 200,
+        "title": "Сайтове на абонамент – бързи, сигурни и с красив дизайн",
+        "description": "Бързи, сигурни и адаптивни сайтове на абонамент от 30 €/месец. Красив дизайн, SEO и поддръжка. Свържете се с нас чрез контактната форма.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Сайтове на абонамент с красив дизайн, бързина и сигурност"],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/services",
+        "status": 200,
+        "title": "Сайтове на абонамент | Saitena",
+        "description": "Сайтове на абонамент. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Комплексни решения за Вашето онлайн присъствие"],
+        "structuredTypes": [],
+        "images": 19,
+        "missingAlt": 0
+      },
+      {
+        "path": "/prices",
+        "status": 200,
+        "title": "Сайтове на абонамент – планове и цени | Saitena",
+        "description": "Разгледайте плановете за сайтове на абонамент от Saitena. Изработка, красив дизайн, хостинг, SEO и техническа поддръжка. Изберете подходящ план!",
+        "canonicals": ["https://saitena.com/prices"],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Цени за сайтове на абонамент с ясни планове и условия"],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/about",
+        "status": 200,
+        "title": "За Saitena | Saitena",
+        "description": "За Saitena. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Добър сайт. Човешки разговор. Дългосрочна грижа."],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio",
+        "status": 200,
+        "title": "Портфолио за уеб дизайн и изработка на сайтове | Saitena",
+        "description": "Разгледайте проектите в портфолиото на Saitena: фирмени сайтове, сайтове за услуги и специалисти с адаптивен уеб дизайн и ясна структура.",
+        "canonicals": ["https://saitena.com/portfolio"],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Разгледайте примерни дизайни"],
+        "structuredTypes": [],
+        "images": 8,
+        "missingAlt": 0
+      },
+      {
+        "path": "/blog",
+        "status": 200,
+        "title": "Полезно за вашия сайт | Saitena",
+        "description": "Полезно за вашия сайт. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Полезни статии, съвети и идеи за Вашия онлайн бизнес"],
+        "structuredTypes": [],
+        "images": 10,
+        "missingAlt": 0
+      },
+      {
+        "path": "/faq",
+        "status": 200,
+        "title": "Често задавани въпроси за изработка на сайт на абонамент | Saitena",
+        "description": "Всичко важно за цените, изработката, поддръжката и условията на Saitena — обяснено ясно и разбираемо.",
+        "canonicals": ["https://saitena.com/faq"],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Често задавани въпроси за изработка на сайт на абонамент"],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/contact",
+        "status": 200,
+        "title": "Контакти | Saitena",
+        "description": "Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за 30 €/месец без първоначална такса.",
+        "canonicals": ["https://saitena.com/contact"],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Контакти"],
+        "structuredTypes": [],
+        "images": 6,
+        "missingAlt": 0
+      },
+      {
+        "path": "/sitemap",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/privacy",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/cookies",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/terms",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/subscription-terms",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/forma-studio",
+        "status": 200,
+        "title": "Forma Studio | Saitena",
+        "description": "Forma Studio. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Forma Studio"],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/bloom-botanics",
+        "status": 200,
+        "title": "Bloom Botanics | Saitena",
+        "description": "Bloom Botanics. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Bloom Botanics"],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/dobreva-consult",
+        "status": 200,
+        "title": "Добрева Консулт | Saitena",
+        "description": "Добрева Консулт. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Добрева Консулт"],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/studio-move",
+        "status": 200,
+        "title": "Studio Move | Saitena",
+        "description": "Studio Move. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Studio Move"],
+        "structuredTypes": [],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/blog/what-is-a-website-subscription",
+        "status": 200,
+        "title": "Какво означава сайт на абонамент? | Saitena",
+        "description": "Какво означава сайт на абонамент?. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Какво означава сайт на абонамент?"],
+        "structuredTypes": [],
+        "images": 6,
+        "missingAlt": 0
+      },
+      {
+        "path": "/blog/how-to-prepare-website-content",
+        "status": 200,
+        "title": "Какво да подготвите за първия си сайт? | Saitena",
+        "description": "Какво да подготвите за първия си сайт?. Професионални сайтове на абонамент и постоянна техническа грижа.",
+        "canonicals": [],
+        "robots": "noindex, nofollow",
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": ["Какво да подготвите за първия си сайт?"],
+        "structuredTypes": [],
+        "images": 6,
+        "missingAlt": 0
+      }
+    ],
+    "probes": [
+      {
+        "path": "/uslugi",
+        "status": 308,
+        "location": "/services"
+      },
+      {
+        "path": "/planove",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/plans",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/za-nas",
+        "status": 308,
+        "location": "/about"
+      },
+      {
+        "path": "/kontakti",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/vuprosi",
+        "status": 308,
+        "location": "/faq"
+      },
+      {
+        "path": "/zapitvane",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/inquiry",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/karta-na-saita",
+        "status": 308,
+        "location": "/sitemap"
+      },
+      {
+        "path": "/pravni/poveritelnost",
+        "status": 308,
+        "location": "/legal/privacy"
+      },
+      {
+        "path": "/pravni/biskvitki",
+        "status": 308,
+        "location": "/legal/cookies"
+      },
+      {
+        "path": "/pravni/uslovia",
+        "status": 308,
+        "location": "/legal/terms"
+      },
+      {
+        "path": "/pravni/abonamentni-uslovia",
+        "status": 308,
+        "location": "/legal/subscription-terms"
+      },
+      {
+        "path": "/blog/kakvo-e-sait-na-abonament",
+        "status": 308,
+        "location": "/blog/what-is-a-website-subscription"
+      },
+      {
+        "path": "/blog/kak-da-podgotvite-sadarzhanie",
+        "status": 308,
+        "location": "/blog/how-to-prepare-website-content"
+      },
+      {
+        "path": "/concepts/clarity/uslugi",
+        "status": 308,
+        "location": "/services"
+      },
+      {
+        "path": "/concepts/clarity/planove",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/concepts/clarity/plans",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/concepts/clarity/za-nas",
+        "status": 308,
+        "location": "/about"
+      },
+      {
+        "path": "/concepts/clarity/kontakti",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/concepts/clarity/vuprosi",
+        "status": 308,
+        "location": "/faq"
+      },
+      {
+        "path": "/concepts/clarity/zapitvane",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/concepts/clarity/inquiry",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/concepts/clarity/karta-na-saita",
+        "status": 308,
+        "location": "/sitemap"
+      },
+      {
+        "path": "/concepts/clarity/pravni/poveritelnost",
+        "status": 308,
+        "location": "/legal/privacy"
+      },
+      {
+        "path": "/concepts/clarity/pravni/biskvitki",
+        "status": 308,
+        "location": "/legal/cookies"
+      },
+      {
+        "path": "/concepts/clarity/pravni/uslovia",
+        "status": 308,
+        "location": "/legal/terms"
+      },
+      {
+        "path": "/concepts/clarity/pravni/abonamentni-uslovia",
+        "status": 308,
+        "location": "/legal/subscription-terms"
+      },
+      {
+        "path": "/concepts/clarity/blog/kakvo-e-sait-na-abonament",
+        "status": 308,
+        "location": "/blog/what-is-a-website-subscription"
+      },
+      {
+        "path": "/concepts/clarity/blog/kak-da-podgotvite-sadarzhanie",
+        "status": 308,
+        "location": "/blog/how-to-prepare-website-content"
+      },
+      {
+        "path": "/services/",
+        "status": 308,
+        "location": "/services"
+      },
+      {
+        "path": "/seo-audit-missing-20261117",
+        "status": 200
+      },
+      {
+        "path": "/blog/not-a-real-post",
+        "status": 200
+      },
+      {
+        "path": "/concepts/clarity/services",
+        "status": 200
+      },
+      {
+        "path": "/robots.txt",
+        "status": 200,
+        "body": "User-agent: *\nDisallow: /"
+      },
+      {
+        "path": "/sitemap.xml",
+        "status": 404,
+        "body": ""
+      },
+      {
+        "path": "/blog?category=seo",
+        "status": 200
+      },
+      {
+        "path": "/contact?plan=START",
+        "status": 200
+      }
+    ],
+    "brokenLinks": [
+      {
+        "href": "/sitemap",
+        "status": 404
+      },
+      {
+        "href": "/legal/privacy",
+        "status": 404
+      },
+      {
+        "href": "/legal/cookies",
+        "status": 404
+      },
+      {
+        "href": "/legal/terms",
+        "status": 404
+      },
+      {
+        "href": "/legal/subscription-terms",
+        "status": 404
+      },
+      {
+        "href": "/cdn-cgi/l/email-protection",
+        "status": 404
+      }
+    ],
+    "brokenImages": []
+  },
+  "localPublicDemo": {
+    "capturedAt": "2026-11-17T07:00:07.952Z",
+    "pages": [
+      {
+        "path": "/",
+        "status": 200,
+        "title": "Изработка на сайтове на абонамент с поддръжка | Saitena",
+        "description": "Фирмен сайт на абонамент от 30 €/месец без първоначална такса. Saitena съчетава дизайн, изработка, хостинг и техническа поддръжка в една услуга.",
+        "canonicals": ["https://saitena.com"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Изработка на сайтове на абонамент с поддръжка | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Сайтове на абонамент с красив дизайн, бързина и сигурност"],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/services",
+        "status": 200,
+        "title": "Изработка и поддръжка на уебсайтове | Saitena",
+        "description": "Какво включва услугата на Saitena: изработка на адаптивен уебсайт, хостинг и домейн, техническа поддръжка, сигурност и основа за SEO видимост.",
+        "canonicals": ["https://saitena.com/services"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Изработка и поддръжка на уебсайтове | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Комплексни решения за Вашето онлайн присъствие"],
+        "structuredTypes": [
+          "Organization",
+          "WebSite",
+          "Service",
+          "Service",
+          "Service",
+          "Service",
+          "Service",
+          "Service"
+        ],
+        "images": 19,
+        "missingAlt": 0
+      },
+      {
+        "path": "/prices",
+        "status": 200,
+        "title": "Сайтове на абонамент – планове и цени | Saitena",
+        "description": "Разгледайте плановете за сайтове на абонамент от Saitena. Изработка, красив дизайн, хостинг, SEO и техническа поддръжка. Изберете подходящ план!",
+        "canonicals": ["https://saitena.com/prices"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Сайтове на абонамент – планове и цени | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Цени за сайтове на абонамент с ясни планове и условия"],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/about",
+        "status": 200,
+        "title": "За Saitena — подход към изработката на сайтове",
+        "description": "Запознайте се с подхода на Saitena към сайтовете на абонамент: ясен обхват, дизайн според бизнеса и постоянна техническа грижа след изработката.",
+        "canonicals": ["https://saitena.com/about"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "За Saitena — подход към изработката на сайтове",
+        "twitterCard": "summary_large_image",
+        "h1": ["Добър сайт. Човешки разговор. Дългосрочна грижа."],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio",
+        "status": 200,
+        "title": "Портфолио за уеб дизайн и изработка на сайтове | Saitena",
+        "description": "Разгледайте концептуални уеб дизайни за фирмени сайтове, услуги и специалисти. Примерите показват визуални посоки и не са потвърдени клиентски проекти.",
+        "canonicals": ["https://saitena.com/portfolio"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Портфолио за уеб дизайн и изработка на сайтове | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Разгледайте примерни дизайни"],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 8,
+        "missingAlt": 0
+      },
+      {
+        "path": "/blog",
+        "status": 200,
+        "title": "Блог за сайтове, съдържание и поддръжка | Saitena",
+        "description": "Разгледайте примерни редакционни материали за сайтовете на абонамент и подготовката на съдържание. Практични въпроси преди изработката на фирмен сайт.",
+        "canonicals": ["https://saitena.com/blog"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Блог за сайтове, съдържание и поддръжка | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Полезни статии, съвети и идеи за Вашия онлайн бизнес"],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 10,
+        "missingAlt": 0
+      },
+      {
+        "path": "/faq",
+        "status": 200,
+        "title": "Въпроси за сайтовете на абонамент | Saitena",
+        "description": "Отговори за изработката на сайт на абонамент: цени и планове, включена поддръжка, домейн, хостинг и условия. Вижте потвърдената информация за услугата.",
+        "canonicals": ["https://saitena.com/faq"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Въпроси за сайтовете на абонамент | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Често задавани въпроси за изработка на сайт на абонамент"],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/contact",
+        "status": 200,
+        "title": "Контакти и запитване за изработка на сайт | Saitena",
+        "description": "Обсъдете фирмения си сайт със Saitena. Изпратете запитване за изработка, абонаментен план или поддръжка и опишете нуждите на Вашия бизнес.",
+        "canonicals": ["https://saitena.com/contact"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Контакти и запитване за изработка на сайт | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Контакти"],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 6,
+        "missingAlt": 0
+      },
+      {
+        "path": "/sitemap",
+        "status": 200,
+        "title": "Карта на сайта — страници и полезни връзки | Saitena",
+        "description": "Намерете услугите, цените, примерните дизайни, въпросите и контактите на Saitena. Преглед на основните страници и редакционните материали.",
+        "canonicals": ["https://saitena.com/sitemap"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Карта на сайта — страници и полезни връзки | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Всичко на едно място."],
+        "structuredTypes": ["Organization", "WebSite"],
+        "images": 6,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/privacy",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/cookies",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/terms",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/legal/subscription-terms",
+        "status": 404,
+        "title": "",
+        "description": null,
+        "canonicals": [],
+        "robots": null,
+        "openGraphTitle": null,
+        "twitterCard": null,
+        "h1": [],
+        "structuredTypes": [],
+        "images": 0,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/forma-studio",
+        "status": 200,
+        "title": "Forma Studio — примерен уеб дизайн | Saitena",
+        "description": "Концептуален дизайн, не клиентски проект. Сайт за архитектурно студио: големи визуални полета, подбрани проекти и лесен път към запитване.",
+        "canonicals": ["https://saitena.com/portfolio/forma-studio"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Forma Studio — примерен уеб дизайн | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Forma Studio"],
+        "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/bloom-botanics",
+        "status": 200,
+        "title": "Bloom Botanics — примерен уеб дизайн | Saitena",
+        "description": "Концептуален дизайн, не клиентски проект. Сайт за флорално ателие: естествена палитра, колекции като галерия и покана за индивидуална поръчка чрез запитване.",
+        "canonicals": ["https://saitena.com/portfolio/bloom-botanics"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Bloom Botanics — примерен уеб дизайн | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Bloom Botanics"],
+        "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/dobreva-consult",
+        "status": 200,
+        "title": "Добрева Консулт — примерен уеб дизайн | Saitena",
+        "description": "Концептуален дизайн, не клиентски проект. Сайт за независим консултант: разбираемо представяне на услугите, професионален профил и кратка контактна форма.",
+        "canonicals": ["https://saitena.com/portfolio/dobreva-consult"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Добрева Консулт — примерен уеб дизайн | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Добрева Консулт"],
+        "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/portfolio/studio-move",
+        "status": 200,
+        "title": "Studio Move — примерен уеб дизайн | Saitena",
+        "description": "Концептуален дизайн, не клиентски проект. Сайт за студио за движение: ясна програма, представяне на заниманията и екипа и удобен път към запитване.",
+        "canonicals": ["https://saitena.com/portfolio/studio-move"],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Studio Move — примерен уеб дизайн | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Studio Move"],
+        "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"],
+        "images": 7,
+        "missingAlt": 0
+      },
+      {
+        "path": "/blog/what-is-a-website-subscription",
+        "status": 200,
+        "title": "Какво означава сайт на абонамент? | Saitena",
+        "description": "Как се различават изработката, поддръжката и месечната грижа — и какво да уточните предварително.",
+        "canonicals": [
+          "https://saitena.com/blog/what-is-a-website-subscription"
+        ],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Какво означава сайт на абонамент? | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Какво означава сайт на абонамент?"],
+        "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"],
+        "images": 6,
+        "missingAlt": 0
+      },
+      {
+        "path": "/blog/how-to-prepare-website-content",
+        "status": 200,
+        "title": "Какво да подготвите за първия си сайт? | Saitena",
+        "description": "Кратък списък с информацията, която помага една идея да стане ясна структура.",
+        "canonicals": [
+          "https://saitena.com/blog/how-to-prepare-website-content"
+        ],
+        "robots": "noindex, nofollow, noarchive",
+        "openGraphTitle": "Какво да подготвите за първия си сайт? | Saitena",
+        "twitterCard": "summary_large_image",
+        "h1": ["Какво да подготвите за първия си сайт?"],
+        "structuredTypes": ["Organization", "WebSite", "BreadcrumbList"],
+        "images": 6,
+        "missingAlt": 0
+      }
+    ],
+    "probes": [
+      {
+        "path": "/uslugi",
+        "status": 308,
+        "location": "/services"
+      },
+      {
+        "path": "/planove",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/plans",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/za-nas",
+        "status": 308,
+        "location": "/about"
+      },
+      {
+        "path": "/kontakti",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/vuprosi",
+        "status": 308,
+        "location": "/faq"
+      },
+      {
+        "path": "/zapitvane",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/inquiry",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/karta-na-saita",
+        "status": 308,
+        "location": "/sitemap"
+      },
+      {
+        "path": "/pravni/poveritelnost",
+        "status": 308,
+        "location": "/legal/privacy"
+      },
+      {
+        "path": "/pravni/biskvitki",
+        "status": 308,
+        "location": "/legal/cookies"
+      },
+      {
+        "path": "/pravni/uslovia",
+        "status": 308,
+        "location": "/legal/terms"
+      },
+      {
+        "path": "/pravni/abonamentni-uslovia",
+        "status": 308,
+        "location": "/legal/subscription-terms"
+      },
+      {
+        "path": "/blog/kakvo-e-sait-na-abonament",
+        "status": 308,
+        "location": "/blog/what-is-a-website-subscription"
+      },
+      {
+        "path": "/blog/kak-da-podgotvite-sadarzhanie",
+        "status": 308,
+        "location": "/blog/how-to-prepare-website-content"
+      },
+      {
+        "path": "/concepts/clarity/uslugi",
+        "status": 308,
+        "location": "/services"
+      },
+      {
+        "path": "/concepts/clarity/planove",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/concepts/clarity/plans",
+        "status": 308,
+        "location": "/prices"
+      },
+      {
+        "path": "/concepts/clarity/za-nas",
+        "status": 308,
+        "location": "/about"
+      },
+      {
+        "path": "/concepts/clarity/kontakti",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/concepts/clarity/vuprosi",
+        "status": 308,
+        "location": "/faq"
+      },
+      {
+        "path": "/concepts/clarity/zapitvane",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/concepts/clarity/inquiry",
+        "status": 308,
+        "location": "/contact"
+      },
+      {
+        "path": "/concepts/clarity/karta-na-saita",
+        "status": 308,
+        "location": "/sitemap"
+      },
+      {
+        "path": "/concepts/clarity/pravni/poveritelnost",
+        "status": 308,
+        "location": "/legal/privacy"
+      },
+      {
+        "path": "/concepts/clarity/pravni/biskvitki",
+        "status": 308,
+        "location": "/legal/cookies"
+      },
+      {
+        "path": "/concepts/clarity/pravni/uslovia",
+        "status": 308,
+        "location": "/legal/terms"
+      },
+      {
+        "path": "/concepts/clarity/pravni/abonamentni-uslovia",
+        "status": 308,
+        "location": "/legal/subscription-terms"
+      },
+      {
+        "path": "/concepts/clarity/blog/kakvo-e-sait-na-abonament",
+        "status": 308,
+        "location": "/blog/what-is-a-website-subscription"
+      },
+      {
+        "path": "/concepts/clarity/blog/kak-da-podgotvite-sadarzhanie",
+        "status": 308,
+        "location": "/blog/how-to-prepare-website-content"
+      },
+      {
+        "path": "/services/",
+        "status": 308,
+        "location": "/services"
+      },
+      {
+        "path": "/seo-audit-missing-20261117",
+        "status": 404
+      },
+      {
+        "path": "/blog/not-a-real-post",
+        "status": 404
+      },
+      {
+        "path": "/concepts/clarity/services",
+        "status": 308,
+        "location": "/services"
+      },
+      {
+        "path": "/robots.txt",
+        "status": 200,
+        "body": "User-Agent: *\nDisallow: /\n\n"
+      },
+      {
+        "path": "/sitemap.xml",
+        "status": 200,
+        "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n</urlset>\n"
+      },
+      {
+        "path": "/blog?category=seo",
+        "status": 200
+      },
+      {
+        "path": "/contact?plan=START",
+        "status": 200
+      }
+    ],
+    "brokenLinks": [],
+    "brokenImages": []
+  },
+  "lighthouse": [
+    {
+      "artifact": "live-lighthouse-mobile.json",
+      "url": "https://saitena.com/",
+      "capturedAt": "2026-11-17T06:56:11.410Z",
+      "lighthouseVersion": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+      "formFactor": "mobile",
+      "performance": 0.91,
+      "accessibility": 0.98,
+      "seo": 0.63,
+      "lcpMs": 1166.608,
+      "cls": 0,
+      "tbtMs": 363,
+      "runWarnings": []
+    },
+    {
+      "artifact": "live-lighthouse-desktop.json",
+      "url": "https://saitena.com/",
+      "capturedAt": "2026-11-17T06:57:35.058Z",
+      "lighthouseVersion": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+      "formFactor": "desktop",
+      "performance": 1,
+      "accessibility": 0.98,
+      "seo": 0.63,
+      "lcpMs": 453.091,
+      "cls": 0.00002954843977898772,
+      "tbtMs": 4,
+      "runWarnings": []
+    },
+    {
+      "artifact": "live-lighthouse-services-mobile.json",
+      "url": "https://saitena.com/services",
+      "capturedAt": "2026-11-17T06:59:36.057Z",
+      "lighthouseVersion": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+      "formFactor": "mobile",
+      "performance": 0.96,
+      "accessibility": 1,
+      "seo": 0.66,
+      "lcpMs": 2548.444,
+      "cls": 0,
+      "tbtMs": 131,
+      "runWarnings": []
+    },
+    {
+      "artifact": "live-lighthouse-prices-mobile.json",
+      "url": "https://saitena.com/prices",
+      "capturedAt": "2026-11-17T07:01:28.100Z",
+      "lighthouseVersion": "13.6.0",
+      "browser": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+      "formFactor": "mobile",
+      "performance": 0.98,
+      "accessibility": 1,
+      "seo": 0.69,
+      "lcpMs": 1499.8785,
+      "cls": 0,
+      "tbtMs": 164,
+      "runWarnings": []
+    }
+  ],
+  "browser": {
+    "viewports": [375, 768, 1366],
+    "pageChecks": 45,
+    "enlargedTextChecks": 4,
+    "noJS": [
+      {
+        "userAgent": "Googlebot",
+        "path": "/",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "Googlebot",
+        "path": "/services",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "Googlebot",
+        "path": "/blog/what-is-a-website-subscription",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "bingbot",
+        "path": "/",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "bingbot",
+        "path": "/services",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "bingbot",
+        "path": "/blog/what-is-a-website-subscription",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "OAI-SearchBot",
+        "path": "/",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "OAI-SearchBot",
+        "path": "/services",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "OAI-SearchBot",
+        "path": "/blog/what-is-a-website-subscription",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "PerplexityBot",
+        "path": "/",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "PerplexityBot",
+        "path": "/services",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "PerplexityBot",
+        "path": "/blog/what-is-a-website-subscription",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "Claude-SearchBot",
+        "path": "/",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "Claude-SearchBot",
+        "path": "/services",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      },
+      {
+        "userAgent": "Claude-SearchBot",
+        "path": "/blog/what-is-a-website-subscription",
+        "h1Visible": false,
+        "mainText": "Зареждаме страницата…",
+        "metadataInHead": true
+      }
+    ]
+  },
+  "fieldData": {
+    "available": false,
+    "reason": "PageSpeed Insights public API returned HTTP 429 quota exhausted; no Search Console/CrUX account data available."
+  }
+}

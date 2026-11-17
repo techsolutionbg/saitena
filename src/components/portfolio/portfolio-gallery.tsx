@@ -9,10 +9,13 @@ import { ScrollReveal } from "@/components/ui/scroll-reveal";
 export function PortfolioGallery({
   limit,
   mobileLimit,
+  headingLevel = 3,
 }: {
   limit?: number;
   mobileLimit?: number;
+  headingLevel?: 2 | 3;
 }) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const [filter, setFilter] = useState("Всички");
   const [displayedFilter, setDisplayedFilter] = useState("Всички");
   const galleryId = useId();
@@ -92,7 +95,9 @@ export function PortfolioGallery({
               </div>
               <div className="project-meta">
                 <div>
-                  <h3>{project.name}</h3>
+                  <Heading className="project-card-title">
+                    {project.name}
+                  </Heading>
                   <p>{project.category}</p>
                 </div>
               </div>

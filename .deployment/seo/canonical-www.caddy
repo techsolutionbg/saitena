@@ -1,0 +1,4 @@
+# REVIEW ONLY. Import inside the existing authorized public handle/route,
+# after origin/Cloudflare/worker denials. Never import before the guard.
+@saitena_seo_www host www.saitena.com
+redir @saitena_seo_www https://saitena.com{uri} 308

@@ -10,20 +10,18 @@ import { AppearanceControls } from "@/components/appearance/appearance-controls"
 import { startPlan } from "@/lib/plans";
 import { FloatingCall } from "@/components/contact/floating-call";
 import { isPreview, releaseMode } from "@/lib/release-mode";
+import { robotsMetadata, siteUrl } from "@/lib/seo";
 import "./globals.css";
 import "./artwork.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://saitena.com"),
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Сайтове на абонамент с изработка и поддръжка | Saitena",
     template: "%s | Saitena",
   },
   description: `Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за ${startPlan.price} €/месец без първоначална такса.`,
-  robots: {
-    index: !isPreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
-    follow: !isPreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
-  },
+  robots: robotsMetadata(),
   icons: {
     icon: [
       {
