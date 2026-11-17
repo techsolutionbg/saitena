@@ -4,8 +4,9 @@
   align-items: center;
   justify-content: center;
   gap: 24px;
-  min-height: 60vh;
-  min-height: 60svh;
+  /* Keep the shared footer below the viewport until streamed content replaces us. */
+  min-height: 100vh;
+  min-height: 100svh;
   padding: 40px 20px;
   text-align: center;
   background: radial-gradient(ellipse at center, var(--surface), var(--bg) 70%);
