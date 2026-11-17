@@ -1,0 +1,24 @@
+# Separate reviewed frontend artifact; never replace tech-solution-web-1.
+name: saitena-website-portal-candidate
+services:
+  portal:
+    image: ${PORTAL_IMAGE:?Set separately reviewed portal image digest}
+    ports: ["127.0.0.1:13001:3000"]
+    mem_limit: 512m
+    cpus: 1
+    restart: unless-stopped
+    networks:
+      edge:
+        aliases: [saitena-portal-candidate]
+    logging:
+      driver: local
+      options: {max-size: 10m, max-file: "3"}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+networks:
+  edge:
+    external: true
+    name: ${EDGE_NETWORK:?Verify actual Caddy network before approval}

@@ -1,0 +1,47 @@
+services:
+  api:
+    environment:
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAIL_USERNAME: ""
+      MAIL_PASSWORD: ""
+      MAIL_ENCRYPTION: ""
+      MAIL_AUTO_TLS: "false"
+      MAIL_REQUIRE_TLS: "false"
+      MAIL_FROM_ADDRESS: auth-dev@example.test
+      MAIL_FROM_NAME: Saitena Auth Dev
+
+  mailpit:
+    image: axllent/mailpit:v1.33.1
+    restart: "no"
+    ports:
+      - "127.0.0.1:18027:8025"
+
+  saitena:
+    image: node:24-alpine
+    init: true
+    working_dir: /app
+    env_file: ./apps/saitena/.env
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:8001
+      NEXT_PUBLIC_CLIENT_AREA_URL: http://127.0.0.1:3001
+    command: npm run dev -- --hostname 0.0.0.0
+    ports:
+      - "127.0.0.1:${SAITENA_PORT:-3000}:3000"
+    volumes:
+      - ./apps/saitena:/app
+      - saitena_node_modules:/app/node_modules
+      - saitena_next:/app/.next
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  saitena_node_modules:
+  saitena_next:

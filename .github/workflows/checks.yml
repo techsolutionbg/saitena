@@ -1,0 +1,72 @@
+name: Saitena checks (no deployment)
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+  deployments: read
+concurrency:
+  group: saitena-checks-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Deployment policy API capability report (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/report-deployment-api.mjs
+      - run: npm ci --no-audit --no-fund
+      - run: npm ci --prefix tools/lint --no-audit --no-fund
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: node --test tests/*.test.mjs
+      - run: python3 -m unittest discover -s tests -p 'test_deploy_agent.py' -v
+      - run: node scripts/audit-git-candidate.mjs
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_AUTH_ENABLED: "false"
+          NEXT_PUBLIC_INDEXING_ENABLED: "false"
+          NEXT_TELEMETRY_DISABLED: "1"
+      - run: node scripts/check-production-candidate.mjs
+      - run: docker build --target candidate -f .deployment/Dockerfile -t saitena-public:check .
+      - name: Isolated HTTPS and SMTP integration
+        env:
+          SAITENA_STAGING_IMAGE: saitena-public:check
+        run: |
+          docker compose -p saitena-website-ci -f .deployment/compose.staging.yaml up -d --wait
+          mkdir -p qa-output
+          for i in $(seq 1 30); do
+            docker compose -p saitena-website-ci -f .deployment/compose.staging.yaml cp tls:/data/caddy/pki/authorities/local/root.crt qa-output/staging-root.crt && break
+            sleep 1
+          done
+          node scripts/check-https-contact.mjs
+      - name: Deployment failure and rollback rehearsal
+        run: python3 scripts/test-deployment-staging.py
+      - name: Private Preview build and privacy checks
+        run: |
+          docker build --target candidate --build-arg NEXT_PUBLIC_RELEASE_MODE=private-preview -f .deployment/Dockerfile -t saitena-website-public:preview-check .
+          node scripts/test-private-preview.mjs
+          node scripts/test-preview-deployment.mjs
+      - name: Public demo build and privacy checks (no publication)
+        env:
+          SAITENA_PREVIEW_TEST_MODE: public-demo
+          SAITENA_PREVIEW_TEST_IMAGE: saitena-website-public:demo-check
+        run: |
+          docker build --target release --build-arg NEXT_PUBLIC_RELEASE_MODE=public-demo -f .deployment/Dockerfile -t saitena-website-public:demo-check .
+          node scripts/test-private-preview.mjs
+      - name: Public demo origin guard and rollback rehearsal
+        env:
+          SAITENA_DEPLOY_TEST_MODE: public-demo
+        run: node scripts/test-preview-deployment.mjs

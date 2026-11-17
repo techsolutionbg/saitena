@@ -9,6 +9,7 @@ import { FeatureHelp } from "@/components/ui/feature-help";
 import { MobilePlanDisclosure } from "./mobile-plan-disclosure";
 import { PricesHero } from "./prices-hero";
 import styles from "./plans.module.css";
+import { isPreview } from "@/lib/release-mode";
 
 function ComparisonValue({
   value,
@@ -106,6 +107,11 @@ export function PlansPage() {
   return (
     <>
       <PricesHero />
+      {isPreview && (
+        <p className="wrap demo-prices-note">
+          Демонстрационни цени и планове — не са търговска оферта.
+        </p>
+      )}
       <CustomPlanOffer />
       <section
         className={`wrap ${styles.plans}`}

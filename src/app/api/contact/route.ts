@@ -1,5 +1,6 @@
 import { validateContactMessage } from "@/lib/contact-message";
-import { sendLocalContactMail } from "@/lib/local-contact-mail";
+import { sendContactMail } from "@/lib/contact-mail";
+import { hasPreviewProtections } from "@/lib/release-mode";
 
 export const runtime = "nodejs";
 const MAX_BODY_BYTES = 20_000;
@@ -13,17 +14,14 @@ function response(error: string, status: number) {
 }
 
 export async function POST(request: Request) {
-  if (process.env.NODE_ENV !== "development")
-    return response(
-      "Изпращането е достъпно само в локалната тестова среда.",
-      503,
-    );
   if (
     request.headers.get("origin") !==
       `${new URL(request.url).protocol}//${request.headers.get("host")}` ||
     request.headers.get("sec-fetch-site") === "cross-site"
   )
     return response("Невалиден източник на заявката.", 403);
+  if (hasPreviewProtections)
+    return response("Изпращането на съобщения е изключено.", 403);
   if (request.headers.get("content-type")?.split(";")[0] !== "application/json")
     return response("Неподдържан формат на данните.", 415);
 
@@ -62,7 +60,7 @@ export async function POST(request: Request) {
   if (!validation.ok) return response(validation.error, 400);
 
   try {
-    await sendLocalContactMail(validation.message);
+    await sendContactMail(validation.message);
     return Response.json(
       { ok: true },
       { headers: { "Cache-Control": "no-store" } },

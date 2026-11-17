@@ -1,0 +1,29 @@
+# Final technical preparation — 15 November 2026
+
+Continue Draft PR #1, codex/first-production-candidate only. Legal/company data is deferred and does not block technical checks. No merge/deployment or production infrastructure mutation is authorized.
+
+## Assets
+
+See runtime-asset-provenance.md for 24 individual records and binary-review-manifest.json for exact bytes/hashes and replacement proposals. Documentation establishes project-generation records for 16 illustrations, owner-supplied origins for four home backgrounds, user-reference derivatives for three logos, and no located generation/license record for the FAQ background. No purchased stock-license receipt was found. Generated-from-reference is NOT evidence that rights to the reference were cleared. Publication rights stay pending; no assets are falsely approved. No illustration was replaced without need: preserve the current design while owner reviews provenance. For the five uncertain backgrounds, own CSS gradients/Canvas waves are a suitable original replacement; brand redesign requires owner approval. Fresh original, unreferenced generation is an alternative for reference-based illustrations if owner cannot confirm rights. Runtime assets already use optimized formats and responsive dimensions; no further lossy degradation was applied.
+
+Release gate now verifies SHA256, missing files AND unlisted public files, in addition to rights and legal drafts. A previous approval cannot authorize different bytes. Tests cover approved fixture, pending rights, modified image, new public file and legal draft. Legal drafts remain accessible only in private staging and cannot pass the release target.
+
+## SMTP
+
+Actual variables are CONTACT_MAIL_MODE, CONTACT_SMTP_HOST, CONTACT_SMTP_PORT, CONTACT_SMTP_USER, CONTACT_SMTP_PASSWORD, CONTACT_MAIL_FROM and CONTACT_MAIL_TO. Blank protected-runtime template is .deployment/smtp.env.example. Need owner/provider-supplied hostname, 465 or 587, credentials, authorized From, fixed business recipient and reviewed SPF/DKIM/DMARC. No actual credentials are printed or committed. TLS certificate verification, STARTTLS requirement on non-465 production transport, auth, fixed recipient, visitor Reply-To, timeouts, generic error response and file/URL access disabling remain in place. No auto-reply to visitor. Per-process global 20/minute abuse limit, size/content/origin validation work but do not replace approved edge/distributed limits or a delivery queue. No production mail delivery claim is made.
+
+CI now runs ALL existing node tests (blog, links, contact validation/config, release gate), builds production, checks 12 routes/metadata and ALL 24 runtime assets, builds Docker and starts a separate local HTTPS/Mailpit Compose project. It verifies explicit CA+hostname trust and receipt only by inbox@saitena.test. No production APIs or mailboxes are used. Prior local theme/mobile/rollback evidence remains applicable: this change does not alter styles or image bytes. Metadata now has production metadataBase and consistent noindex head/header/robots defaults. Production registration/indexing stay disabled.
+
+## Production read-only evidence and candidates
+
+Re-read actual Caddyfile and running container/network inventory. Existing clients -> PHP2:8443 with original cookie filtering, admin/api/infra, and public under-construction routing are unchanged. Caddy remains on tech-solution_default; all previously healthy services remain healthy. Candidate artifacts in this repository include public/portal Dockerfiles, separate Compose projects with bounded logs/resources/health, and Caddyfile.frontends.fragment. Portal build uses separately reviewed apps/web source, Dockerfile-specific ignore excludes .env/Git/build outputs; it is not silently bundled with or published by this website repository. Public release remains a separate image target that refuses incomplete approval.
+
+Full merged Caddy file must be captured from LIVE production and validated before separate activation approval. Fragment is not a complete replacement file. Keep clients/API/admin/infra unchanged. portal.saitena.com needs approved DNS and public ACME validation before routing. Future Sanctum append-only change adds portal origin/host while preserving current exact production lists and .saitena.com/Secure/HttpOnly/Lax. Do not change Laravel for information-only website publication.
+
+Cloudflare dashboard last inspection was a login screen, not an authenticated zone session. No authorized token/connector is available in this task. Public DNS/TLS and Caddy observations do not verify internal SSL mode, WAF, DDoS options, cache/proxy rules or origin trust. These remain explicitly unconfirmed until authorized read-only access. No DNS/settings changes were made. The owner checklist specifies the required access and information.
+
+## Activation/rollback
+
+Use first-release-deployment-plan.md and first-release-owner-checklist.md. Capture live config/image/network/overlays immediately before separately approved deployment. Stage new frontend projects on loopback first; validate merged Caddy and reload only after checks. For rollback restore the complete captured mounted Caddy file with a mount-aware procedure, validate/reload and inspect LIVE JSON. Previous services stay running; no DB migration, user change or volume deletion. Local staging image rollback was previously rehearsed successfully. Production routing rollback remains a reviewed procedure, not a production action already tested.
+
+Remaining human/infrastructure gates: rights to 24 assets/references, business/contact/legal decisions, SMTP secrets through protected runtime, authenticated Cloudflare audit, separately approved portal DNS/full Caddy activation bundle. Technical work and candidate CI continue despite these deferred inputs.

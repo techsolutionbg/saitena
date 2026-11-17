@@ -1,6 +1,7 @@
 export const servicesCatalog = [
   {
     id: "website",
+    image: "/images/services-website-v1.webp",
     title: "Изработка на уебсайт",
     description:
       "Разработваме модерни, бързи и адаптивни уебсайтове, съобразени с дейността, целите и нуждите на Вашия бизнес.",
@@ -9,6 +10,7 @@ export const servicesCatalog = [
   },
   {
     id: "hosting",
+    image: "/images/services-hosting-v1.webp",
     title: "Хостинг и домейн",
     description:
       "Осигуряваме хостинг за Вашия сайт и съдействие при регистрацията и управлението на домейн.",
@@ -17,6 +19,7 @@ export const servicesCatalog = [
   },
   {
     id: "security",
+    image: "/images/services-security-v1.webp",
     title: "Сигурност и GDPR",
     description:
       "Прилагаме мерки за защита на сайта, сигурна връзка и технически решения, подпомагащи спазването на изискванията за защита на личните данни.",
@@ -25,6 +28,7 @@ export const servicesCatalog = [
   },
   {
     id: "support",
+    image: "/images/services-support-v1.webp",
     title: "Поддръжка и грижа",
     description:
       "Грижим се за актуализациите, наблюдението и техническата поддръжка, за да работи сайтът Ви надеждно.",
@@ -33,6 +37,7 @@ export const servicesCatalog = [
   },
   {
     id: "seo",
+    image: "/images/services-seo-v1.webp",
     title: "SEO и видимост",
     description:
       "Оптимизираме структурата, съдържанието и техническите характеристики на сайта за по-добра видимост в Google и по-лесно разбиране от AI търсачките.",
@@ -41,6 +46,7 @@ export const servicesCatalog = [
   },
   {
     id: "growth",
+    image: "/images/services-growth-v1.webp",
     title: "Развитие и надграждане",
     description:
       "Добавяме нови страници, функционалности и подобрения, когато нуждите на Вашия бизнес се променят.",

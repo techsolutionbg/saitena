@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "lint": "node tools/lint/node_modules/eslint/bin/eslint.js src next.config.ts --max-warnings=0",
+    "test:contact:config": "node --test tests/contact-mail-config.test.mjs",
     "test:contact": "node --test tests/contact-message.test.mjs",
     "test:contact:integration": "node scripts/test-contact-mail.mjs",
     "mail:up": "docker compose -f compose.mailpit.yaml up -d",
@@ -10,7 +12,7 @@
     "dev:lan": "node scripts/lan-preview.mjs",
     "build": "next build",
     "start": "next start --hostname 127.0.0.1",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "format:file": "prettier --write",
     "format:check": "prettier --check",
     "format:watch": "node scripts/format-watch.mjs"

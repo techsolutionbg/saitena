@@ -1,0 +1,6 @@
+# Asset integrity hashes must be identical in Windows checkouts and Linux builds.
+preview-assets/*.svg text eol=lf
+# Linux provisioning files must keep executable/config syntax on Windows checkouts.
+.deployment/restricted-shell text eol=lf
+.deployment/sshd-match.conf text eol=lf
+.deployment/sudoers text eol=lf

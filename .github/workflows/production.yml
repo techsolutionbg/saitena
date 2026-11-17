@@ -1,0 +1,113 @@
+name: Approved production release
+on:
+  workflow_run:
+    workflows: [Saitena checks (no deployment)]
+    branches: [main]
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: saitena-production
+  cancel-in-progress: false
+jobs:
+  authorize:
+    if: github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository && vars.SAITENA_AUTODEPLOY_ENABLED == 'true'
+    permissions:
+      { contents: read, actions: read, deployments: read, pull-requests: read }
+    runs-on: ubuntu-24.04
+    outputs:
+      sha: ${{ steps.policy.outputs.sha }}
+      release: ${{ steps.policy.outputs.release }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 24 }
+      - id: policy
+        env:
+          GH_TOKEN: ${{ secrets.SAITENA_RELEASE_POLICY_TOKEN || github.token }}
+        run: node scripts/authorize-main-deployment.mjs
+  build:
+    timeout-minutes: 30
+    needs: authorize
+    runs-on: ubuntu-24.04
+    permissions: { contents: read, packages: write }
+    outputs:
+      digest: ${{ steps.image.outputs.digest }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.authorize.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 24 }
+      - run: node scripts/check-release-readiness.mjs
+        env: { SAITENA_RELEASE_MODE: public-demo }
+      - name: Build and publish exact release image
+        id: image
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ needs.authorize.outputs.sha }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
+          trap 'docker logout ghcr.io >/dev/null 2>&1' EXIT
+          IMAGE=ghcr.io/techsolutionbg/saitena/public
+          docker build --target release --build-arg NEXT_PUBLIC_RELEASE_MODE=public-demo --label "org.opencontainers.image.revision=$SHA" --label "org.opencontainers.image.source=https://github.com/techsolutionbg/saitena" -f .deployment/Dockerfile -t "$IMAGE:$SHA-public-demo" .
+          docker push "$IMAGE:$SHA-public-demo"
+          DIGEST=$(docker image inspect "$IMAGE:$SHA-public-demo" --format '{{index .RepoDigests 0}}')
+          [[ "$DIGEST" =~ ^ghcr.io/techsolutionbg/saitena/public@sha256:[a-f0-9]{64}$ ]]
+          test "$(gh api /users/techsolutionbg/packages/container/saitena%2Fpublic --jq .visibility)" = private
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+          printf 'Main commit: `%s`\n\nImmutable image: `%s`\n\nApprove production to deploy this exact candidate.\n' "$SHA" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
+  deploy:
+    timeout-minutes: 15
+    needs: [authorize, build]
+    permissions:
+      {
+        contents: read,
+        actions: read,
+        deployments: read,
+        id-token: write,
+        packages: read,
+        pull-requests: read,
+      }
+    environment:
+      name: production
+      url: https://saitena.com
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.authorize.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: 24 }
+      - name: Revalidate main and protections after owner approval
+        env:
+          GH_TOKEN: ${{ secrets.SAITENA_RELEASE_POLICY_TOKEN || github.token }}
+        run: |
+          git fetch --no-tags origin main
+          node scripts/authorize-main-deployment.mjs
+      - name: Join restricted deployment tailnet
+        uses: tailscale/github-action@064b10558093f38325e838ddea35486bdc6b1d5c
+        with:
+          oauth-client-id: ${{ vars.SAITENA_TAILSCALE_CLIENT_ID }}
+          audience: ${{ vars.SAITENA_TAILSCALE_AUDIENCE }}
+          tags: tag:ci-saitena-preview
+          version: 1.104.6
+          use-cache: "false"
+          log-mode: quiet
+      - name: Deploy, verify externally and accept or roll back
+        env:
+          DEPLOY_KEY: ${{ secrets.SAITENA_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.SAITENA_DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ vars.SAITENA_DEPLOY_HOST }}
+          SHA: ${{ needs.authorize.outputs.sha }}
+          IMAGE: ${{ needs.build.outputs.digest }}
+          RELEASE: ${{ needs.authorize.outputs.release }}
+          REGISTRY_TOKEN: ${{ github.token }}
+          REGISTRY_USER: ${{ github.actor }}
+        run: node scripts/deploy-approved-main.mjs

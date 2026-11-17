@@ -13,16 +13,21 @@ import { textSizeBootstrap } from "@/lib/text-size";
 import { AppearanceControls } from "@/components/appearance/appearance-controls";
 import { startPlan } from "@/lib/plans";
 import { FloatingCall } from "@/components/contact/floating-call";
+import { isPreview, releaseMode } from "@/lib/release-mode";
 import "./globals.css";
 import "./artwork.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://saitena.com"),
   title: {
     default: "Сайтове на абонамент с изработка и поддръжка | Saitena",
     template: "%s | Saitena",
   },
   description: `Сайтове на абонамент с професионален дизайн, изработка и техническа поддръжка. Разгледайте план START за ${startPlan.price} €/месец без първоначална такса.`,
-  robots: { index: true, follow: true },
+  robots: {
+    index: !isPreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
+    follow: !isPreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
+  },
   icons: { icon: [{ url: "/brand/saitena-mark.svg", type: "image/svg+xml" }] },
 };
 export default function RootLayout({
@@ -31,6 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="bg"
+      data-release-mode={releaseMode}
       data-theme="light"
       data-scroll-behavior="smooth"
       suppressHydrationWarning
@@ -53,7 +59,7 @@ export default function RootLayout({
         <div className="floating-theme">
           <AppearanceControls />
         </div>
-        <FloatingCall />
+        {!isPreview && <FloatingCall />}
       </body>
     </html>
   );

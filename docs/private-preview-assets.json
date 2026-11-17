@@ -1,0 +1,38 @@
+[
+  {
+    "path": "public/preview/illustration.svg",
+    "source": "preview-assets/illustration.svg",
+    "sha256": "f2e786b510631b4f80904e613a24694de94499493eef58d0e182e6278b87e464",
+    "publicationRights": "approved-private-preview",
+    "provenance": "Original project SVG; owner requested removal of visible preview labels and improved logo proportions. Use remains restricted to Private Preview.",
+    "approvedBy": "techsolutionbg",
+    "approvedOn": "2026-11-15"
+  },
+  {
+    "path": "public/preview/logo-light.svg",
+    "source": "preview-assets/logo-light.svg",
+    "sha256": "a8c141bca61a99a87fb732791b1cd93263c54646da31177e4500994407f27420",
+    "publicationRights": "approved-private-preview",
+    "provenance": "Original project SVG; owner requested removal of visible preview labels and improved logo proportions. Use remains restricted to Private Preview.",
+    "approvedBy": "techsolutionbg",
+    "approvedOn": "2026-11-15"
+  },
+  {
+    "path": "public/preview/logo-dark.svg",
+    "source": "preview-assets/logo-dark.svg",
+    "sha256": "ea8c3b01c4ef7b7fa4d3c5353fc9fad1d00f5610bfec4447ef65dcd177a6c08b",
+    "publicationRights": "approved-private-preview",
+    "provenance": "Original project SVG; owner requested removal of visible preview labels and improved logo proportions. Use remains restricted to Private Preview.",
+    "approvedBy": "techsolutionbg",
+    "approvedOn": "2026-11-15"
+  },
+  {
+    "path": "public/preview/mark.svg",
+    "source": "preview-assets/mark.svg",
+    "sha256": "55fc99593e103d032bbfeda0995630eb6592cef59f1ecef15725e2cf23f855fc",
+    "publicationRights": "approved-private-preview",
+    "provenance": "Original native SVG authored for this project; no embedded raster or external resources. Owner approved use only in Private Preview.",
+    "approvedBy": "techsolutionbg",
+    "approvedOn": "2026-11-15"
+  }
+]

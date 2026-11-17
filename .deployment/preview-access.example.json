@@ -1,0 +1,7 @@
+{
+  "approved": false,
+  "owner_ips": [],
+  "cloudflare_cidrs": [],
+  "secret_import": "/config/caddy/saitena-preview-key.caddy",
+  "secret_host_file": "/REQUIRES-VERIFIED-CADDY-CONFIG-VOLUME/caddy/saitena-preview-key.caddy"
+}

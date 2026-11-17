@@ -7,6 +7,7 @@ import {
 } from "@/lib/navigation";
 import { Icon } from "@/components/ui/icons";
 import { Brand } from "@/components/layout/brand";
+import { isPreview, previewDetails } from "@/lib/release-mode";
 
 const usefulNavigation: NavigationItem[] = [
   { href: "/faq", label: "Често задавани въпроси", icon: "help" },
@@ -44,42 +45,54 @@ export function Footer() {
         </div>
         <div>
           <h2>Полезно</h2>
-          {usefulNavigation.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <Icon name={item.icon} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {usefulNavigation
+            .filter((item) => !isPreview || item.href !== "/sitemap")
+            .map((item) => (
+              <Link key={item.href} href={item.href}>
+                <Icon name={item.icon} />
+                <span>{item.label}</span>
+              </Link>
+            ))}
         </div>
         <div className="footer-contacts">
           <h2>Свържете се с нас</h2>
-          {contacts.map((contact) =>
-            contact.href ? (
-              <a
-                key={contact.id}
-                href={contact.href}
-                className="footer-contact-row"
-                aria-label={`${contact.label}: ${contact.value}`}
-              >
-                <Icon name={contact.icon} />
-                <span>
-                  <span className="footer-contact-label">{contact.label}</span>
-                  {contact.value}
-                </span>
-              </a>
-            ) : (
-              <div
-                key={contact.id}
-                className="footer-contact-row footer-contact-pending"
-              >
-                <Icon name={contact.icon} />
-                <span>
-                  {contact.label}
-                  <small>Очаква данни</small>
-                </span>
-              </div>
-            ),
+          {isPreview && (
+            <p>
+              {previewDetails.email}
+              <br />
+              {previewDetails.phone}
+            </p>
           )}
+          {!isPreview &&
+            contacts.map((contact) =>
+              contact.href ? (
+                <a
+                  key={contact.id}
+                  href={contact.href}
+                  className="footer-contact-row"
+                  aria-label={`${contact.label}: ${contact.value}`}
+                >
+                  <Icon name={contact.icon} />
+                  <span>
+                    <span className="footer-contact-label">
+                      {contact.label}
+                    </span>
+                    {contact.value}
+                  </span>
+                </a>
+              ) : (
+                <div
+                  key={contact.id}
+                  className="footer-contact-row footer-contact-pending"
+                >
+                  <Icon name={contact.icon} />
+                  <span>
+                    {contact.label}
+                    <small>Очаква данни</small>
+                  </span>
+                </div>
+              ),
+            )}
           <Link href="/contact" className="footer-contact-row">
             <Icon name="file" />
             <span>Контактна страница</span>
@@ -88,14 +101,17 @@ export function Footer() {
       </div>
       <div className="footer-bottom">
         <nav aria-label="Правни страници">
-          {legalNavigation.map((item) => (
-            <Link key={item.href} href={item.href}>
-              <Icon name={item.icon} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {!isPreview &&
+            legalNavigation.map((item) => (
+              <Link key={item.href} href={item.href}>
+                <Icon name={item.icon} />
+                <span>{item.label}</span>
+              </Link>
+            ))}
         </nav>
-        <p className="footer-copyright">© {new Date().getFullYear()} Saitena</p>
+        <p className="footer-copyright">
+          © {new Date().getFullYear()} Saitena. Всички права запазени.
+        </p>
       </div>
     </footer>
   );

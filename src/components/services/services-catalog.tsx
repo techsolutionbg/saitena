@@ -37,7 +37,7 @@ export function ServicesCatalog() {
               aria-labelledby={`service-${service.id}-title`}
             >
               <Image
-                src={`/images/services-${service.id}-v1.webp`}
+                src={service.image}
                 alt=""
                 width={320}
                 height={320}

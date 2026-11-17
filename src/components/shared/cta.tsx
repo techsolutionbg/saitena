@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Arrow } from "@/components/ui/icons";
 import { ButtonLink } from "@/components/ui/button-link";
 
@@ -27,7 +28,8 @@ export function CTA({ forFAQ = false }: { forFAQ?: boolean }) {
             Разгледайте плановете <Arrow />
           </Link>
         )}
-        <img
+        <Image
+          unoptimized
           src="/brand/saitena-mark.svg"
           className="cta-watermark"
           width={525}

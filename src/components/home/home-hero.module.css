@@ -11,8 +11,8 @@
   isolation: isolate;
   display: grid;
   place-items: center;
-  min-height: 700px;
-  padding-block: clamp(64px, 7vw, 112px);
+  min-height: 620px;
+  padding-block: clamp(48px, 6vw, 88px);
   background-color: var(--surface);
   background-image: var(--hero-wash), var(--hero-art);
   background-position: center;
@@ -141,7 +141,7 @@
 @media (max-width: 768px) {
   .hero {
     --hero-art: url("/images/home-hero-light-mobile.webp");
-    min-height: 640px;
+    min-height: 0;
   }
   :global(:root[data-theme="dark"]) .hero {
     --hero-art: url("/images/home-hero-dark-mobile.webp");
@@ -152,7 +152,7 @@
 }
 @media (max-width: 580px) {
   .hero {
-    padding-block: 52px 92px;
+    padding-block: 44px 64px;
   }
   .actions {
     flex-direction: column;
