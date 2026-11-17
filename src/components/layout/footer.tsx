@@ -109,7 +109,9 @@ export function Footer() {
               </Link>
             ))}
         </nav>
-        <p className="footer-copyright">© {new Date().getFullYear()} Saitena</p>
+        <p className="footer-copyright">
+          © {new Date().getFullYear()} Saitena. Всички права запазени.
+        </p>
       </div>
     </footer>
   );

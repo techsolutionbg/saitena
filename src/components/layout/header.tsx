@@ -9,6 +9,9 @@ import { Brand } from "./brand";
 import { AppearanceControls } from "@/components/appearance/appearance-controls";
 import { AccountActions, type HeaderUser } from "./account-actions";
 
+// Keep unfinished cart and account controls out of the public navigation.
+const showAccountActions = false;
+
 export function Header({ user }: { user?: HeaderUser | null }) {
   const pathname = usePathname();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -111,9 +114,11 @@ export function Header({ user }: { user?: HeaderUser | null }) {
           ))}
         </nav>
         <div className="header-actions">
-          <div className="header-utilities">
-            <AccountActions user={user} />
-          </div>
+          {showAccountActions && (
+            <div className="header-utilities">
+              <AccountActions user={user} />
+            </div>
+          )}
           <button
             ref={menuToggleRef}
             type="button"
@@ -180,7 +185,7 @@ export function Header({ user }: { user?: HeaderUser | null }) {
             </nav>
           </div>
           <div className="sidebar-footer">
-            <AccountActions user={user} />
+            {showAccountActions && <AccountActions user={user} />}
             <div className="sidebar-theme">
               <AppearanceControls sidebar />
             </div>

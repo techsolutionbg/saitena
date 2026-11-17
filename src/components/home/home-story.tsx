@@ -159,26 +159,30 @@ export function HomeStory() {
           aria-labelledby={`${section.id}-title`}
         >
           <div className={`wrap ${styles.row}`}>
-            <div className={styles.copy} data-scroll-reveal="copy">
-              <h2 id={`${section.id}-title`}>{section.title}</h2>
-              <p className={styles.introduction}>{section.introduction}</p>
-              {section.paragraphs.map((paragraph) => (
-                <p key={paragraph}>
-                  {section.id === "design-for-business" &&
-                  paragraph === section.paragraphs[0] ? (
-                    <strong>{paragraph}</strong>
-                  ) : (
-                    paragraph
-                  )}
-                </p>
-              ))}
-              <Link
-                href={section.link.href}
-                className={`button ${styles.storyButton}`}
-              >
-                {section.link.label}
-                <Arrow />
-              </Link>
+            <div className={styles.copy}>
+              <h2 id={`${section.id}-title`} data-scroll-reveal="copy">
+                {section.title}
+              </h2>
+              <div className={styles.body} data-scroll-reveal="copy">
+                <p className={styles.introduction}>{section.introduction}</p>
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>
+                    {section.id === "design-for-business" &&
+                    paragraph === section.paragraphs[0] ? (
+                      <strong>{paragraph}</strong>
+                    ) : (
+                      paragraph
+                    )}
+                  </p>
+                ))}
+                <Link
+                  href={section.link.href}
+                  className={`button ${styles.storyButton}`}
+                >
+                  {section.link.label}
+                  <Arrow />
+                </Link>
+              </div>
             </div>
             <div
               className={styles.visual}

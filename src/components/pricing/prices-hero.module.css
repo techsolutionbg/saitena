@@ -88,6 +88,12 @@
   flex: 1 1 250px;
   white-space: normal;
 }
+.contactButton svg {
+  flex-shrink: 0;
+}
+.contactButton span {
+  min-width: 0;
+}
 .benefits {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -151,6 +157,11 @@
   }
   .actions a {
     flex-basis: 100%;
+  }
+  .actions .contactButton {
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
   }
   .benefits {
     grid-template-columns: minmax(0, 1fr);

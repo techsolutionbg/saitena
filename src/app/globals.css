@@ -612,6 +612,11 @@ body:has(.auth-page) > a[aria-label^="Обадете се на Saitena"] {
   padding-top: 14px;
   border-top: 1px solid var(--line);
 }
+.sidebar-theme:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
 body:has(#mobile-sidebar[open]) .floating-theme {
   display: none;
 }
@@ -1619,13 +1624,15 @@ body:has(#mobile-sidebar[open]) .floating-theme {
   color: var(--primary);
 }
 .footer-copyright {
-  margin-left: auto;
-  text-align: right;
-  white-space: nowrap;
+  margin: 0;
+  text-align: center;
+  font-size: var(--font-small);
+  white-space: normal;
 }
 .footer-bottom {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   justify-content: space-between;
   gap: 24px 36px;
   padding-block: 25px;
@@ -2263,6 +2270,9 @@ body:has(#mobile-sidebar[open]) .floating-theme {
     gap: 35px;
     padding-block: 10px 35px;
   }
+  .footer-brand p {
+    max-width: none;
+  }
   .footer-grid h2 {
     margin-bottom: 20px;
   }
@@ -2278,7 +2288,8 @@ body:has(#mobile-sidebar[open]) .floating-theme {
     align-items: stretch;
   }
   .footer-copyright {
-    align-self: flex-end;
+    align-self: stretch;
+    padding-inline: 72px;
   }
   .footer-bottom nav a {
     align-items: flex-start;

@@ -23,8 +23,12 @@ export function PricesHero() {
             <a className="button" href="#subscription-plans-title">
               Разгледайте плановете <Arrow />
             </a>
-            <Link className="button button-secondary" href="/contact">
-              <Icon name="message" /> Обсъдете Вашия проект
+            <Link
+              className={`button button-secondary ${styles.contactButton}`}
+              href="/contact"
+            >
+              <Icon name="message" />
+              <span>Обсъдете Вашия проект</span>
             </Link>
           </div>
           <ul className={styles.benefits}>

@@ -585,10 +585,23 @@
   .section:nth-child(even) .copy {
     order: 0;
   }
+  .copy {
+    display: contents;
+  }
+  .copy h2 {
+    order: 0;
+    padding-bottom: 0;
+  }
+  .body {
+    min-width: 0;
+    order: 2;
+  }
   .visual {
+    order: 1;
     width: 100%;
     max-width: 620px;
     min-height: 400px;
+    padding-block-end: 40px;
     justify-self: center;
   }
   .techNodes {
