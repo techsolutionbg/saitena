@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import "@fontsource/manrope/400.css";
-import "@fontsource/manrope/500.css";
-import "@fontsource/manrope/600.css";
-import "@fontsource/manrope/700.css";
-import "@fontsource/manrope/800.css";
+import { fontVariables } from "./fonts";
 import "@fontsource/lora/400.css";
 import "@fontsource/lora/400-italic.css";
 import { Header } from "@/components/layout/header";
@@ -28,7 +24,14 @@ export const metadata: Metadata = {
     index: !isPreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
     follow: !isPreview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true",
   },
-  icons: { icon: [{ url: "/brand/saitena-mark.svg", type: "image/svg+xml" }] },
+  icons: {
+    icon: [
+      {
+        url: isPreview ? "/brand/saitena-mark.svg" : "/media/mark-64.png",
+        type: isPreview ? "image/svg+xml" : "image/png",
+      },
+    ],
+  },
 };
 export default function RootLayout({
   children,
@@ -36,6 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="bg"
+      className={fontVariables}
       data-release-mode={releaseMode}
       data-theme="light"
       data-scroll-behavior="smooth"

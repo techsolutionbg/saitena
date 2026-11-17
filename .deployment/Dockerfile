@@ -16,13 +16,15 @@ ARG NEXT_PUBLIC_RELEASE_MODE=public
 LABEL io.saitena.release-mode=$NEXT_PUBLIC_RELEASE_MODE
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
-COPY --from=build --chown=node:node /app/package*.json ./
-COPY --from=build --chown=node:node /app/node_modules ./node_modules
-COPY --from=build --chown=node:node /app/.next ./.next
+COPY --from=build --chown=node:node /app/.next/standalone ./
+COPY --from=build --chown=node:node /app/.next/static ./.next/static
 COPY --from=build --chown=node:node /app/public ./public
+COPY --from=build /app/node_modules/@fontsource-variable/manrope/LICENSE /app/licenses/manrope-OFL.txt
+COPY --from=build /app/node_modules/@fontsource/lora/LICENSE /app/licenses/lora-OFL.txt
+ENV HOSTNAME=0.0.0.0 PORT=3000
 USER node
 EXPOSE 3000
-CMD ["npm", "run", "start", "--", "--hostname", "0.0.0.0"]
+CMD ["node", "server.js"]
 
 FROM build AS release-review
 RUN test "$NEXT_PUBLIC_AUTH_ENABLED" = false && test "$NEXT_PUBLIC_INDEXING_ENABLED" = false && test "$NEXT_PUBLIC_API_URL" = https://api.saitena.com && test "$NEXT_PUBLIC_CLIENT_AREA_URL" = https://portal.saitena.com && node scripts/check-release-readiness.mjs

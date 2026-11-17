@@ -1,0 +1,148 @@
+{
+  "date": "2026-11-17",
+  "baseline": "4f0cb52293c189549529607658c3b9adb4275c4d",
+  "candidateBranch": "codex/performance-lcp",
+  "conditions": {
+    "lighthouse": "13.6.0",
+    "chrome": "157.0.8103.38",
+    "protocol": "HTTPS/HTTP2",
+    "runsPerVersionAndDevice": 3,
+    "coldBrowserProfiles": true,
+    "sslValidation": true,
+    "productionDeployment": false
+  },
+  "runs": [
+    {
+      "label": "linux-before",
+      "mode": "mobile",
+      "run": 1,
+      "score": 79,
+      "FCP_ms": 1058.3435,
+      "LCP_ms": 5121.3435,
+      "TBT_ms": 190.5,
+      "CLS": 0.008689635258421619,
+      "SI_ms": 1629.7155125039144
+    },
+    {
+      "label": "linux-before",
+      "mode": "mobile",
+      "run": 2,
+      "score": 81,
+      "FCP_ms": 1055.9075,
+      "LCP_ms": 5112.9075,
+      "TBT_ms": 75.5,
+      "CLS": 0.00746226281245177,
+      "SI_ms": 1671.0325557281437
+    },
+    {
+      "label": "linux-before",
+      "mode": "mobile",
+      "run": 3,
+      "score": 81,
+      "FCP_ms": 1054.383,
+      "LCP_ms": 5111.383,
+      "TBT_ms": 56.5,
+      "CLS": 0.00746226281245177,
+      "SI_ms": 1625.3685740182827
+    },
+    {
+      "label": "linux-before",
+      "mode": "desktop",
+      "run": 1,
+      "score": 99,
+      "FCP_ms": 285.039,
+      "LCP_ms": 965.039,
+      "TBT_ms": 0,
+      "CLS": 0.0003564568464652271,
+      "SI_ms": 439.1048675852735
+    },
+    {
+      "label": "linux-before",
+      "mode": "desktop",
+      "run": 2,
+      "score": 99,
+      "FCP_ms": 284.71799999999996,
+      "LCP_ms": 964.718,
+      "TBT_ms": 0,
+      "CLS": 0.0003564568464652271,
+      "SI_ms": 433.7765866182866
+    },
+    {
+      "label": "linux-before",
+      "mode": "desktop",
+      "run": 3,
+      "score": 100,
+      "FCP_ms": 286.632,
+      "LCP_ms": 574.6320000000001,
+      "TBT_ms": 0,
+      "CLS": 0.0003564568464652271,
+      "SI_ms": 369.5897123307175
+    },
+    {
+      "label": "linux-after",
+      "mode": "mobile",
+      "run": 1,
+      "score": 99,
+      "FCP_ms": 1067.4355,
+      "LCP_ms": 1995.4355,
+      "TBT_ms": 64,
+      "CLS": 0.006936998577450572,
+      "SI_ms": 1215.4650236081538
+    },
+    {
+      "label": "linux-after",
+      "mode": "mobile",
+      "run": 2,
+      "score": 98,
+      "FCP_ms": 1058.5145,
+      "LCP_ms": 2417.5145,
+      "TBT_ms": 54.5,
+      "CLS": 0.006936998577450572,
+      "SI_ms": 1058.5145
+    },
+    {
+      "label": "linux-after",
+      "mode": "mobile",
+      "run": 3,
+      "score": 99,
+      "FCP_ms": 1056.8705,
+      "LCP_ms": 2106.8705,
+      "TBT_ms": 53,
+      "CLS": 0.006936998577450572,
+      "SI_ms": 1056.8705
+    },
+    {
+      "label": "linux-after",
+      "mode": "desktop",
+      "run": 1,
+      "score": 100,
+      "FCP_ms": 288.04200000000003,
+      "LCP_ms": 530.042,
+      "TBT_ms": 0,
+      "CLS": 0.00002954843977898772,
+      "SI_ms": 339.207207850274
+    },
+    {
+      "label": "linux-after",
+      "mode": "desktop",
+      "run": 2,
+      "score": 100,
+      "FCP_ms": 286.567,
+      "LCP_ms": 570.567,
+      "TBT_ms": 0,
+      "CLS": 0.00002954843977898772,
+      "SI_ms": 330.5915297303402
+    },
+    {
+      "label": "linux-after",
+      "mode": "desktop",
+      "run": 3,
+      "score": 100,
+      "FCP_ms": 286.64599999999996,
+      "LCP_ms": 570.646,
+      "TBT_ms": 0,
+      "CLS": 0.00002954843977898772,
+      "SI_ms": 336.53212767822436
+    }
+  ]
+}

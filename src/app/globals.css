@@ -18,7 +18,11 @@
   pointer-events: none;
 }
 :root {
-  --font-family: "Manrope", "Segoe UI", sans-serif;
+  --font-family:
+    var(--font-manrope-cyrillic), var(--font-manrope-latin),
+    var(--font-manrope-cyrillic-ext), var(--font-manrope-latin-ext),
+    var(--font-manrope-greek), var(--font-manrope-vietnamese), "Segoe UI",
+    sans-serif;
   --font-paragraph: "Segoe UI", system-ui, sans-serif;
   --font-body: 1.125rem;
   --font-heading: 1.5rem;

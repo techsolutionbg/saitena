@@ -53,6 +53,7 @@ try {
     const mode=${JSON.stringify(mode)};
     const assets=${JSON.stringify(assets)};
     const allowed=new Set(assets.map(a=>'/'+a.path.slice(7)));
+    const derived={'/media/logo-light.png':'/brand/saitena-logo-light.svg','/media/logo-dark.png':'/brand/saitena-logo-dark.svg','/media/mark-64.png':'/brand/saitena-mark.svg'};
     const health=await(await fetch(base+'/api/health')).json();assert.equal(health.releaseMode,mode);
     for(const path of ['/', '/services','/prices','/about','/portfolio','/blog','/faq','/contact','/sitemap']){
       const r=await fetch(base+path);assert.equal(r.status,200,path);assert.match(r.headers.get('x-robots-tag')??'',/noindex/);
@@ -68,7 +69,7 @@ try {
         if(mode==='private-preview')assert(!decodeURIComponent(src).includes('/images/')&&!decodeURIComponent(src).includes('/brand/'),path+': original image reference');
         else{
           const url=new URL(src,base),original=url.pathname==='/_next/image'?url.searchParams.get('url'):url.pathname;
-          assert(allowed.has(original),path+': asset missing from original manifest');
+          assert(allowed.has(original)||(Object.hasOwn(derived,original)&&allowed.has(derived[original])),path+': asset missing from original manifest');
           const loaded=await fetch(url);assert.equal(loaded.status,200,path+': '+src);assert((loaded.headers.get('content-type')??'').startsWith('image/'));
         }
       }
@@ -82,6 +83,18 @@ try {
     assert((await(await fetch(base+'/robots.txt')).text()).includes('Disallow: /'));
     assert(!(await(await fetch(base+'/sitemap.xml')).text()).includes('<loc>'));
     for(const a of assets){const r=await fetch(base+'/'+a.path.slice(7));assert.equal(r.status,200,a.path);const bytes=Buffer.from(await r.arrayBuffer());if(a.path.endsWith('.svg'))assert(!/private preview/i.test(bytes.toString()),a.path);assert.equal(require('node:crypto').createHash('sha256').update(bytes).digest('hex'),a.sha256,a.path);}
+    if(mode==='public-demo'){
+      const sharp=require('sharp');
+      for(const [target,source] of Object.entries(derived)){
+        assert(allowed.has(source),target+': unapproved derivative source');
+        const r=await fetch(base+target);assert.equal(r.status,200,target);assert((r.headers.get('content-type')??'').startsWith('image/png'));
+        const actual=await sharp(Buffer.from(await r.arrayBuffer())).ensureAlpha().raw().toBuffer({resolveWithObject:true});
+        const expected=sharp(require('node:fs').readFileSync('/app/public'+source));if(target.includes('mark-64'))expected.resize(64,64);
+        const original=await expected.ensureAlpha().raw().toBuffer({resolveWithObject:true});
+        assert.deepEqual(actual.info,original.info,target+': geometry');assert.deepEqual(actual.data,original.data,target+': changed pixels');
+      }
+      assert.equal((await fetch(base+'/media/not-approved.png')).status,404);
+    }
     const fs=require('node:fs'),path=require('node:path');
     function files(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(path.join(dir,e.name)):[path.relative('/app',path.join(dir,e.name))]);}
     assert.deepEqual(files('/app/public').sort(),assets.map(a=>a.path).sort());

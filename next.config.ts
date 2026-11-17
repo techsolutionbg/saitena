@@ -12,6 +12,8 @@ if (
   throw new Error("Preview builds require auth and indexing disabled");
 
 const config: NextConfig = {
+  output: "standalone",
+  images: { qualities: [75, 90] },
   poweredByHeader: false,
   devIndicators: false,
   allowedDevOrigins: ["127.0.0.1", "localhost"],
