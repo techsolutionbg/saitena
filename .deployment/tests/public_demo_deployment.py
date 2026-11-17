@@ -5,6 +5,7 @@ startup are fixture boundaries. The same backup, native-diff, switch, recovery,
 acceptance and watchdog-timeout implementations operate on real containers.
 """
 import hashlib
+import base64
 import importlib.util
 import json
 import os
@@ -156,7 +157,22 @@ except RuntimeError as error: assert str(error)=='unknown_source_refused'
 else: raise AssertionError('Concurrent source edit was overwritten')
 assert route.read_bytes()==edited_source and profile.read_bytes()==after_profile
 route.write_bytes(original)  # Explicit fixture-only operator repair.
-results=['header-profile-activation-restore-reactivation']
+with get(authorized=True) as response:
+    baseline_digest = hashlib.sha256(response.read()).hexdigest()
+agent.save(migration, {'phase':'prepared','request':{'mode':'public-demo'},
+    'original':base64.b64encode(legacy_original).decode(),
+    'candidate_sha256':hashes['candidate'],'fallback_sha256':hashes['fallback'],
+    'baseline_digest':baseline_digest,'container':old})
+def authorized_digest():
+    with get(authorized=True) as response:return hashlib.sha256(response.read()).hexdigest()
+profile_runtime.public_digest = authorized_digest  # CF transport boundary; same live Caddy guard.
+profile_runtime.apply(fallback)
+agent.guarded_recover(migration, profile_runtime)
+assert route.read_bytes()==legacy_original and profile.read_bytes()==before_profile
+assert json.loads(migration.read_bytes())['phase']=='rolled_back'
+profile_runtime.apply(original)
+assert profile.read_bytes()==after_profile
+results=['header-profile-activation-restore-reactivation','header-profile-restore-from-known-403']
 for version in ['new','bad','timeout','fallback']:
     config['state_dir']=str(root/version);Path(config['state_dir']).mkdir(mode=0o700)
     runtime=FixtureRuntime(config);runtime.armed=False
