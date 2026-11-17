@@ -35,6 +35,7 @@ jobs:
     permissions: { contents: read, packages: write }
     outputs:
       digest: ${{ steps.image.outputs.digest }}
+      image_id: ${{ steps.identity.outputs.image_id }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -77,6 +78,13 @@ jobs:
           echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
           if [ "$MODE" = customer-auth ]; then PURPOSE='Approve the public image for coordinated Auth only; this run does not deploy.'; else PURPOSE='Approve production to deploy this exact candidate.'; fi
           printf 'Main commit: `%s`\n\nImmutable image: `%s`\n\n%s\n' "$SHA" "$DIGEST" "$PURPOSE" >> "$GITHUB_STEP_SUMMARY"
+      - name: Inspect approved public Auth image identity
+        if: needs.authorize.outputs.mode == 'customer-auth'
+        id: identity
+        env:
+          SHA: ${{ needs.authorize.outputs.sha }}
+          IMAGE: ${{ steps.image.outputs.digest }}
+        run: node scripts/inspect-auth-image.mjs
   deploy:
     timeout-minutes: 15
     needs: [authorize, build]
@@ -134,4 +142,5 @@ jobs:
         env:
           SHA: ${{ needs.authorize.outputs.sha }}
           IMAGE: ${{ needs.build.outputs.digest }}
+          IMAGE_ID: ${{ needs.build.outputs.image_id }}
         run: node scripts/record-auth-release-approval.mjs
