@@ -1024,6 +1024,12 @@ body:has(#mobile-sidebar[open]) .floating-theme {
 .project-meta p {
   margin-top: 9px;
 }
+main .project-card-title {
+  font-size: var(--font-heading);
+  line-height: var(--line-heading);
+  letter-spacing: -0.025em;
+  text-wrap: wrap;
+}
 .project-meta > span {
   border: 1px solid var(--line);
   border-radius: 30px;

@@ -40,6 +40,12 @@ jobs:
           NEXT_PUBLIC_INDEXING_ENABLED: "false"
           NEXT_TELEMETRY_DISABLED: "1"
       - run: node scripts/check-production-candidate.mjs
+      - name: SEO metadata, routing and schema checks (no indexing)
+        run: npm run test:seo:integration
+        env:
+          NEXT_PUBLIC_AUTH_ENABLED: "false"
+          NEXT_PUBLIC_INDEXING_ENABLED: "false"
+          NEXT_PUBLIC_RELEASE_MODE: public
       - run: docker build --target candidate -f .deployment/Dockerfile -t saitena-public:check .
       - name: Isolated HTTPS and SMTP integration
         env:

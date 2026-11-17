@@ -7,6 +7,8 @@
     "test:contact:config": "node --test tests/contact-mail-config.test.mjs",
     "test:contact": "node --test tests/contact-message.test.mjs",
     "test:contact:integration": "node scripts/test-contact-mail.mjs",
+    "test:seo": "node --test tests/seo.test.mjs",
+    "test:seo:integration": "node scripts/check-seo-candidate.mjs",
     "mail:up": "docker compose -f compose.mailpit.yaml up -d",
     "dev": "next dev --hostname 127.0.0.1",
     "dev:lan": "node scripts/lan-preview.mjs",

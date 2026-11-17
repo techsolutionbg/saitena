@@ -26,7 +26,11 @@ import { BlogCatalog } from "@/components/blog/blog-catalog";
 import { blogPosts } from "@/lib/blog-posts";
 import { parseBlogFilters, type BlogQuery } from "@/lib/blog-catalog";
 import contactStyles from "@/components/contact/contact-page.module.css";
-import { isPreview, previewDetails } from "@/lib/release-mode";
+import {
+  hasPreviewProtections,
+  isPreview,
+  previewDetails,
+} from "@/lib/release-mode";
 
 export function ContentPage({
   path,
@@ -56,7 +60,7 @@ export function ContentPage({
           className="wrap portfolio-page"
           aria-label="Галерия с проекти за сайтове"
         >
-          <PortfolioGallery />
+          <PortfolioGallery headingLevel={2} />
         </section>
         <PortfolioCTA />
       </>
@@ -65,12 +69,15 @@ export function ContentPage({
     const project = projects.find((p) => path === `portfolio/${p.slug}`)!;
     return (
       <>
-        <div className="wrap breadcrumb">
+        <nav className="wrap breadcrumb" aria-label="Навигационна пътека">
           <Link href="/portfolio">Портфолио</Link>
-          <span>/</span>
-          {project.name}
-        </div>
-        <PageIntro eyebrow={project.type.toUpperCase()} title={project.name}>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{project.name}</span>
+        </nav>
+        <PageIntro
+          eyebrow={`КОНЦЕПТУАЛЕН ДИЗАЙН · ${project.type.toUpperCase()}`}
+          title={project.name}
+        >
           <p>{project.description}</p>
         </PageIntro>
         <section className="wrap case-study">
@@ -260,11 +267,11 @@ export function ContentPage({
     const article = articles.find((a) => path === `blog/${a.slug}`)!;
     return (
       <>
-        <div className="wrap breadcrumb">
+        <nav className="wrap breadcrumb" aria-label="Навигационна пътека">
           <Link href="/blog">Блог</Link>
-          <span>/</span>
-          {article.category}
-        </div>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{article.title}</span>
+        </nav>
         <PageIntro
           eyebrow="ПРИМЕРЕН РЕДАКЦИОНЕН МАТЕРИАЛ"
           title={article.title}
@@ -322,7 +329,7 @@ export function ContentPage({
               </Link>
             ))}
           </div>
-          {!isPreview && (
+          {!hasPreviewProtections && (
             <div>
               <h2>Правна информация</h2>
               {Object.entries(routeTitles)

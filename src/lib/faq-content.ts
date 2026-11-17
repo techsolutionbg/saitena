@@ -57,9 +57,3 @@ export const faqPublicationCounts = {
   published: faq.length,
   pending: editorial.filter((item) => item.status === "pending").length,
 };
-
-export const faqMetadata = {
-  title: "Често задавани въпроси за изработка на сайт на абонамент | Saitena",
-  description:
-    "Всичко важно за цените, изработката, поддръжката и условията на Saitena — обяснено ясно и разбираемо.",
-};

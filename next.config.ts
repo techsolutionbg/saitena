@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { publicSecurityHeaders } from "./src/lib/security-headers.mjs";
+import { isIndexingEnabled } from "./src/lib/seo-policy.mjs";
 
 const releaseMode = process.env.NEXT_PUBLIC_RELEASE_MODE ?? "public";
 if (!["public", "private-preview", "public-demo"].includes(releaseMode))
@@ -68,8 +69,7 @@ const config: NextConfig = {
   },
   // This isolated preview has no connection to the frozen hosting platform.
   async headers() {
-    const indexingEnabled =
-      !preview && process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true";
+    const indexingEnabled = isIndexingEnabled();
     return [
       {
         source: "/:path*",

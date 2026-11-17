@@ -62,7 +62,7 @@ export function BenefitsMarquee() {
                   <span className={styles.icon}>
                     <Icon name={benefit.icon} />
                   </span>
-                  <h3>{benefit.title}</h3>
+                  <h2>{benefit.title}</h2>
                   <p>{benefit.description}</p>
                 </li>
               ))}

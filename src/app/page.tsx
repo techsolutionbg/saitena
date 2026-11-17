@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import { Home } from "@/components/home/home";
-import { startPlan } from "@/lib/plans";
+import { pageMetadata } from "@/lib/seo";
+import { PageStructuredData } from "@/components/seo/json-ld";
 
-export const metadata: Metadata = {
-  title: {
-    absolute: "Сайтове на абонамент – бързи, сигурни и с красив дизайн",
-  },
-  description: `Бързи, сигурни и адаптивни сайтове на абонамент от ${startPlan.price} €/месец. Красив дизайн, SEO и поддръжка. Свържете се с нас чрез контактната форма.`,
-};
+export const metadata = pageMetadata("");
 
 export default function HomePage() {
-  return <Home />;
+  return (
+    <>
+      <PageStructuredData path="" />
+      <Home />
+    </>
+  );
 }

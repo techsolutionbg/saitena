@@ -9,6 +9,7 @@ import {
 } from "@/lib/plans";
 import { Arrow, Icon } from "@/components/ui/icons";
 import { ContactSuccessDialog } from "@/components/contact/contact-success-dialog";
+import { hasPreviewProtections } from "@/lib/release-mode";
 
 export function InquiryForm({
   kind,
@@ -212,7 +213,12 @@ export function InquiryForm({
         <p className="form-privacy">
           * Задължителни полета. Предвидено е кратко уведомление за
           обработването на запитванията и връзка към{" "}
-          <Link href={`/legal/privacy`}>политиката за поверителност</Link>.
+          {hasPreviewProtections ? (
+            "политиката за поверителност"
+          ) : (
+            <Link href="/legal/privacy">политиката за поверителност</Link>
+          )}
+          .
         </p>
         <button ref={submitButtonRef} className="button" type="submit">
           {website ? (

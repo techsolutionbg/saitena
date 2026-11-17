@@ -47,10 +47,13 @@
   width: 32px;
   height: 32px;
 }
-.item h3 {
+.item h2 {
   margin: 0 0 8px;
   font-size: var(--font-heading);
   font-weight: var(--weight-heading);
+  line-height: var(--line-heading);
+  letter-spacing: -0.025em;
+  text-wrap: wrap;
 }
 .item p {
   margin: 0;
