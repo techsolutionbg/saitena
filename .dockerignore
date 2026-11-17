@@ -18,6 +18,13 @@ docs/**
 !docs/private-preview-approval.json
 !docs/public-demo-approval.json
 !docs/public-demo-assets.json
+!docs/customer-auth-release-approval.json
+platform
+apps/api
+apps/web
+infra
+qa-private
+.deployment/Caddyfile.auth-local
 public/brand/saitena-logo-master.png
 public/images/portfolio-hero-v1.webp
 .vscode

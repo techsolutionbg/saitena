@@ -239,7 +239,7 @@ export function AuthExperience({ mode }: { mode: Mode }) {
     setNotice("");
     try {
       if (isLogin) {
-        const destination = clientAreaUrl("login");
+        const destination = clientAreaUrl(process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true" ? "dashboard" : "login");
         if (!destination) throw new AuthApiError(-2);
         await signIn(email.trim(), password);
         window.location.assign(destination);
@@ -295,7 +295,7 @@ export function AuthExperience({ mode }: { mode: Mode }) {
           password_confirmation: confirmation,
         });
         setNotice(
-          "Регистрацията е създадена. Проверете имейла си и последвайте връзката за потвърждение, преди да влезете.",
+          "Ако адресът е подходящ за регистрация, ще получите инструкции по имейл. Можете да влезете в профила си; клиентските услуги изискват потвърден имейл.",
         );
       }
     } catch (cause) {

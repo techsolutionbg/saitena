@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "owner": "techsolutionbg",
+  "mode": "customer-auth",
+  "production_auth_approved": false,
+  "api_candidate_approved": false,
+  "portal_candidate_approved": false,
+  "legal_copy_approved": false,
+  "consent_policy_approved": false,
+  "smtp_sender_approved": false,
+  "https_staging_approved": false,
+  "migration_backup_rollback_approved": false,
+  "customer_cookie_boundary_approved": false,
+  "origin_guard_plan_approved": false,
+  "deployment_helper_approved": false,
+  "api_manifest_sha256": null,
+  "portal_manifest_sha256": null,
+  "staging_evidence_sha256": null
+}

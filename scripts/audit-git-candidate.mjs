@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync, statSync } from "node:fs";
+import { isPrivatePlatformPath } from "./public-source-boundary.mjs";
 const git = (...args) =>
   execFileSync("git", args, { encoding: "utf8", maxBuffer: 80 * 1024 * 1024 });
 const paths = [
@@ -21,7 +22,12 @@ const patterns = [
 const findings = [];
 let binary = 0;
 for (const path of paths) {
-  if ((forbidden.test(path) || /(?:^|\/)[^/]*\.env(?:\.[^/]*)?$/i.test(path)) && !path.endsWith(".env.example"))
+  if (isPrivatePlatformPath(path))
+    findings.push({ path, kind: "private-platform-in-public-repository" });
+  if (
+    (forbidden.test(path) || /(?:^|\/)[^/]*\.env(?:\.[^/]*)?$/i.test(path)) &&
+    !path.endsWith(".env.example")
+  )
     findings.push({ path, kind: "forbidden-path" });
   if (!statSync(path).isFile()) continue;
   const data = readFileSync(path);

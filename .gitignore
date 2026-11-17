@@ -22,3 +22,10 @@ __pycache__/
 !*.env.example
 public/brand/saitena-logo-master.png
 public/images/portfolio-hero-v1.webp
+# This repository is PUBLIC. Private backend/portal/operations belong elsewhere.
+/platform/
+/apps/api/
+/apps/web/
+/infra/
+/qa-private/
+/.deployment/Caddyfile.auth-local

@@ -5,6 +5,13 @@ export class AuthApiError extends Error {
   }
 }
 
+const customerAuth = process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true";
+let customerCsrfToken: string | null = null;
+
+function endpoint(path: string): string {
+  return customerAuth ? path.replace("/api/v1/auth/", "/api/v1/customer/auth/") : path;
+}
+
 function apiUrl(): string {
   if (process.env.NODE_ENV === "production" && process.env.NEXT_PUBLIC_AUTH_ENABLED !== "true")
     throw new AuthApiError(-1);
@@ -15,9 +22,10 @@ function apiUrl(): string {
 
   try {
     const url = new URL(value);
-    const isLocal = ["localhost", "127.0.0.1"].includes(url.hostname);
-    if (url.username || url.password) throw new Error();
-    if (url.protocol !== "https:" && !(url.protocol === "http:" && isLocal))
+    const isLocal = ["localhost", "127.0.0.1"].includes(url.hostname)
+      || (process.env.NEXT_PUBLIC_AUTH_TEST_MODE === "true" && url.hostname === "api.saitena-auth.test");
+    if (url.username || url.password || url.pathname !== "/" || url.search || url.hash) throw new Error();
+    if (url.protocol !== "https:" && !(url.protocol === "http:" && ["localhost", "127.0.0.1"].includes(url.hostname)))
       throw new Error();
     if (process.env.NODE_ENV === "development" && !isLocal) throw new Error();
     return url.toString().replace(/\/$/, "");
@@ -34,18 +42,19 @@ function xsrfToken(): string | null {
 }
 
 async function postJson(path: string, body: object): Promise<void> {
-  const token = xsrfToken();
+  const token = customerAuth ? customerCsrfToken : xsrfToken();
   if (!token) throw new AuthApiError(419);
   const headers: Record<string, string> = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    "X-XSRF-TOKEN": token,
+    [customerAuth ? "X-CSRF-TOKEN" : "X-XSRF-TOKEN"]: token,
   };
 
   let response: Response;
   try {
-    response = await fetch(`${apiUrl()}${path}`, {
+    response = await fetch(`${apiUrl()}${endpoint(path)}`, {
       method: "POST",
+      cache: "no-store",
       headers,
       credentials: "include",
       body: JSON.stringify(body),
@@ -60,14 +69,21 @@ async function postJson(path: string, body: object): Promise<void> {
 async function csrfCookie(): Promise<void> {
   let response: Response;
   try {
-    response = await fetch(`${apiUrl()}/sanctum/csrf-cookie`, {
+    response = await fetch(`${apiUrl()}${customerAuth ? "/api/v1/customer/auth/csrf" : "/sanctum/csrf-cookie"}`, {
       credentials: "include",
+      cache: "no-store",
       headers: { Accept: "application/json" },
     });
   } catch {
     throw new AuthApiError(0);
   }
-  if (!response.ok || !xsrfToken())
+  if (customerAuth && response.ok) {
+    const payload: unknown = await response.json();
+    customerCsrfToken = typeof payload === "object" && payload !== null
+      && "csrf_token" in payload && typeof payload.csrf_token === "string"
+      ? payload.csrf_token : null;
+  }
+  if (!response.ok || !(customerAuth ? customerCsrfToken : xsrfToken()))
     throw new AuthApiError(response.ok ? 419 : response.status);
 }
 
@@ -119,8 +135,8 @@ export async function verifyEmail(input: {
   let response: Response;
   try {
     response = await fetch(
-      `${apiUrl()}/api/v1/auth/email/verify/${encodeURIComponent(input.id)}/${encodeURIComponent(input.hash)}?${query}`,
-      { credentials: "include", headers: { Accept: "application/json" } },
+      `${apiUrl()}${endpoint(`/api/v1/auth/email/verify/${encodeURIComponent(input.id)}/${encodeURIComponent(input.hash)}?${query}`)}`,
+      { credentials: "include", cache: "no-store", headers: { Accept: "application/json" } },
     );
   } catch {
     throw new AuthApiError(0);
@@ -128,13 +144,13 @@ export async function verifyEmail(input: {
   if (!response.ok) throw new AuthApiError(response.status);
 }
 
-export function clientAreaUrl(path: "login"): string | null {
+export function clientAreaUrl(path: "login" | "dashboard"): string | null {
   const configured = process.env.NEXT_PUBLIC_CLIENT_AREA_URL;
   if (!configured) return null;
   try {
     const base = new URL(configured);
     const isLocal = ["localhost", "127.0.0.1"].includes(base.hostname);
-    if (base.protocol !== "https:" && !(base.protocol === "http:" && isLocal))
+    if (base.username || base.password || (base.protocol !== "https:" && !(base.protocol === "http:" && isLocal)))
       return null;
     base.pathname = `${base.pathname.replace(/\/$/, "")}/${path}`;
     base.search = "";

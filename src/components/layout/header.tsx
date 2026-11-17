@@ -9,8 +9,9 @@ import { Brand } from "./brand";
 import { AppearanceControls } from "@/components/appearance/appearance-controls";
 import { AccountActions, type HeaderUser } from "./account-actions";
 
-// Keep unfinished cart and account controls out of the public navigation.
-const showAccountActions = false;
+// Production demo remains unchanged; the local customer integration exposes only login.
+const showAccountActions = process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true"
+  && (process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_AUTH_ENABLED === "true");
 
 export function Header({ user }: { user?: HeaderUser | null }) {
   const pathname = usePathname();

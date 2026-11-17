@@ -13,7 +13,8 @@ export function AccountActions({ user }: { user?: HeaderUser | null }) {
     : "";
 
   return (
-    <div className={styles.actions} role="group" aria-label="Количка и профил">
+    <div className={styles.actions} role="group" aria-label="Клиентски профил">
+      {process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED !== "true" && (
       <button
         type="button"
         className={styles.control}
@@ -23,6 +24,7 @@ export function AccountActions({ user }: { user?: HeaderUser | null }) {
       >
         <Icon name="cart" />
       </button>
+      )}
       <Link
         className={`${styles.control} ${fullName ? styles.profile : ""}`}
         aria-label={

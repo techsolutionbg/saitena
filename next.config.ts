@@ -3,13 +3,25 @@ import { publicSecurityHeaders } from "./src/lib/security-headers.mjs";
 import { isIndexingEnabled } from "./src/lib/seo-policy.mjs";
 
 const releaseMode = process.env.NEXT_PUBLIC_RELEASE_MODE ?? "public";
-if (!["public", "private-preview", "public-demo"].includes(releaseMode))
+if (
+  !["public", "private-preview", "public-demo", "customer-auth"].includes(
+    releaseMode,
+  )
+)
   throw new Error("Unknown release mode");
-const preview = releaseMode !== "public";
+const preview = ["private-preview", "public-demo"].includes(releaseMode);
+if (
+  releaseMode === "customer-auth" &&
+  (process.env.NEXT_PUBLIC_AUTH_ENABLED !== "true" ||
+    process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED !== "true" ||
+    process.env.NEXT_PUBLIC_INDEXING_ENABLED !== "false")
+)
+  throw new Error("Customer Auth builds require both auth flags and noindex");
 if (
   preview &&
   (process.env.NEXT_PUBLIC_INDEXING_ENABLED === "true" ||
-    process.env.NEXT_PUBLIC_AUTH_ENABLED === "true")
+    process.env.NEXT_PUBLIC_AUTH_ENABLED === "true" ||
+    process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true")
 )
   throw new Error("Preview builds require auth and indexing disabled");
 
@@ -18,7 +30,12 @@ const config: NextConfig = {
   images: { qualities: [75, 90] },
   poweredByHeader: false,
   devIndicators: false,
-  allowedDevOrigins: ["127.0.0.1", "localhost"],
+  allowedDevOrigins: [
+    "127.0.0.1",
+    "localhost",
+    "saitena-auth.test",
+    "www.saitena-auth.test",
+  ],
   async redirects() {
     const authRedirects =
       process.env.NODE_ENV === "production" &&
