@@ -1,0 +1,74 @@
+name: saitena-website-dev
+
+services:
+  website:
+    image: saitena-website-dev:local
+    build:
+      context: .
+      dockerfile: .development/Dockerfile
+    init: true
+    working_dir: /app
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      NODE_ENV: development
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_RELEASE_MODE: public-demo
+      NEXT_PUBLIC_AUTH_ENABLED: "false"
+      NEXT_PUBLIC_INDEXING_ENABLED: "false"
+      NEXT_PUBLIC_API_URL: http://127.0.0.1:8001
+      NEXT_PUBLIC_CLIENT_AREA_URL: http://127.0.0.1:3001
+      CONTACT_MAIL_MODE: disabled
+    volumes:
+      - next_cache:/app/.next
+      - type: bind
+        source: ./.env
+        target: /app/.env
+        read_only: true
+        bind:
+          create_host_path: false
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          initial_sync: true
+        - action: sync
+          path: ./public
+          target: /app/public
+          initial_sync: true
+        - action: sync
+          path: ./docs
+          target: /app/docs
+          initial_sync: true
+        - action: sync+restart
+          path: ./next.config.ts
+          target: /app/next.config.ts
+          initial_sync: true
+        - action: sync+restart
+          path: ./tsconfig.json
+          target: /app/tsconfig.json
+          initial_sync: true
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./package-lock.json
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 2g
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 15s
+      timeout: 10s
+      start_period: 120s
+      retries: 5
+
+volumes:
+  next_cache:

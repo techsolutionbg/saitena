@@ -14,6 +14,7 @@ if (
 const config: NextConfig = {
   poweredByHeader: false,
   devIndicators: false,
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   async redirects() {
     const authRedirects =
       process.env.NODE_ENV === "production" &&

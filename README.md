@@ -1,6 +1,6 @@
 # Saitena Website — „Ясно напред“
 
-Публичният сайт на Saitena за изработка на сайтове на месечен абонамент. Проектът е в локален етап на разработка: има адаптивни страници, светла/тъмна тема, интерактивни FAQ и блог, карта и изпращане на контактни съобщения към **локален Mailpit**. Auth flow се разработва срещу отделен локален Laravel API; production deployment и интеграция не са конфигурирани.
+Публичният сайт на Saitena за изработка на сайтове на месечен абонамент. Има адаптивни страници, светла/тъмна тема, интерактивни FAQ и блог. Публикуваната версия използва одобрения режим `public-demo`: регистрации, поръчки, реална поща и индексиране са изключени. Контактните и auth интеграциите се тестват отделно срещу локален Mailpit и изолиран Laravel API. [Контролираното автоматично публикуване](docs/automated-deployment.md) запазва задължителен CI, защитен main и лично одобрение в GitHub Environment; първият реален Actions deployment подлежи на runtime приемане.
 
 ## Преди работа
 
@@ -16,7 +16,7 @@
 - CSS Modules и общи семантични CSS променливи; без Tailwind или тежки анимационни библиотеки.
 - Manrope за основния интерфейс, Segoe UI за параграфите; локални font assets чрез `@fontsource`.
 - Leaflet **1.9.4** за OpenStreetMap; Nodemailer **10.5.0** за локалната поща.
-- Prettier **3.10.1**. Няма конфигуриран ESLint script.
+- Prettier **3.10.1**, ESLint чрез отделния lockfile в `tools/lint`; проверки с `npm run lint` и `npm run typecheck`.
 - Последно използвана локална среда: Node.js **24.20.0**, npm и Windows PowerShell. Точните зависимости са в `package.json` и `package-lock.json`.
 
 Съдържанието се управлява през кода в `src/lib/`. Няма CMS, база данни или административен панел. Езикът е български; английската версия е само архитектурно подготвена чрез `src/lib/i18n.ts`. Всички актуални slug-ове са на английски.
@@ -35,6 +35,21 @@ npm run dev
 Адрес: [http://127.0.0.1:3000](http://127.0.0.1:3000). Dev сървърът слуша само на loopback интерфейса. Преди стартиране проверете дали вече няма работещ процес. При зает порт използвайте например `npm run dev -- --port 3100`, без да спирате чужди услуги.
 
 Next.js Fast Refresh прилага записаните промени в компонентите и CSS; при необходимост прави пълно презареждане. Не е нужен build след всяка редакция. `npm run start` обслужва предварително изпълнен `npm run build` и няма Fast Refresh.
+
+## Локален Docker преглед с автоматично презареждане
+
+От папката `apps/saitena`, при свободен порт 3000 и работещ Docker Desktop:
+
+```powershell
+docker compose -f compose.dev.yaml up -d --build
+docker compose -f compose.dev.yaml watch --no-up --prune=false
+```
+
+Отворете [http://127.0.0.1:3000](http://127.0.0.1:3000). Оставете `watch` да работи (в терминал или във фонов процес). [Compose Watch](https://docs.docker.com/compose/how-tos/file-watch/) синхронизира записаните промени от Windows към Linux контейнера, а [Next.js Fast Refresh](https://nextjs.org/docs/app/api-reference/cli/next) обновява страницата без ръчен refresh. Използва се стандартният Turbopack; Webpack не е необходим. `node_modules` е инсталиран в Linux image, а `.next` е в отделен volume. Промяна на `package.json`/lockfile изгражда наново само dev image; конфигурационните файлове рестартират само сайта. Локалният `.env` се монтира read-only и не влиза в image. След негово редактиране изпълнете `docker compose -f compose.dev.yaml restart website`.
+
+Средата е само на loopback, без production регистрации, реална поща или индексиране. API URL е локалният `127.0.0.1:8001`; този Compose файл не стартира и не променя API, база или портал. Използва оригиналния локален интерфейс, без SVG преобразуване.
+
+Логове: `docker compose -f compose.dev.yaml logs --tail 80 -f website`. За спиране: приключете `watch` с Ctrl+C, ако работи в терминал, и изпълнете `docker compose -f compose.dev.yaml stop`. Не изтривайте volumes. Локалното запазване на файл **не публикува на сървъра**. Процесът е commit/push към dev или PR branch → успешен PR CI → merge в main → успешен main CI → image digest → лично GitHub Environment одобрение → deployment с backup, runtime проверки и rollback. Push към dev сам по себе си не публикува.
 
 ## Локална автентикация с портала и API
 
