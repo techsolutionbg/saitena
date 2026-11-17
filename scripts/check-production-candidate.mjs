@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { publicSecurityHeaders } from "../src/lib/security-headers.mjs";
 
 // Run against a previously built, auth-disabled information-only candidate.
 const server = spawn(
@@ -44,6 +45,8 @@ try {
   for (const path of paths) {
     const response = await fetch(`${base}${path}`);
     assert.equal(response.status, 200, path);
+    for (const { key, value } of publicSecurityHeaders(true))
+      assert.equal(response.headers.get(key), value, `${path}: ${key}`);
     assert.match(response.headers.get("x-robots-tag") ?? "", /noindex/, path);
     const html = await response.text();
     assert.match(html, /name="robots"[^>]+noindex/, `robots metadata: ${path}`);
@@ -57,8 +60,12 @@ try {
     ))
       assets.add(match[1]);
   }
-  for (const path of assets)
-    assert.equal((await fetch(`${base}${path}`)).status, 200, path);
+  for (const path of assets) {
+    const response = await fetch(`${base}${path}`);
+    assert.equal(response.status, 200, path);
+    for (const { key, value } of publicSecurityHeaders(true))
+      assert.equal(response.headers.get(key), value, `${path}: ${key}`);
+  }
   const manifest = JSON.parse(
     readFileSync("docs/binary-review-manifest.json", "utf8"),
   );
