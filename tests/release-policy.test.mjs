@@ -189,3 +189,34 @@ test("automatic updates require the current protected main SHA and complete publ
     assert.throws(() => assertReleasePolicy(y));
   }
 });
+
+test("coordinated Auth is approval-only and retains public main/CI/Environment protections", () => {
+  const x = fixture();
+  Object.assign(x, {
+    source: "main",
+    mainSha: sha,
+    confirmation: sha,
+    releaseMode: "customer-auth",
+    modeConfirmation: "customer-auth",
+    authApprovalOnly: true,
+  });
+  delete x.tag;
+  delete x.release;
+  for (const name of [
+    "Public demo origin guard and rollback rehearsal",
+    "Customer Auth frontend and consent contract checks",
+  ])
+    x.jobs[0].steps.push({ name, status: "completed", conclusion: "success" });
+  assert.doesNotThrow(() => assertReleasePolicy(x));
+  for (const change of [
+    (y) => (y.authApprovalOnly = false),
+    (y) => y.jobs[0].steps.pop(),
+    (y) => (y.environment.protection_rules = []),
+    (y) => (y.branchProtection = undefined),
+    (y) => (y.mainSha = "b".repeat(40)),
+  ]) {
+    const y = structuredClone(x);
+    change(y);
+    assert.throws(() => assertReleasePolicy(y));
+  }
+});

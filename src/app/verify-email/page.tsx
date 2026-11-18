@@ -4,6 +4,7 @@ import { AuthExperience } from "@/components/auth/auth-experience";
 export const metadata: Metadata = {
   title: "Потвърждение на имейл",
   description: "Потвърдете имейл адреса към профила си в Saitena.",
+  referrer: "no-referrer",
   robots: { index: false, follow: false },
 };
 

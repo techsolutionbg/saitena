@@ -52,4 +52,22 @@ test("production OIDC remains behind release authorization and Environment appro
   assert.match(deploy, /Revalidate main and protections after owner approval/);
   assert.match(deploy, /node scripts\/deploy-approved-main\.mjs/);
   assert.doesNotMatch(source, /SAITENA_DEPLOY_KEY[\s\S]*\n  build:/);
+  assert.match(
+    deploy,
+    /name: Join restricted deployment tailnet\s+if: needs\.authorize\.outputs\.mode == 'public-demo'/,
+  );
+  assert.match(
+    deploy,
+    /name: Deploy, verify externally and accept or roll back\s+if: needs\.authorize\.outputs\.mode == 'public-demo'/,
+  );
+  const auth = deploy.split(
+    "name: Record coordinated Auth approval only (no deployment)",
+  )[1];
+  assert.ok(auth);
+  assert.match(auth, /mode == 'customer-auth'/);
+  assert.doesNotMatch(
+    auth,
+    /DEPLOY_KEY|tailscale|ssh|private-platform|saitena-platform/,
+  );
+  assert.match(auth, /record-auth-release-approval\.mjs/);
 });

@@ -32,6 +32,8 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: node --test tests/*.test.mjs
+      - name: Customer Auth frontend and consent contract checks
+        run: node --test tests/customer-auth*.test.mjs
       - run: python3 -m unittest discover -s tests -p 'test_deploy_agent.py' -v
       - run: node scripts/audit-git-candidate.mjs
       - run: npm run build
