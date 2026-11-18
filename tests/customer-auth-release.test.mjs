@@ -80,10 +80,21 @@ function fixture() {
     cleanup: () => rmSync(root, { recursive: true, force: true }),
   };
 }
-test("customer Auth fails closed with the actual pending owner record", () => {
-  const blockers = customerAuthReleaseBlockers(process.cwd(), env);
-  assert(blockers.some((x) => x.includes("production_auth_approved")));
-  assert(blockers.some((x) => x.includes("legal documents")));
+test("customer Auth fails closed with a pending owner record", () => {
+  const f = fixture();
+  try {
+    f.approval.production_auth_approved = false;
+    f.save();
+    writeFileSync(
+      join(f.root, "src/components/pages/pages.tsx"),
+      "СТРУКТУРЕН МАКЕТ",
+    );
+    const blockers = customerAuthReleaseBlockers(f.root, env);
+    assert(blockers.some((x) => x.includes("production_auth_approved")));
+    assert(blockers.some((x) => x.includes("legal documents")));
+  } finally {
+    f.cleanup();
+  }
 });
 test("customer Auth retains asset, legal, SMTP, exact-evidence and noindex gates", () => {
   const f = fixture();
@@ -171,13 +182,17 @@ test("existing automatic release policy still rejects unapproved Auth mode", () 
   );
 });
 
-test("actual default profile cannot activate Auth and an Auth profile needs explicit login-only approval", () => {
-  assert.deepEqual(deploymentProfile(), {
-    mode: "public-demo",
-    authApprovalOnly: false,
-  });
+test("public-demo profile cannot activate Auth and an Auth profile needs explicit login-only approval", () => {
   const f = fixture();
   try {
+    writeFileSync(
+      join(f.root, "docs/deployment-profile.json"),
+      JSON.stringify({ mode: "public-demo" }),
+    );
+    assert.deepEqual(deploymentProfile(f.root), {
+      mode: "public-demo",
+      authApprovalOnly: false,
+    });
     writeFileSync(
       join(f.root, "docs/deployment-profile.json"),
       JSON.stringify({ mode: "customer-auth" }),

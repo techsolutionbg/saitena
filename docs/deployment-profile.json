@@ -1,1 +1,3 @@
-{ "mode": "public-demo" }
+{
+  "mode": "customer-auth"
+}
