@@ -684,11 +684,22 @@ def watchdog(journal, runtime):
         if entry["phase"] not in ["prepared", "switching", "awaiting_acceptance"]:
             return
         if time.time() >= entry["deadline"]:
+            # Auth creates/removes its marker under this same mutation lock.
+            # Do not wait for main's deployment lease: its controller may be
+            # stalled while the independent watchdog needs deadline recovery.
             with mutation_lock(runtime.c["state_dir"]):
+                if os.path.lexists(Path(runtime.c["state_dir"]) / "auth-pending.json"):
+                    return
                 if json.loads(journal.read_bytes())["phase"] in ["prepared", "switching", "awaiting_acceptance"]:
                     guarded_recover(journal, runtime)
             return
         time.sleep(2)
+
+
+def reject_auth_pending(state):
+    # Existence alone fails closed, including malformed/orphaned/symlink state.
+    if os.path.lexists(Path(state) / "auth-pending.json"):
+        raise RuntimeError("owner_auth_acceptance_pending")
 
 
 def main():
@@ -724,6 +735,11 @@ def main():
         return
     with open(Path(config["state_dir"]) / "deploy.lock", "a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        # Check AFTER acquiring the lease. The Auth coordinator releases its
+        # lease during owner testing, but its durable marker blocks all public
+        # mutations until a verified terminal transition. Even malformed,
+        # orphaned or symlink markers fail closed; this helper never clears one.
+        reject_auth_pending(config["state_dir"])
         if len(sys.argv) == 3 and sys.argv[1] == "recover" and re.fullmatch(r"(?:v\d+\.\d+\.\d+|main-[a-f0-9]{40})", sys.argv[2]):
             recovery = guarded_recover if config["release_mode"] == "public-demo" else recover
             recovery(Path(config["state_dir"]) / (sys.argv[2] + ".json"), Runtime(config))

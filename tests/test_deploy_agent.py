@@ -39,6 +39,38 @@ class FakeRuntime:
 
 
 class DeploymentTests(unittest.TestCase):
+    def test_watchdog_recovery_does_not_wait_for_main_deployment_lease(self):
+        with tempfile.TemporaryDirectory() as folder:
+            journal=Path(folder)/'release.json'
+            journal.write_text(json.dumps({'phase':'awaiting_acceptance','deadline':0}))
+            runtime=FakeRuntime();runtime.c={'state_dir':folder}
+            with (Path(folder)/'deploy.lock').open('a') as lease:
+                fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                with patch.object(agent,'guarded_recover') as recover:
+                    agent.watchdog(journal,runtime)
+                    recover.assert_called_once_with(journal,runtime)
+
+    def test_watchdog_cannot_restore_public_route_during_pending_auth(self):
+        with tempfile.TemporaryDirectory() as folder:
+            journal=Path(folder)/'release.json'
+            journal.write_text(json.dumps({'phase':'awaiting_acceptance','deadline':0}))
+            marker=Path(folder)/'auth-pending.json';marker.write_text('{incomplete')
+            runtime=FakeRuntime();runtime.c={'state_dir':folder}
+            with patch.object(agent,'guarded_recover') as recover:
+                agent.watchdog(journal,runtime)
+                recover.assert_not_called()
+            self.assertEqual(marker.read_text(),'{incomplete')
+
+    def test_auth_pending_marker_fails_closed_without_parsing_or_mutating_it(self):
+        with tempfile.TemporaryDirectory() as folder:
+            agent.reject_auth_pending(folder)
+            marker=Path(folder)/'auth-pending.json'
+            for content in ['{malformed',json.dumps({'phase':'pending_acceptance'})]:
+                marker.write_text(content)
+                with self.assertRaisesRegex(RuntimeError,'owner_auth_acceptance_pending'):
+                    agent.reject_auth_pending(folder)
+                self.assertEqual(marker.read_text(),content)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
