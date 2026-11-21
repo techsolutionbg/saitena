@@ -54,15 +54,37 @@ function fixture() {
       approved_assets: assets,
     }),
   );
-  const approval = JSON.parse(
-    readFileSync(
-      new URL("../docs/customer-auth-release-approval.json", import.meta.url),
+  // Exercise each schema independently of the real owner's current approval.
+  // Promoting a new policy must not silently redefine the legacy fixture.
+  const approval = {
+    schema: 1,
+    owner: "techsolutionbg",
+    mode: "customer-auth",
+    ...Object.fromEntries(
+      [
+        "registration_enabled",
+        "login_only_approved",
+        "production_auth_approved",
+        "api_candidate_approved",
+        "portal_candidate_approved",
+        "legal_copy_approved",
+        "consent_policy_approved",
+        "smtp_sender_approved",
+        "https_staging_approved",
+        "migration_backup_rollback_approved",
+        "customer_cookie_boundary_approved",
+        "origin_guard_plan_approved",
+        "deployment_helper_approved",
+      ].map((key) => [key, true]),
     ),
-  );
-  for (const key of Object.keys(approval)) {
-    if (typeof approval[key] === "boolean") approval[key] = true;
-    if (key.endsWith("sha256")) approval[key] = "a".repeat(64);
-  }
+    ...Object.fromEntries(
+      [
+        "api_manifest_sha256",
+        "portal_manifest_sha256",
+        "staging_evidence_sha256",
+      ].map((key) => [key, "a".repeat(64)]),
+    ),
+  };
   const save = () =>
     writeFileSync(
       join(root, "docs/customer-auth-release-approval.json"),
@@ -102,6 +124,18 @@ test("prelaunch requires fresh exact owner scope without falsely approving legal
     );
     const build = { ...env, NEXT_PUBLIC_CUSTOMER_PRELAUNCH_ENABLED: "true" };
     assert.deepEqual(customerAuthReleaseBlockers(f.root, build), []);
+    for (const key of [
+      "prelaunch_only_approved",
+      "integration_evidence_approved",
+    ]) {
+      f.approval[key] = false;
+      f.save();
+      assert(
+        customerAuthReleaseBlockers(f.root, build).some((x) => x.includes(key)),
+      );
+      f.approval[key] = true;
+      f.save();
+    }
     f.approval.production_auth_approved = false;
     f.save();
     assert(
