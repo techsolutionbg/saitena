@@ -1,3 +1,4 @@
 {
-  "mode": "customer-auth"
+  "mode": "customer-auth",
+  "prelaunch": true
 }
