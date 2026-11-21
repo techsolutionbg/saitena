@@ -6,8 +6,7 @@ export const isPreview = releaseMode === "private-preview";
 export const hasPreviewProtections =
   releaseMode === "private-preview" ||
   releaseMode === "public-demo" ||
-  (releaseMode === "customer-auth" &&
-    process.env.NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED !== "true");
+  releaseMode === "customer-auth";
 
 export const previewDetails = {
   company: "Saitena — тестови фирмени данни",

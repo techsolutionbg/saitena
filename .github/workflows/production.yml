@@ -19,6 +19,7 @@ jobs:
       sha: ${{ steps.policy.outputs.sha }}
       release: ${{ steps.policy.outputs.release }}
       mode: ${{ steps.policy.outputs.mode }}
+      prelaunch: ${{ steps.policy.outputs.prelaunch }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { fetch-depth: 0, persist-credentials: false }
@@ -52,7 +53,8 @@ jobs:
           NEXT_PUBLIC_RELEASE_MODE: customer-auth
           NEXT_PUBLIC_AUTH_ENABLED: "true"
           NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED: "true"
-          NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED: "false"
+          NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED: ${{ needs.authorize.outputs.prelaunch == 'true' && 'true' || 'false' }}
+          NEXT_PUBLIC_CUSTOMER_PRELAUNCH_ENABLED: ${{ needs.authorize.outputs.prelaunch }}
           NEXT_PUBLIC_INDEXING_ENABLED: "false"
           NEXT_PUBLIC_API_URL: https://api.saitena.com
           NEXT_PUBLIC_CLIENT_AREA_URL: https://portal.saitena.com
@@ -64,13 +66,15 @@ jobs:
           SHA: ${{ needs.authorize.outputs.sha }}
           ACTOR: ${{ github.actor }}
           MODE: ${{ needs.authorize.outputs.mode }}
+          PRELAUNCH: ${{ needs.authorize.outputs.prelaunch }}
         run: |
           set -euo pipefail
           printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$ACTOR" --password-stdin
           trap 'docker logout ghcr.io >/dev/null 2>&1' EXIT
           IMAGE=ghcr.io/techsolutionbg/saitena/public
           case "$MODE" in public-demo) AUTH=false ;; customer-auth) AUTH=true ;; *) exit 1 ;; esac
-          docker build --target release --build-arg "NEXT_PUBLIC_RELEASE_MODE=$MODE" --build-arg "NEXT_PUBLIC_AUTH_ENABLED=$AUTH" --build-arg "NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED=$AUTH" --build-arg NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED=false --label "org.opencontainers.image.revision=$SHA" --label "org.opencontainers.image.source=https://github.com/techsolutionbg/saitena" -f .deployment/Dockerfile -t "$IMAGE:$SHA-$MODE" .
+          case "$PRELAUNCH" in true) test "$MODE" = customer-auth; REGISTRATION=true ;; false) REGISTRATION=false ;; *) exit 1 ;; esac
+          docker build --target release --build-arg "NEXT_PUBLIC_RELEASE_MODE=$MODE" --build-arg "NEXT_PUBLIC_AUTH_ENABLED=$AUTH" --build-arg "NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED=$AUTH" --build-arg "NEXT_PUBLIC_CUSTOMER_REGISTRATION_ENABLED=$REGISTRATION" --build-arg "NEXT_PUBLIC_CUSTOMER_PRELAUNCH_ENABLED=$PRELAUNCH" --label "org.opencontainers.image.revision=$SHA" --label "org.opencontainers.image.source=https://github.com/techsolutionbg/saitena" -f .deployment/Dockerfile -t "$IMAGE:$SHA-$MODE" .
           docker push "$IMAGE:$SHA-$MODE"
           DIGEST=$(docker image inspect "$IMAGE:$SHA-$MODE" --format '{{index .RepoDigests 0}}')
           [[ "$DIGEST" =~ ^ghcr.io/techsolutionbg/saitena/public@sha256:[a-f0-9]{64}$ ]]

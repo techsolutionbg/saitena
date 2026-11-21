@@ -312,7 +312,9 @@ export function AuthExperience({ mode }: { mode: Mode }) {
         }
         if (!acceptedTerms) {
           setError(
-            "За да продължите, приемете Общите условия и Политиката за поверителност.",
+            policy?.mode === "owner-prelaunch"
+              ? "Потвърдете участието си в ограниченото тестване."
+              : "За да продължите, приемете Общите условия и Политиката за поверителност.",
           );
           return;
         }
@@ -321,15 +323,22 @@ export function AuthExperience({ mode }: { mode: Mode }) {
           email: email.trim(),
           password,
           password_confirmation: confirmation,
-          ...(policy
+          ...(policy?.mode === "owner-prelaunch"
             ? {
-                consent: {
+                prelaunch: {
                   accepted: acceptedTerms,
-                  terms_version: policy.documents.terms.version,
-                  privacy_version: policy.documents.privacy.version,
+                  policy_sha256: policy.policy_sha256,
                 },
               }
-            : {}),
+            : policy
+              ? {
+                  consent: {
+                    accepted: acceptedTerms,
+                    terms_version: policy.documents.terms.version,
+                    privacy_version: policy.documents.privacy.version,
+                  },
+                }
+              : {}),
         });
         setNotice(
           "Ако адресът е подходящ за регистрация, ще получите инструкции по имейл. Можете да влезете в профила си; клиентските услуги изискват потвърден имейл.",
@@ -640,14 +649,24 @@ export function AuthExperience({ mode }: { mode: Mode }) {
                                 setAcceptedTerms(event.target.checked)
                               }
                             />
-                            <span>
-                              Прочетох и приемам{" "}
-                              <Link href="/legal/terms">Общите условия</Link> и{" "}
-                              <Link href="/legal/privacy">
-                                Политиката за поверителност
-                              </Link>
-                              .
-                            </span>
+                            {policy?.mode === "owner-prelaunch" ? (
+                              <span>
+                                Участвам като разрешен тестер. Платформата още
+                                не приема реални клиентски поръчки. Това
+                                потвърждение не е сключване на договор за
+                                услуга.
+                              </span>
+                            ) : (
+                              <span>
+                                Прочетох и приемам{" "}
+                                <Link href="/legal/terms">Общите условия</Link>{" "}
+                                и{" "}
+                                <Link href="/legal/privacy">
+                                  Политиката за поверителност
+                                </Link>
+                                .
+                              </span>
+                            )}
                           </label>
                         )}
                       </>
