@@ -151,6 +151,45 @@ test("prelaunch requires fresh exact owner scope without falsely approving legal
     f.cleanup();
   }
 });
+test("all valid emails require a new explicit scope and matching permanent preview record", () => {
+  const f = fixture();
+  try {
+    Object.assign(f.approval, {
+      schema: 2,
+      prelaunch_only_approved: true,
+      integration_evidence_approved: true,
+      integration_evidence_sha256: "b".repeat(64),
+      tester_policy_sha256: "c".repeat(64),
+      legal_copy_approved: false,
+      consent_policy_approved: false,
+      registration_scope: "all-valid-emails",
+      enrollment: "any-valid-email",
+      acceptance_mode: "permanent-preview",
+    });
+    const build = { ...env, NEXT_PUBLIC_CUSTOMER_PRELAUNCH_ENABLED: "true" };
+    f.save();
+    assert.deepEqual(customerAuthReleaseBlockers(f.root, build), []);
+    for (const scope of [undefined, null, "", "*", "public", "enrolled"]) {
+      f.approval.registration_scope = scope;
+      f.save();
+      assert(customerAuthReleaseBlockers(f.root, build).length);
+    }
+    f.approval.registration_scope = "all-valid-emails";
+    for (const key of ["enrollment", "acceptance_mode"]) {
+      const before = f.approval[key];
+      f.approval[key] = "explicit-private-email-allowlist";
+      f.save();
+      assert(customerAuthReleaseBlockers(f.root, build).length);
+      f.approval[key] = before;
+    }
+    f.approval.legal_copy_approved = true;
+    f.save();
+    assert(customerAuthReleaseBlockers(f.root, build).length);
+  } finally {
+    f.cleanup();
+  }
+});
+
 test("customer Auth fails closed with a pending owner record", () => {
   const f = fixture();
   try {

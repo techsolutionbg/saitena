@@ -13,6 +13,7 @@ export type RegistrationPolicy =
       registration_enabled: boolean;
       mode: "owner-prelaunch";
       policy_sha256: string;
+      registration_scope: "enrolled" | "all-valid-emails";
     }
   | {
       registration_enabled: boolean;
@@ -53,7 +54,10 @@ export async function registrationPolicy(): Promise<RegistrationPolicy> {
     throw new AuthApiError(503);
   const documents = value.documents;
   if ("mode" in value && value.mode === "owner-prelaunch") {
+    const scope =
+      "registration_scope" in value ? value.registration_scope : "enrolled";
     if (
+      (scope !== "enrolled" && scope !== "all-valid-emails") ||
       !("policy_sha256" in value) ||
       typeof value.policy_sha256 !== "string" ||
       !/^[a-f0-9]{64}$/.test(value.policy_sha256) ||
@@ -66,6 +70,7 @@ export async function registrationPolicy(): Promise<RegistrationPolicy> {
       registration_enabled: true,
       mode: "owner-prelaunch",
       policy_sha256: value.policy_sha256,
+      registration_scope: scope,
     };
   }
   if ("mode" in value && value.mode !== "legal") throw new AuthApiError(503);

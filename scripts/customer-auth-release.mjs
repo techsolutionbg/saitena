@@ -63,16 +63,27 @@ export function customerAuthReleaseBlockers(
   ])
     if (!/^[a-f0-9]{64}$/.test(approval[key] ?? ""))
       blockers.push(`Customer Auth exact evidence missing: ${key}`);
+  // Legacy owner records remain enrolled-only. A broader scope must be
+  // explicitly bound to a new record; changing API behavior cannot grant it.
+  const scope = Object.hasOwn(approval, "registration_scope")
+    ? approval.registration_scope
+    : "enrolled";
+  const scopedPreview =
+    (scope === "enrolled" &&
+      approval.enrollment === "explicit-private-email-allowlist" &&
+      approval.acceptance_mode === "permanent-enrolled-testers") ||
+    (scope === "all-valid-emails" &&
+      approval.enrollment === "any-valid-email" &&
+      approval.acceptance_mode === "permanent-preview");
   if (
     prelaunch &&
     (registration !== "true" ||
       approval.legal_copy_approved !== false ||
       approval.consent_policy_approved !== false ||
-      approval.enrollment !== "explicit-private-email-allowlist" ||
-      approval.acceptance_mode !== "permanent-enrolled-testers")
+      !scopedPreview)
   )
     blockers.push(
-      "Prelaunch requires enrolled testers, permanent monitoring and truthful deferred legal consent",
+      "Prelaunch requires exact registration scope, permanent monitoring and truthful deferred legal consent",
     );
   const expected = {
     NEXT_PUBLIC_RELEASE_MODE: "customer-auth",

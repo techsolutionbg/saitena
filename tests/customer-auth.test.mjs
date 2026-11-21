@@ -27,11 +27,25 @@ test("prelaunch registration validates the displayed policy without inventing le
     const calls=[];
     const policy={registration_enabled:true,mode:'owner-prelaunch',policy_sha256:'a'.repeat(64),consent_deferred:true,documents:[]};
     globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json(url.endsWith('/registration-policy')?policy:url.endsWith('/csrf')?{csrf_token:'synthetic-csrf'}:{});};
-    const displayed=await registrationPolicy();assert.equal(displayed.mode,'owner-prelaunch');
+    const displayed=await registrationPolicy();assert.equal(displayed.mode,'owner-prelaunch');assert.equal(displayed.registration_scope,'enrolled');
     await registerAccount({name:'Synthetic',email:'synthetic@example.test',password:'SyntheticOnly#1234',password_confirmation:'SyntheticOnly#1234',prelaunch:{accepted:true,policy_sha256:displayed.policy_sha256}});
     const body=JSON.parse(calls.at(-1).options.body);assert(!('consent' in body));assert.equal(body.prelaunch.policy_sha256,policy.policy_sha256);
     policy.policy_sha256='untrusted';await assert.rejects(registrationPolicy());
     policy.mode='unknown';await assert.rejects(registrationPolicy());
+  `);
+});
+
+test("public prelaunch accepts arbitrary email input only under the displayed explicit scope", () => {
+  run(`
+    import assert from 'node:assert/strict';
+    import {registrationPolicy,registerAccount} from './src/lib/auth-api.ts';
+    const calls=[];
+    const policy={registration_enabled:true,mode:'owner-prelaunch',policy_sha256:'a'.repeat(64),registration_scope:'all-valid-emails',consent_deferred:true,documents:[]};
+    globalThis.fetch=async(url,options)=>{calls.push({url,options});return Response.json(url.endsWith('/registration-policy')?policy:url.endsWith('/csrf')?{csrf_token:'synthetic-csrf'}:{});};
+    const displayed=await registrationPolicy();assert.equal(displayed.registration_scope,'all-valid-emails');
+    await registerAccount({name:'Synthetic',email:'another@different.test',password:'SyntheticOnly#1234',password_confirmation:'SyntheticOnly#1234',prelaunch:{accepted:true,policy_sha256:displayed.policy_sha256}});
+    assert.equal(JSON.parse(calls.at(-1).options.body).email,'another@different.test');
+    for(const bad of [null,'*','public',false]){policy.registration_scope=bad;await assert.rejects(registrationPolicy());}
   `);
 });
 
