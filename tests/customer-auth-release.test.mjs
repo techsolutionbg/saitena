@@ -80,6 +80,43 @@ function fixture() {
     cleanup: () => rmSync(root, { recursive: true, force: true }),
   };
 }
+
+test("prelaunch requires fresh exact owner scope without falsely approving legal documents", () => {
+  const f = fixture();
+  try {
+    Object.assign(f.approval, {
+      schema: 2,
+      prelaunch_only_approved: true,
+      integration_evidence_approved: true,
+      integration_evidence_sha256: "b".repeat(64),
+      tester_policy_sha256: "c".repeat(64),
+      legal_copy_approved: false,
+      consent_policy_approved: false,
+      enrollment: "explicit-private-email-allowlist",
+      acceptance_mode: "permanent-enrolled-testers",
+    });
+    f.save();
+    writeFileSync(
+      join(f.root, "src/components/pages/pages.tsx"),
+      "СТРУКТУРЕН МАКЕТ",
+    );
+    const build = { ...env, NEXT_PUBLIC_CUSTOMER_PRELAUNCH_ENABLED: "true" };
+    assert.deepEqual(customerAuthReleaseBlockers(f.root, build), []);
+    f.approval.production_auth_approved = false;
+    f.save();
+    assert(
+      customerAuthReleaseBlockers(f.root, build).some((x) =>
+        x.includes("production_auth_approved"),
+      ),
+    );
+    f.approval.production_auth_approved = true;
+    f.approval.enrollment = "public";
+    f.save();
+    assert(customerAuthReleaseBlockers(f.root, build).length);
+  } finally {
+    f.cleanup();
+  }
+});
 test("customer Auth fails closed with a pending owner record", () => {
   const f = fixture();
   try {
@@ -192,6 +229,7 @@ test("public-demo profile cannot activate Auth and an Auth profile needs explici
     assert.deepEqual(deploymentProfile(f.root), {
       mode: "public-demo",
       authApprovalOnly: false,
+      prelaunch: false,
     });
     writeFileSync(
       join(f.root, "docs/deployment-profile.json"),
@@ -206,6 +244,7 @@ test("public-demo profile cannot activate Auth and an Auth profile needs explici
     assert.deepEqual(deploymentProfile(f.root), {
       mode: "customer-auth",
       authApprovalOnly: true,
+      prelaunch: false,
     });
   } finally {
     f.cleanup();

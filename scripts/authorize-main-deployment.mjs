@@ -59,10 +59,10 @@ assertReleasePolicy({
 });
 appendFileSync(
   process.env.GITHUB_OUTPUT,
-  `sha=${sha}\nci_run=${id}\nrelease=main-${sha}\nmode=${profile.mode}\n`,
+  `sha=${sha}\nci_run=${id}\nrelease=main-${sha}\nmode=${profile.mode}\nprelaunch=${profile.prelaunch}\n`,
 );
 if (process.env.GITHUB_STEP_SUMMARY)
   appendFileSync(
     process.env.GITHUB_STEP_SUMMARY,
-    `Verified merged main commit: \`${sha}\`\n\nCI: https://github.com/${repo}/actions/runs/${id}\n\nDeployment requires the production owner review. Registrations, mail and indexing remain disabled.\n`,
+    `Verified merged main commit: \`${sha}\`\n\nCI: https://github.com/${repo}/actions/runs/${id}\n\nDeployment requires the production owner review. Auth images are approval-only; activation remains a separate coordinated owner SSH procedure.\n`,
   );

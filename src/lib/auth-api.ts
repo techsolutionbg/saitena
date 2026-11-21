@@ -8,13 +8,20 @@ export class AuthApiError extends Error {
 const customerAuth = process.env.NEXT_PUBLIC_CUSTOMER_AUTH_ENABLED === "true";
 let customerCsrfToken: string | null = null;
 
-export type RegistrationPolicy = {
-  registration_enabled: boolean;
-  documents: Record<
-    "terms" | "privacy",
-    { version: string; sha256: string; path: string }
-  >;
-};
+export type RegistrationPolicy =
+  | {
+      registration_enabled: boolean;
+      mode: "owner-prelaunch";
+      policy_sha256: string;
+    }
+  | {
+      registration_enabled: boolean;
+      mode: "legal";
+      documents: Record<
+        "terms" | "privacy",
+        { version: string; sha256: string; path: string }
+      >;
+    };
 
 export async function registrationPolicy(): Promise<RegistrationPolicy> {
   if (!customerAuth) throw new AuthApiError(-1);
@@ -24,6 +31,7 @@ export async function registrationPolicy(): Promise<RegistrationPolicy> {
       `${apiUrl()}/api/v1/customer/auth/registration-policy`,
       {
         credentials: "include",
+        signal: AbortSignal.timeout(15_000),
         cache: "no-store",
         headers: { Accept: "application/json" },
       },
@@ -44,6 +52,23 @@ export async function registrationPolicy(): Promise<RegistrationPolicy> {
   )
     throw new AuthApiError(503);
   const documents = value.documents;
+  if ("mode" in value && value.mode === "owner-prelaunch") {
+    if (
+      !("policy_sha256" in value) ||
+      typeof value.policy_sha256 !== "string" ||
+      !/^[a-f0-9]{64}$/.test(value.policy_sha256) ||
+      !("consent_deferred" in value) ||
+      value.consent_deferred !== true ||
+      Object.keys(documents).length !== 0
+    )
+      throw new AuthApiError(503);
+    return {
+      registration_enabled: true,
+      mode: "owner-prelaunch",
+      policy_sha256: value.policy_sha256,
+    };
+  }
+  if ("mode" in value && value.mode !== "legal") throw new AuthApiError(503);
   function document(key: "terms" | "privacy") {
     if (!(key in documents)) throw new AuthApiError(503);
     const entry: unknown = Reflect.get(documents, key);
@@ -64,6 +89,7 @@ export async function registrationPolicy(): Promise<RegistrationPolicy> {
   }
   return {
     registration_enabled: true,
+    mode: "legal",
     documents: { terms: document("terms"), privacy: document("privacy") },
   };
 }
@@ -134,6 +160,7 @@ async function postJson(path: string, body: object): Promise<void> {
   try {
     response = await fetch(`${apiUrl()}${endpoint(path)}`, {
       method: "POST",
+      signal: AbortSignal.timeout(15_000),
       cache: "no-store",
       headers,
       credentials: "include",
@@ -153,6 +180,7 @@ async function csrfCookie(): Promise<void> {
       `${apiUrl()}${customerAuth ? "/api/v1/customer/auth/csrf" : "/sanctum/csrf-cookie"}`,
       {
         credentials: "include",
+        signal: AbortSignal.timeout(15_000),
         cache: "no-store",
         headers: { Accept: "application/json" },
       },
@@ -209,8 +237,13 @@ export async function registerAccount(input: {
     terms_version: string;
     privacy_version: string;
   };
+  prelaunch?: { accepted: boolean; policy_sha256: string };
 }): Promise<void> {
-  if (customerAuth && input.consent?.accepted !== true)
+  if (
+    customerAuth &&
+    input.consent?.accepted !== true &&
+    input.prelaunch?.accepted !== true
+  )
     throw new AuthApiError(422);
   await csrfCookie();
   await postJson("/api/v1/auth/register", input);
@@ -232,6 +265,7 @@ export async function verifyEmail(input: {
       `${apiUrl()}${endpoint(`/api/v1/auth/email/verify/${encodeURIComponent(input.id)}/${encodeURIComponent(input.hash)}?${query}`)}`,
       {
         credentials: "include",
+        signal: AbortSignal.timeout(15_000),
         cache: "no-store",
         headers: { Accept: "application/json" },
       },

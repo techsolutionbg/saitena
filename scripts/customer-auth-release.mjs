@@ -8,6 +8,7 @@ export function customerAuthReleaseBlockers(
   env = process.env,
 ) {
   const blockers = releaseBlockers(root, "public-demo");
+  const prelaunch = env.NEXT_PUBLIC_CUSTOMER_PRELAUNCH_ENABLED === "true";
   let approval;
   try {
     approval = JSON.parse(
@@ -22,7 +23,7 @@ export function customerAuthReleaseBlockers(
   if (
     approval.owner !== "techsolutionbg" ||
     approval.mode !== "customer-auth" ||
-    approval.schema !== 1
+    approval.schema !== (prelaunch ? 2 : 1)
   )
     blockers.push("Customer Auth approval identity/schema mismatch");
   for (const key of [
@@ -30,7 +31,7 @@ export function customerAuthReleaseBlockers(
     "api_candidate_approved",
     "portal_candidate_approved",
     "smtp_sender_approved",
-    "https_staging_approved",
+    prelaunch ? "integration_evidence_approved" : "https_staging_approved",
     "migration_backup_rollback_approved",
     "customer_cookie_boundary_approved",
     "origin_guard_plan_approved",
@@ -46,8 +47,9 @@ export function customerAuthReleaseBlockers(
     blockers.push(
       "Customer Auth registration_enabled must match the explicit build flag",
     );
-  const required =
-    registration === "true"
+  const required = prelaunch
+    ? ["prelaunch_only_approved"]
+    : registration === "true"
       ? ["legal_copy_approved", "consent_policy_approved"]
       : ["login_only_approved"];
   for (const key of required)
@@ -56,10 +58,22 @@ export function customerAuthReleaseBlockers(
   for (const key of [
     "api_manifest_sha256",
     "portal_manifest_sha256",
-    "staging_evidence_sha256",
+    prelaunch ? "integration_evidence_sha256" : "staging_evidence_sha256",
+    ...(prelaunch ? ["tester_policy_sha256"] : []),
   ])
     if (!/^[a-f0-9]{64}$/.test(approval[key] ?? ""))
       blockers.push(`Customer Auth exact evidence missing: ${key}`);
+  if (
+    prelaunch &&
+    (registration !== "true" ||
+      approval.legal_copy_approved !== false ||
+      approval.consent_policy_approved !== false ||
+      approval.enrollment !== "explicit-private-email-allowlist" ||
+      approval.acceptance_mode !== "permanent-enrolled-testers")
+  )
+    blockers.push(
+      "Prelaunch requires enrolled testers, permanent monitoring and truthful deferred legal consent",
+    );
   const expected = {
     NEXT_PUBLIC_RELEASE_MODE: "customer-auth",
     NEXT_PUBLIC_AUTH_ENABLED: "true",
@@ -74,6 +88,7 @@ export function customerAuthReleaseBlockers(
       blockers.push(`Customer Auth release requires ${key}=${value}`);
   if (
     registration === "true" &&
+    !prelaunch &&
     /СТРУКТУРЕН МАКЕТ|предстои потвърждение|не действащ правен документ/u.test(
       readFileSync(join(root, "src/components/pages/pages.tsx"), "utf8"),
     )
